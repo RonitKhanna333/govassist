@@ -1,0 +1,99 @@
+{
+  "authority": "Ministry of Food Processing Industries",
+  "conditions": [
+    {
+      "asks": "Are you applying as an individual micro food processing unit?",
+      "clause": "individual-capital-subsidy",
+      "expr": "profile.applicant_type == \"individual\"",
+      "id": "applicant_is_individual_unit",
+      "reads": [
+        "applicant_type"
+      ]
+    },
+    {
+      "asks": "Is your food processing unit already operating?",
+      "clause": "individual-existing-unit",
+      "expr": "profile.is_existing_micro_food_processing_unit == true",
+      "id": "existing_micro_food_unit",
+      "reads": [
+        "is_existing_micro_food_processing_unit"
+      ]
+    },
+    {
+      "asks": "Has your unit been identified in the SLUP for an ODOP product or verified by the Resource Person?",
+      "clause": "individual-identified-or-verified",
+      "expr": "profile.identified_in_slup_or_verified == true",
+      "id": "unit_identified_or_verified",
+      "reads": [
+        "identified_in_slup_or_verified"
+      ]
+    },
+    {
+      "asks": "Is the enterprise unincorporated, and does it employ fewer than 10 workers?",
+      "clause": "individual-unincorporated-under-ten-workers",
+      "expr": "profile.is_unincorporated == true and profile.worker_count < 10",
+      "id": "unincorporated_and_under_ten_workers",
+      "reads": [
+        "is_unincorporated",
+        "worker_count"
+      ]
+    },
+    {
+      "asks": "Do you have ownership rights over the enterprise?",
+      "clause": "individual-ownership-right",
+      "expr": "profile.has_enterprise_ownership_right == true",
+      "id": "applicant_has_ownership_right",
+      "reads": [
+        "has_enterprise_ownership_right"
+      ]
+    },
+    {
+      "asks": "Are you at least 18 years old and at least VIII standard pass?",
+      "clause": "individual-age-and-education",
+      "expr": "profile.age >= 18 and profile.passed_class_8 == true",
+      "id": "applicant_age_and_education",
+      "reads": [
+        "age",
+        "passed_class_8"
+      ]
+    },
+    {
+      "asks": "Has anyone else in your family already received this financial assistance?",
+      "clause": "individual-one-person-per-family",
+      "expr": "profile.family_member_already_received_assistance == false",
+      "id": "one_person_per_family_only",
+      "reads": [
+        "family_member_already_received_assistance"
+      ]
+    },
+    {
+      "asks": "Are you willing to formalize the unit, contribute at least 10% of the project cost, and take a bank loan?",
+      "clause": "individual-formalize-contribute-and-borrow",
+      "expr": "profile.will_formalize == true and profile.own_contribution_percent >= 10 and profile.will_take_bank_loan == true",
+      "id": "willing_to_formalize_and_contribute",
+      "reads": [
+        "own_contribution_percent",
+        "will_formalize",
+        "will_take_bank_loan"
+      ]
+    }
+  ],
+  "decision": "ALL(conditions)",
+  "effective_from": null,
+  "effective_to": null,
+  "name_en": "PM Formalisation of Micro Food Processing Enterprises Scheme",
+  "scheme": "pmfme",
+  "sources": [
+    {
+      "checksum": "sha256:632c359d08289866abb104c642b0efb1bf9e007baf06b651a13fd0de47f90ce8",
+      "extractor": "pdfminer.six",
+      "id": "scheme-guidelines",
+      "pdf": "source/scheme-guidelines.pdf",
+      "retrieved_at": "2026-08-05",
+      "txt": "source/scheme-guidelines.txt",
+      "url": "https://pmfme.mofpi.gov.in/newsletters/docs/SchemeGuidelines.pdf"
+    }
+  ],
+  "tier": 1,
+  "version": 1
+}

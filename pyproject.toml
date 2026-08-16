@@ -1,0 +1,18 @@
+[project]
+name = "govassist-corpus"
+version = "0.1.0"
+description = "Grounded corpus tooling for GovAssist: build scheme.md files whose every quote is provably verbatim from an official source document."
+requires-python = ">=3.10"
+dependencies = [
+    "pdfminer.six>=20231228",
+    "pypdf>=4.0.0",
+    "requests>=2.31.0",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["data/scripts"]

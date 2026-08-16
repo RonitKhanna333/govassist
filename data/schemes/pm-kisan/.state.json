@@ -1,0 +1,14 @@
+{
+  "clauses": {},
+  "conditions": {},
+  "created_at": "2026-08-05T19:51:56+00:00",
+  "gates": {
+    "0_source": {
+      "at": "2026-08-05T19:53:56+00:00",
+      "by": "thorb",
+      "note": "C:\\Users\\thorb\\Desktop\\govassist\\data\\schemes\\pm-kisan\\source\\clarification-on-ogs-of-pmkisan.pdf",
+      "status": "approved"
+    }
+  },
+  "scheme": "pm-kisan"
+}

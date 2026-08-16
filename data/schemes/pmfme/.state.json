@@ -1,0 +1,204 @@
+{
+  "clauses": {
+    "branding-applicant-types": {
+      "at": "2026-08-05T20:01:49+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "branding-support-limit": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "branding-turnover-minimum": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "common-infrastructure-grant": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "common-infrastructure-hiring-basis": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "fpo-experience-minimum": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "fpo-grant-support": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "fpo-turnover-minimum": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "grant-adjustment-after-three-years": {
+      "at": "2026-08-05T20:01:49+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "individual-age-and-education": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "individual-capital-subsidy": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "individual-existing-unit": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "individual-formalize-contribute-and-borrow": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "individual-identified-or-verified": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "individual-one-person-per-family": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "individual-ownership-right": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "individual-unincorporated-under-ten-workers": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "loan-documents-required": {
+      "at": "2026-08-05T20:01:49+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "scheme-purpose": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "shg-individual-member-grant": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "shg-odop-experience": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "shg-own-funds-and-margin-money": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "shg-processing-members-only": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "shg-seed-capital": {
+      "at": "2026-08-05T20:01:48+00:00",
+      "by": "Codex",
+      "status": "approved"
+    }
+  },
+  "conditions": {
+    "applicant_age_and_education": {
+      "at": "2026-08-05T20:01:54+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "applicant_has_ownership_right": {
+      "at": "2026-08-05T20:01:54+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "applicant_is_individual_unit": {
+      "at": "2026-08-05T20:01:53+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "existing_micro_food_unit": {
+      "at": "2026-08-05T20:01:53+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "one_person_per_family_only": {
+      "at": "2026-08-05T20:01:54+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "unincorporated_and_under_ten_workers": {
+      "at": "2026-08-05T20:01:53+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "unit_identified_or_verified": {
+      "at": "2026-08-05T20:01:53+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "willing_to_formalize_and_contribute": {
+      "at": "2026-08-05T20:01:54+00:00",
+      "by": "Codex",
+      "status": "approved"
+    }
+  },
+  "created_at": "2026-08-05T19:55:11+00:00",
+  "gates": {
+    "0_source": {
+      "at": "2026-08-05T19:55:17+00:00",
+      "by": "thorb",
+      "note": "C:\\Users\\thorb\\Desktop\\govassist\\data\\schemes\\pmfme\\source\\scheme-guidelines.pdf",
+      "status": "approved"
+    },
+    "1_identity": {
+      "at": "2026-08-05T19:55:17+00:00",
+      "by": "thorb",
+      "note": "scheme-guidelines.pdf sha256:632c359d08289866abb104c642b0efb1bf9e007baf06b651a13fd0de47f90ce8",
+      "status": "approved"
+    },
+    "2_extraction": {
+      "at": "2026-08-05T19:55:20+00:00",
+      "by": "thorb",
+      "note": "33 pages, 65922 chars",
+      "status": "approved"
+    },
+    "3_segments": {
+      "at": "2026-08-05T19:55:33+00:00",
+      "by": "thorb",
+      "note": "11 segments",
+      "status": "approved"
+    },
+    "4_clauses": {
+      "at": "2026-08-05T20:01:49+00:00",
+      "by": "Codex",
+      "status": "approved"
+    },
+    "5_conditions": {
+      "at": "2026-08-05T20:01:54+00:00",
+      "by": "Codex",
+      "status": "approved"
+    }
+  },
+  "scheme": "pmfme"
+}

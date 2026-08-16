@@ -1,0 +1,58 @@
+{
+  "authority": "Department of Demonstration Affairs",
+  "conditions": [
+    {
+      "asks": "Do you or your family own cultivable farmland?",
+      "clause": "landholding-basic",
+      "expr": "profile.owns_cultivable_land == true",
+      "id": "landholding",
+      "reads": [
+        "owns_cultivable_land"
+      ]
+    },
+    {
+      "asks": "How old are you?",
+      "clause": "age-minimum",
+      "expr": "profile.age >= 18",
+      "id": "adult",
+      "reads": [
+        "age"
+      ]
+    },
+    {
+      "asks": "Did you or anyone in your family pay income tax last year?",
+      "clause": "exclusion-income-tax",
+      "expr": "profile.paid_income_tax_last_year == false",
+      "id": "not_income_tax_payer",
+      "reads": [
+        "paid_income_tax_last_year"
+      ]
+    },
+    {
+      "asks": "Are you a serving or retired government employee?",
+      "clause": "exclusion-government-employee",
+      "expr": "profile.is_government_employee == false",
+      "id": "not_government_employee",
+      "reads": [
+        "is_government_employee"
+      ]
+    }
+  ],
+  "decision": "ALL(conditions)",
+  "effective_from": "2024-04-01",
+  "effective_to": null,
+  "name_en": "Demo Welfare Scheme",
+  "scheme": "demo-scheme",
+  "sources": [
+    {
+      "checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "id": "guidelines-demo",
+      "pdf": "source/guidelines-demo.pdf",
+      "retrieved_at": "2026-08-06",
+      "txt": "source/guidelines-demo.txt",
+      "url": "https://example.invalid/guidelines-demo.pdf"
+    }
+  ],
+  "tier": 1,
+  "version": 1
+}

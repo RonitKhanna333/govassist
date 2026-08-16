@@ -1,0 +1,894 @@
+{
+  "edges": [
+    {
+      "from": "clause:branding-applicant-types",
+      "predicate": "BEARS_ON",
+      "to": "attribute:applicant_type"
+    },
+    {
+      "from": "clause:branding-applicant-types",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:branding-support-limit",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:branding-turnover-minimum",
+      "predicate": "BEARS_ON",
+      "to": "attribute:turnover_rs"
+    },
+    {
+      "from": "clause:branding-turnover-minimum",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:common-infrastructure-grant",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:common-infrastructure-hiring-basis",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:fpo-experience-minimum",
+      "predicate": "BEARS_ON",
+      "to": "attribute:years_experience"
+    },
+    {
+      "from": "clause:fpo-experience-minimum",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:fpo-grant-support",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:fpo-turnover-minimum",
+      "predicate": "BEARS_ON",
+      "to": "attribute:turnover_rs"
+    },
+    {
+      "from": "clause:fpo-turnover-minimum",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:grant-adjustment-after-three-years",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:individual-age-and-education",
+      "predicate": "BEARS_ON",
+      "to": "attribute:age"
+    },
+    {
+      "from": "clause:individual-age-and-education",
+      "predicate": "BEARS_ON",
+      "to": "attribute:passed_class_8"
+    },
+    {
+      "from": "clause:individual-age-and-education",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:individual-capital-subsidy",
+      "predicate": "BEARS_ON",
+      "to": "attribute:applicant_type"
+    },
+    {
+      "from": "clause:individual-capital-subsidy",
+      "predicate": "BEARS_ON",
+      "to": "attribute:own_contribution_percent"
+    },
+    {
+      "from": "clause:individual-capital-subsidy",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:individual-existing-unit",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_existing_micro_food_processing_unit"
+    },
+    {
+      "from": "clause:individual-existing-unit",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:individual-formalize-contribute-and-borrow",
+      "predicate": "BEARS_ON",
+      "to": "attribute:own_contribution_percent"
+    },
+    {
+      "from": "clause:individual-formalize-contribute-and-borrow",
+      "predicate": "BEARS_ON",
+      "to": "attribute:will_formalize"
+    },
+    {
+      "from": "clause:individual-formalize-contribute-and-borrow",
+      "predicate": "BEARS_ON",
+      "to": "attribute:will_take_bank_loan"
+    },
+    {
+      "from": "clause:individual-formalize-contribute-and-borrow",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:individual-identified-or-verified",
+      "predicate": "BEARS_ON",
+      "to": "attribute:identified_in_slup_or_verified"
+    },
+    {
+      "from": "clause:individual-identified-or-verified",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:individual-one-person-per-family",
+      "predicate": "BEARS_ON",
+      "to": "attribute:family_member_already_received_assistance"
+    },
+    {
+      "from": "clause:individual-one-person-per-family",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:individual-ownership-right",
+      "predicate": "BEARS_ON",
+      "to": "attribute:has_enterprise_ownership_right"
+    },
+    {
+      "from": "clause:individual-ownership-right",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:individual-unincorporated-under-ten-workers",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_unincorporated"
+    },
+    {
+      "from": "clause:individual-unincorporated-under-ten-workers",
+      "predicate": "BEARS_ON",
+      "to": "attribute:worker_count"
+    },
+    {
+      "from": "clause:individual-unincorporated-under-ten-workers",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:loan-documents-required",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:scheme-purpose",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:shg-individual-member-grant",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:shg-odop-experience",
+      "predicate": "BEARS_ON",
+      "to": "attribute:years_experience"
+    },
+    {
+      "from": "clause:shg-odop-experience",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:shg-own-funds-and-margin-money",
+      "predicate": "BEARS_ON",
+      "to": "attribute:own_contribution_percent"
+    },
+    {
+      "from": "clause:shg-own-funds-and-margin-money",
+      "predicate": "BEARS_ON",
+      "to": "attribute:working_capital_margin_percent"
+    },
+    {
+      "from": "clause:shg-own-funds-and-margin-money",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:shg-processing-members-only",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_currently_processing_food"
+    },
+    {
+      "from": "clause:shg-processing-members-only",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:shg-seed-capital",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "condition:applicant_age_and_education",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:individual-age-and-education"
+    },
+    {
+      "from": "condition:applicant_age_and_education",
+      "predicate": "TESTS",
+      "to": "attribute:age"
+    },
+    {
+      "from": "condition:applicant_age_and_education",
+      "predicate": "TESTS",
+      "to": "attribute:passed_class_8"
+    },
+    {
+      "from": "condition:applicant_has_ownership_right",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:individual-ownership-right"
+    },
+    {
+      "from": "condition:applicant_has_ownership_right",
+      "predicate": "TESTS",
+      "to": "attribute:has_enterprise_ownership_right"
+    },
+    {
+      "from": "condition:applicant_is_individual_unit",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:individual-capital-subsidy"
+    },
+    {
+      "from": "condition:applicant_is_individual_unit",
+      "predicate": "TESTS",
+      "to": "attribute:applicant_type"
+    },
+    {
+      "from": "condition:existing_micro_food_unit",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:individual-existing-unit"
+    },
+    {
+      "from": "condition:existing_micro_food_unit",
+      "predicate": "TESTS",
+      "to": "attribute:is_existing_micro_food_processing_unit"
+    },
+    {
+      "from": "condition:one_person_per_family_only",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:individual-one-person-per-family"
+    },
+    {
+      "from": "condition:one_person_per_family_only",
+      "predicate": "TESTS",
+      "to": "attribute:family_member_already_received_assistance"
+    },
+    {
+      "from": "condition:unincorporated_and_under_ten_workers",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:individual-unincorporated-under-ten-workers"
+    },
+    {
+      "from": "condition:unincorporated_and_under_ten_workers",
+      "predicate": "TESTS",
+      "to": "attribute:is_unincorporated"
+    },
+    {
+      "from": "condition:unincorporated_and_under_ten_workers",
+      "predicate": "TESTS",
+      "to": "attribute:worker_count"
+    },
+    {
+      "from": "condition:unit_identified_or_verified",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:individual-identified-or-verified"
+    },
+    {
+      "from": "condition:unit_identified_or_verified",
+      "predicate": "TESTS",
+      "to": "attribute:identified_in_slup_or_verified"
+    },
+    {
+      "from": "condition:willing_to_formalize_and_contribute",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:individual-formalize-contribute-and-borrow"
+    },
+    {
+      "from": "condition:willing_to_formalize_and_contribute",
+      "predicate": "TESTS",
+      "to": "attribute:own_contribution_percent"
+    },
+    {
+      "from": "condition:willing_to_formalize_and_contribute",
+      "predicate": "TESTS",
+      "to": "attribute:will_formalize"
+    },
+    {
+      "from": "condition:willing_to_formalize_and_contribute",
+      "predicate": "TESTS",
+      "to": "attribute:will_take_bank_loan"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "EXCLUDES",
+      "to": "clause:individual-one-person-per-family"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:branding-applicant-types"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:branding-support-limit"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:branding-turnover-minimum"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:common-infrastructure-grant"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:common-infrastructure-hiring-basis"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:fpo-experience-minimum"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:fpo-grant-support"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:fpo-turnover-minimum"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:grant-adjustment-after-three-years"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:individual-age-and-education"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:individual-capital-subsidy"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:individual-existing-unit"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:individual-formalize-contribute-and-borrow"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:individual-identified-or-verified"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:individual-one-person-per-family"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:individual-ownership-right"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:individual-unincorporated-under-ten-workers"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:loan-documents-required"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:scheme-purpose"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:shg-individual-member-grant"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:shg-odop-experience"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:shg-own-funds-and-margin-money"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:shg-processing-members-only"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:shg-seed-capital"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "PROVIDES",
+      "to": "clause:branding-support-limit"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "PROVIDES",
+      "to": "clause:common-infrastructure-grant"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "PROVIDES",
+      "to": "clause:fpo-grant-support"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "PROVIDES",
+      "to": "clause:individual-capital-subsidy"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "PROVIDES",
+      "to": "clause:shg-individual-member-grant"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "PROVIDES",
+      "to": "clause:shg-seed-capital"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "REQUIRES",
+      "to": "condition:applicant_age_and_education"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "REQUIRES",
+      "to": "condition:applicant_has_ownership_right"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "REQUIRES",
+      "to": "condition:applicant_is_individual_unit"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "REQUIRES",
+      "to": "condition:existing_micro_food_unit"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "REQUIRES",
+      "to": "condition:one_person_per_family_only"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "REQUIRES",
+      "to": "condition:unincorporated_and_under_ten_workers"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "REQUIRES",
+      "to": "condition:unit_identified_or_verified"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "REQUIRES",
+      "to": "condition:willing_to_formalize_and_contribute"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "REQUIRES_DOCUMENT",
+      "to": "clause:loan-documents-required"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "attribute:age",
+      "name": "age",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:applicant_type",
+      "name": "applicant_type",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:family_member_already_received_assistance",
+      "name": "family_member_already_received_assistance",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:has_enterprise_ownership_right",
+      "name": "has_enterprise_ownership_right",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:identified_in_slup_or_verified",
+      "name": "identified_in_slup_or_verified",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_currently_processing_food",
+      "name": "is_currently_processing_food",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_existing_micro_food_processing_unit",
+      "name": "is_existing_micro_food_processing_unit",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_unincorporated",
+      "name": "is_unincorporated",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:own_contribution_percent",
+      "name": "own_contribution_percent",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:passed_class_8",
+      "name": "passed_class_8",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:turnover_rs",
+      "name": "turnover_rs",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:will_formalize",
+      "name": "will_formalize",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:will_take_bank_loan",
+      "name": "will_take_bank_loan",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:worker_count",
+      "name": "worker_count",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:working_capital_margin_percent",
+      "name": "working_capital_margin_percent",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:years_experience",
+      "name": "years_experience",
+      "type": "Attribute"
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:branding-applicant-types",
+      "page": 12,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:branding-support-limit",
+      "page": 11,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:branding-turnover-minimum",
+      "page": 12,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:common-infrastructure-grant",
+      "page": 10,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "procedure",
+      "id": "clause:common-infrastructure-hiring-basis",
+      "page": 10,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:fpo-experience-minimum",
+      "page": 8,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:fpo-grant-support",
+      "page": 8,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:fpo-turnover-minimum",
+      "page": 8,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "procedure",
+      "id": "clause:grant-adjustment-after-three-years",
+      "page": 29,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:individual-age-and-education",
+      "page": 7,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:individual-capital-subsidy",
+      "page": 7,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:individual-existing-unit",
+      "page": 7,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:individual-formalize-contribute-and-borrow",
+      "page": 7,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:individual-identified-or-verified",
+      "page": 7,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:individual-one-person-per-family",
+      "page": 7,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:individual-ownership-right",
+      "page": 7,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:individual-unincorporated-under-ten-workers",
+      "page": 7,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "document",
+      "id": "clause:loan-documents-required",
+      "page": 29,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "definition",
+      "id": "clause:scheme-purpose",
+      "page": 4,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:shg-individual-member-grant",
+      "page": 9,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:shg-odop-experience",
+      "page": 9,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:shg-own-funds-and-margin-money",
+      "page": 9,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:shg-processing-members-only",
+      "page": 9,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:shg-seed-capital",
+      "page": 9,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "asks": "Are you at least 18 years old and at least VIII standard pass?",
+      "expr": "profile.age >= 18 and profile.passed_class_8 == true",
+      "id": "condition:applicant_age_and_education",
+      "type": "Condition"
+    },
+    {
+      "asks": "Do you have ownership rights over the enterprise?",
+      "expr": "profile.has_enterprise_ownership_right == true",
+      "id": "condition:applicant_has_ownership_right",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you applying as an individual micro food processing unit?",
+      "expr": "profile.applicant_type == \"individual\"",
+      "id": "condition:applicant_is_individual_unit",
+      "type": "Condition"
+    },
+    {
+      "asks": "Is your food processing unit already operating?",
+      "expr": "profile.is_existing_micro_food_processing_unit == true",
+      "id": "condition:existing_micro_food_unit",
+      "type": "Condition"
+    },
+    {
+      "asks": "Has anyone else in your family already received this financial assistance?",
+      "expr": "profile.family_member_already_received_assistance == false",
+      "id": "condition:one_person_per_family_only",
+      "type": "Condition"
+    },
+    {
+      "asks": "Is the enterprise unincorporated, and does it employ fewer than 10 workers?",
+      "expr": "profile.is_unincorporated == true and profile.worker_count < 10",
+      "id": "condition:unincorporated_and_under_ten_workers",
+      "type": "Condition"
+    },
+    {
+      "asks": "Has your unit been identified in the SLUP for an ODOP product or verified by the Resource Person?",
+      "expr": "profile.identified_in_slup_or_verified == true",
+      "id": "condition:unit_identified_or_verified",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you willing to formalize the unit, contribute at least 10% of the project cost, and take a bank loan?",
+      "expr": "profile.will_formalize == true and profile.own_contribution_percent >= 10 and profile.will_take_bank_loan == true",
+      "id": "condition:willing_to_formalize_and_contribute",
+      "type": "Condition"
+    },
+    {
+      "authority": "Ministry of Food Processing Industries",
+      "effective_from": null,
+      "effective_to": null,
+      "id": "scheme:pmfme",
+      "name": "PM Formalisation of Micro Food Processing Enterprises Scheme",
+      "tier": 1,
+      "type": "Scheme",
+      "version": 1
+    },
+    {
+      "checksum": "sha256:632c359d08289866abb104c642b0efb1bf9e007baf06b651a13fd0de47f90ce8",
+      "id": "source:scheme-guidelines",
+      "retrieved_at": "2026-08-05",
+      "type": "SourceDocument",
+      "url": "https://pmfme.mofpi.gov.in/newsletters/docs/SchemeGuidelines.pdf"
+    }
+  ],
+  "scheme": "pmfme",
+  "version": 1
+}

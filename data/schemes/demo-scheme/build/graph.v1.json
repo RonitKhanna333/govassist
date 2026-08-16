@@ -1,0 +1,283 @@
+{
+  "edges": [
+    {
+      "from": "clause:age-minimum",
+      "predicate": "BEARS_ON",
+      "to": "attribute:age"
+    },
+    {
+      "from": "clause:age-minimum",
+      "predicate": "FROM",
+      "to": "source:guidelines-demo"
+    },
+    {
+      "from": "clause:benefit-amount",
+      "predicate": "FROM",
+      "to": "source:guidelines-demo"
+    },
+    {
+      "from": "clause:documents-required",
+      "predicate": "FROM",
+      "to": "source:guidelines-demo"
+    },
+    {
+      "from": "clause:exclusion-government-employee",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_government_employee"
+    },
+    {
+      "from": "clause:exclusion-government-employee",
+      "predicate": "FROM",
+      "to": "source:guidelines-demo"
+    },
+    {
+      "from": "clause:exclusion-income-tax",
+      "predicate": "BEARS_ON",
+      "to": "attribute:paid_income_tax_last_year"
+    },
+    {
+      "from": "clause:exclusion-income-tax",
+      "predicate": "FROM",
+      "to": "source:guidelines-demo"
+    },
+    {
+      "from": "clause:landholding-basic",
+      "predicate": "BEARS_ON",
+      "to": "attribute:owns_cultivable_land"
+    },
+    {
+      "from": "clause:landholding-basic",
+      "predicate": "FROM",
+      "to": "source:guidelines-demo"
+    },
+    {
+      "from": "condition:adult",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:age-minimum"
+    },
+    {
+      "from": "condition:adult",
+      "predicate": "TESTS",
+      "to": "attribute:age"
+    },
+    {
+      "from": "condition:landholding",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:landholding-basic"
+    },
+    {
+      "from": "condition:landholding",
+      "predicate": "TESTS",
+      "to": "attribute:owns_cultivable_land"
+    },
+    {
+      "from": "condition:not_government_employee",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:exclusion-government-employee"
+    },
+    {
+      "from": "condition:not_government_employee",
+      "predicate": "TESTS",
+      "to": "attribute:is_government_employee"
+    },
+    {
+      "from": "condition:not_income_tax_payer",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:exclusion-income-tax"
+    },
+    {
+      "from": "condition:not_income_tax_payer",
+      "predicate": "TESTS",
+      "to": "attribute:paid_income_tax_last_year"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "EXCLUDES",
+      "to": "clause:exclusion-government-employee"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "EXCLUDES",
+      "to": "clause:exclusion-income-tax"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:age-minimum"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:benefit-amount"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:documents-required"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:exclusion-government-employee"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:exclusion-income-tax"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:landholding-basic"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "PROVIDES",
+      "to": "clause:benefit-amount"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "REQUIRES",
+      "to": "condition:adult"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "REQUIRES",
+      "to": "condition:landholding"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "REQUIRES",
+      "to": "condition:not_government_employee"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "REQUIRES",
+      "to": "condition:not_income_tax_payer"
+    },
+    {
+      "from": "scheme:demo-scheme",
+      "predicate": "REQUIRES_DOCUMENT",
+      "to": "clause:documents-required"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "attribute:age",
+      "name": "age",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_government_employee",
+      "name": "is_government_employee",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:owns_cultivable_land",
+      "name": "owns_cultivable_land",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:paid_income_tax_last_year",
+      "name": "paid_income_tax_last_year",
+      "type": "Attribute"
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:age-minimum",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:benefit-amount",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "document",
+      "id": "clause:documents-required",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:exclusion-government-employee",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:exclusion-income-tax",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:landholding-basic",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "asks": "How old are you?",
+      "expr": "profile.age >= 18",
+      "id": "condition:adult",
+      "type": "Condition"
+    },
+    {
+      "asks": "Do you or your family own cultivable farmland?",
+      "expr": "profile.owns_cultivable_land == true",
+      "id": "condition:landholding",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you a serving or retired government employee?",
+      "expr": "profile.is_government_employee == false",
+      "id": "condition:not_government_employee",
+      "type": "Condition"
+    },
+    {
+      "asks": "Did you or anyone in your family pay income tax last year?",
+      "expr": "profile.paid_income_tax_last_year == false",
+      "id": "condition:not_income_tax_payer",
+      "type": "Condition"
+    },
+    {
+      "authority": "Department of Demonstration Affairs",
+      "effective_from": "2024-04-01",
+      "effective_to": null,
+      "id": "scheme:demo-scheme",
+      "name": "Demo Welfare Scheme",
+      "tier": 1,
+      "type": "Scheme",
+      "version": 1
+    },
+    {
+      "checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "id": "source:guidelines-demo",
+      "retrieved_at": "2026-08-06",
+      "type": "SourceDocument",
+      "url": "https://example.invalid/guidelines-demo.pdf"
+    }
+  ],
+  "scheme": "demo-scheme",
+  "version": 1
+}

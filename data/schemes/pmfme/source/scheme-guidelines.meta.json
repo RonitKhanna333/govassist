@@ -1,0 +1,11 @@
+{
+  "id": "scheme-guidelines",
+  "url": "https://pmfme.mofpi.gov.in/newsletters/docs/SchemeGuidelines.pdf",
+  "local_file": "C:\\Users\\thorb\\Desktop\\govassist\\data\\schemes\\pmfme\\source\\scheme-guidelines.pdf",
+  "retrieved_at": "2026-08-05",
+  "checksum": "sha256:632c359d08289866abb104c642b0efb1bf9e007baf06b651a13fd0de47f90ce8",
+  "extractor": "pdfminer.six",
+  "pages": 33,
+  "characters": 65890,
+  "hand_corrected": false
+}

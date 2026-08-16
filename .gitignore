@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+data/.deps/
+
+# Drafts are working files: proposals awaiting human review, never committed.
+# Only reviewed scheme.md enters the corpus.
+data/schemes/*/scheme.draft.md
+data/schemes/*/draft-report.txt
+
+# Source PDFs and extracted .txt ARE committed on purpose -- they are the
+# provenance anchor. Do not add them here.
