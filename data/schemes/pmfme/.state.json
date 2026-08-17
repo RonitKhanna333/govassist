@@ -123,43 +123,43 @@
   },
   "conditions": {
     "applicant_age_and_education": {
-      "at": "2026-08-05T20:01:54+00:00",
-      "by": "Codex",
+      "at": "2026-08-17T10:13:12+00:00",
+      "by": "thorb",
       "status": "approved"
     },
     "applicant_has_ownership_right": {
-      "at": "2026-08-05T20:01:54+00:00",
-      "by": "Codex",
+      "at": "2026-08-17T10:13:12+00:00",
+      "by": "thorb",
       "status": "approved"
     },
     "applicant_is_individual_unit": {
-      "at": "2026-08-05T20:01:53+00:00",
-      "by": "Codex",
+      "at": "2026-08-17T10:13:11+00:00",
+      "by": "thorb",
       "status": "approved"
     },
     "existing_micro_food_unit": {
-      "at": "2026-08-05T20:01:53+00:00",
-      "by": "Codex",
+      "at": "2026-08-17T10:13:12+00:00",
+      "by": "thorb",
       "status": "approved"
     },
     "one_person_per_family_only": {
-      "at": "2026-08-05T20:01:54+00:00",
-      "by": "Codex",
+      "at": "2026-08-17T10:13:12+00:00",
+      "by": "thorb",
       "status": "approved"
     },
     "unincorporated_and_under_ten_workers": {
-      "at": "2026-08-05T20:01:53+00:00",
-      "by": "Codex",
+      "at": "2026-08-17T10:13:12+00:00",
+      "by": "thorb",
       "status": "approved"
     },
     "unit_identified_or_verified": {
-      "at": "2026-08-05T20:01:53+00:00",
-      "by": "Codex",
+      "at": "2026-08-17T10:13:12+00:00",
+      "by": "thorb",
       "status": "approved"
     },
     "willing_to_formalize_and_contribute": {
-      "at": "2026-08-05T20:01:54+00:00",
-      "by": "Codex",
+      "at": "2026-08-17T10:13:12+00:00",
+      "by": "thorb",
       "status": "approved"
     }
   },
@@ -195,8 +195,9 @@
       "status": "approved"
     },
     "5_conditions": {
-      "at": "2026-08-05T20:01:54+00:00",
-      "by": "Codex",
+      "at": "2026-08-17T10:13:12+00:00",
+      "by": "thorb",
+      "note": "reviewed via chat: 8 conditions shown with quote+expr; condition 1 (benefit-clause citing eligibility) explicitly confirmed fine-as-is",
       "status": "approved"
     }
   },
