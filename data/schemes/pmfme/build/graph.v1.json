@@ -11,6 +11,16 @@
       "to": "source:scheme-guidelines"
     },
     {
+      "from": "clause:branding-final-product-retail-pack",
+      "predicate": "BEARS_ON",
+      "to": "attribute:sold_in_retail_pack"
+    },
+    {
+      "from": "clause:branding-final-product-retail-pack",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
       "from": "clause:branding-support-limit",
       "predicate": "FROM",
       "to": "source:scheme-guidelines"
@@ -47,6 +57,31 @@
     },
     {
       "from": "clause:fpo-grant-support",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:fpo-own-funds-or-state-sanction",
+      "predicate": "BEARS_ON",
+      "to": "attribute:has_own_funds_or_state_sanction"
+    },
+    {
+      "from": "clause:fpo-own-funds-or-state-sanction",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:fpo-project-cost-not-exceeding-turnover",
+      "predicate": "BEARS_ON",
+      "to": "attribute:project_cost"
+    },
+    {
+      "from": "clause:fpo-project-cost-not-exceeding-turnover",
+      "predicate": "BEARS_ON",
+      "to": "attribute:turnover_rs"
+    },
+    {
+      "from": "clause:fpo-project-cost-not-exceeding-turnover",
       "predicate": "FROM",
       "to": "source:scheme-guidelines"
     },
@@ -132,6 +167,11 @@
     },
     {
       "from": "clause:individual-identified-or-verified",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:individual-land-cost-exclusion",
       "predicate": "FROM",
       "to": "source:scheme-guidelines"
     },
@@ -338,6 +378,11 @@
     {
       "from": "scheme:pmfme",
       "predicate": "HAS_CLAUSE",
+      "to": "clause:branding-final-product-retail-pack"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
       "to": "clause:branding-support-limit"
     },
     {
@@ -364,6 +409,16 @@
       "from": "scheme:pmfme",
       "predicate": "HAS_CLAUSE",
       "to": "clause:fpo-grant-support"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:fpo-own-funds-or-state-sanction"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:fpo-project-cost-not-exceeding-turnover"
     },
     {
       "from": "scheme:pmfme",
@@ -399,6 +454,11 @@
       "from": "scheme:pmfme",
       "predicate": "HAS_CLAUSE",
       "to": "clause:individual-identified-or-verified"
+    },
+    {
+      "from": "scheme:pmfme",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:individual-land-cost-exclusion"
     },
     {
       "from": "scheme:pmfme",
@@ -548,6 +608,11 @@
       "type": "Attribute"
     },
     {
+      "id": "attribute:has_own_funds_or_state_sanction",
+      "name": "has_own_funds_or_state_sanction",
+      "type": "Attribute"
+    },
+    {
       "id": "attribute:identified_in_slup_or_verified",
       "name": "identified_in_slup_or_verified",
       "type": "Attribute"
@@ -575,6 +640,16 @@
     {
       "id": "attribute:passed_class_8",
       "name": "passed_class_8",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:project_cost",
+      "name": "project_cost",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:sold_in_retail_pack",
+      "name": "sold_in_retail_pack",
       "type": "Attribute"
     },
     {
@@ -610,6 +685,15 @@
     {
       "clause_type": "eligibility",
       "id": "clause:branding-applicant-types",
+      "page": 12,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:branding-final-product-retail-pack",
       "page": 12,
       "tier": 1,
       "type": "Clause",
@@ -664,6 +748,24 @@
     {
       "clause_type": "benefit",
       "id": "clause:fpo-grant-support",
+      "page": 8,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:fpo-own-funds-or-state-sanction",
+      "page": 8,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:fpo-project-cost-not-exceeding-turnover",
       "page": 8,
       "tier": 1,
       "type": "Clause",
@@ -727,6 +829,15 @@
     {
       "clause_type": "eligibility",
       "id": "clause:individual-identified-or-verified",
+      "page": 7,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "procedure",
+      "id": "clause:individual-land-cost-exclusion",
       "page": 7,
       "tier": 1,
       "type": "Clause",

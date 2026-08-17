@@ -5,6 +5,12 @@
       "by": "Codex",
       "status": "approved"
     },
+    "branding-final-product-retail-pack": {
+      "at": "2026-08-17T10:34:40+00:00",
+      "by": "thorb",
+      "note": "completeness gap found in branding eligibility list (item iii); reference-only, not wired to conditions",
+      "status": "approved"
+    },
     "branding-support-limit": {
       "at": "2026-08-05T20:01:48+00:00",
       "by": "Codex",
@@ -33,6 +39,18 @@
     "fpo-grant-support": {
       "at": "2026-08-05T20:01:48+00:00",
       "by": "Codex",
+      "status": "approved"
+    },
+    "fpo-own-funds-or-state-sanction": {
+      "at": "2026-08-17T10:34:40+00:00",
+      "by": "thorb",
+      "note": "completeness gap found in FPO eligibility list (item v); reference-only, not wired to conditions",
+      "status": "approved"
+    },
+    "fpo-project-cost-not-exceeding-turnover": {
+      "at": "2026-08-17T10:34:40+00:00",
+      "by": "thorb",
+      "note": "completeness gap found in FPO eligibility list (item iii); reference-only, not wired to conditions -- see scope note",
       "status": "approved"
     },
     "fpo-turnover-minimum": {
@@ -68,6 +86,12 @@
     "individual-identified-or-verified": {
       "at": "2026-08-05T20:01:48+00:00",
       "by": "Codex",
+      "status": "approved"
+    },
+    "individual-land-cost-exclusion": {
+      "at": "2026-08-17T10:28:24+00:00",
+      "by": "thorb",
+      "note": "added to fill a completeness gap found during Gate 4 review (source item x, individual-unit eligibility list, was originally skipped)",
       "status": "approved"
     },
     "individual-one-person-per-family": {

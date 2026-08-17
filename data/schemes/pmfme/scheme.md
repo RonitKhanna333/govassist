@@ -169,6 +169,24 @@ tests:
 
 **Aliases:** i own the unit · ownership rights of enterprise · unit belongs to me · enterprise ownership
 
+## individual-land-cost-exclusion
+
+```yaml
+type: procedure
+source: scheme-guidelines
+page: 7
+tests: []
+```
+
+> x)  Cost of the land should not be included in the Project cost. Cost of 
+> the  ready  built  as  well  as  long  lease  or  rental  workshed  could  be 
+> included in the project cost. Lease rental of workshed to be included 
+> in the project cost should be for a maximum period of 3 years only.
+
+**Plain:** Land cost cannot be counted as part of the project cost. Built or leased/rented workshed cost can be included, but rented workshed cost only counts for up to 3 years.
+
+**Aliases:** does land count · can I include the cost of my land · workshed rent counted · shed lease in project cost
+
 ## individual-age-and-education
 
 ```yaml
@@ -276,6 +294,41 @@ tests:
 **Plain:** The members should have at least 3 years of knowledge and experience with the product.
 
 **Aliases:** 3 years experience · members know the product · minimum experience for fpo · product handling experience
+
+## fpo-project-cost-not-exceeding-turnover
+
+```yaml
+type: eligibility
+source: scheme-guidelines
+page: 8
+tests:
+- project_cost
+- turnover_rs
+```
+
+> iii)  The cost of the project proposed should not be larger than the present turnover;
+
+**Plain:** The proposed project cost cannot be more than the FPO/cooperative's current turnover.
+
+**Aliases:** project cost vs turnover · is my project too expensive for our turnover · cost cannot exceed turnover
+
+## fpo-own-funds-or-state-sanction
+
+```yaml
+type: eligibility
+source: scheme-guidelines
+page: 8
+tests:
+- has_own_funds_or_state_sanction
+```
+
+> v)  The cooperative/FPO should have sufficient internal resources or sanction from 
+> the State Government to meet 10% of the project cost and margin money for 
+> working capital;
+
+**Plain:** The FPO or cooperative must have its own funds, or a State Government sanction, covering 10% of the project cost plus working-capital margin money.
+
+**Aliases:** do we have enough own funds · state government sanction letter · 10 percent contribution for fpo · margin money for working capital
 
 ## shg-seed-capital
 
@@ -433,6 +486,22 @@ tests:
 **Plain:** Branding and marketing assistance requires the product to have a minimum turnover of Rs.5 crore.
 
 **Aliases:** 5 crore turnover · branding assistance turnover · product turnover threshold · marketing support eligibility
+
+## branding-final-product-retail-pack
+
+```yaml
+type: eligibility
+source: scheme-guidelines
+page: 12
+tests:
+- sold_in_retail_pack
+```
+
+> iii)  The final product should be the one to be sold to the consumer in retail pack;
+
+**Plain:** The final product must be one that is sold to consumers in a retail pack, not in bulk.
+
+**Aliases:** sold in retail packaging · consumer retail pack · not bulk sale · packaged product for branding support
 
 ## branding-applicant-types
 
