@@ -6,6 +6,12 @@ is the service that serves them. It never reads `scheme.md` directly and never
 trusts anything the corpus toolchain hasn't already validated — the backend's
 job is to serve verified data, not to re-verify it.
 
+**Provider decision, locked:** the LLM is Groq inference, nothing else. Every
+other GraphRAG dependency — embeddings, vector search, graph storage, graph
+traversal — runs locally, in-process or in the same Postgres, with no external
+API call on that path. §"LLM provider" and §"Embeddings, locally" below cover
+what that actually requires; it's more than picking a model name.
+
 Two things carry over from Phase 1 by design, not by convenience:
 
 1. **`data/scripts/grammar.py` is the rule engine.** It's a restricted-AST
@@ -78,15 +84,79 @@ api/
 │   ├── router.py        scheme | ITR (stub) | GST (stub)
 │   ├── composer.py       drafts from an evidence set, never from memory
 │   ├── verifier.py       claim-by-claim check against the same evidence set
-│   ├── llm.py             provider abstraction (Gemini / Groq free tier)
+│   ├── llm.py             Groq client, two model tiers (below), no other provider
 │   └── prompts/            versioned files, never inline strings
 ├── language/           LanguageService, Bhashini provider, protect.py, round-trip
+├── embeddings/
+│   └── local.py          sentence-transformers, in-process, no network call
 ├── db/
 │   ├── models.py        graph_nodes, graph_edges, clauses, scheme_versions,
 │   │                     sessions (TTL), translation/audio cache
 │   └── migrations/
 └── main.py
 ```
+
+## LLM provider — Groq, two tiers
+
+Groq's free tier (checked against current published limits, not assumed):
+30 requests/minute, a token-per-minute budget that varies 6K–30K by model, and
+a daily request cap that varies 1K–14,400 by model<sup>†</sup>. That variance
+is the actual design input — a single model choice either wastes quality
+budget on cheap calls or burns the request cap on expensive ones. Two tiers,
+picked by task, both configured in `llm.py` behind the same interface so
+swapping either later is a config change:
+
+| Tier | Model | Used by | Why |
+|---|---|---|---|
+| Fast | `llama-3.1-8b-instant` | NLU/slot-filler, router | High call volume (every user turn touches these), free-tier limits are generous (14,400 req/day), and the task is extraction, not reasoning — an 8B model is enough to pull `age: 25` out of a sentence. |
+| Reasoning | `llama-3.3-70b-versatile` | Composer, verifier | Lower request budget (~1,000/day free tier), but these are the two places an LLM can actually change what a user is told, so quality matters more than throughput here. |
+
+Router and NLU together are maybe 2 calls per turn; composer + verifier are 2
+more, only on turns that reach a decision. At that rate the 70B tier's daily
+cap is the actual ceiling on how much live demo/dev traffic the free tier
+supports — worth watching once real usage starts, and worth the prebaked
+answer cache (already planned for TTS/translation) covering the composer's
+output too, not just voice.
+
+Groq also offers free Whisper transcription (2,000 requests/day)<sup>†</sup>.
+Not adopted here — Indic ASR quality is the specific thing Bhashini is built
+for, and swapping in a general-purpose Whisper endpoint for Punjabi/Tamil
+voice input would be trading a purpose-built provider for a generic one on
+exactly the axis that matters. Noted as an option if Bhashini's free tier
+ever becomes the binding constraint, not adopted now.
+
+<sup>†</sup> Free-tier numbers change; re-check at
+[groq.com](https://groq.com) before relying on a specific figure in a demo.
+
+## Embeddings, locally — the other half of "GraphRAG handled locally"
+
+The instruction to keep GraphRAG local isn't only about not using Neo4j — the
+embedding step was the implicit gap in the first draft of this doc, and it's
+worth pinning explicitly:
+
+- **Embedding model:** `sentence-transformers/all-MiniLM-L6-v2`, run
+  in-process in the FastAPI service (or a small offline batch job on
+  `clauses.jsonl`) via `embeddings/local.py`. ~90MB, CPU-fast, no GPU, no
+  network call — it fits the "no dedicated GPU or paid API budget" constraint
+  exactly, and it's the most battle-tested small model for exactly this job.
+  Kept behind a provider interface, like every other swappable piece, so a
+  stronger local model (Qwen3-Embedding-0.6B, ~1.5GB, better quality) is a
+  config change if quality ever demands it.
+- **Vector search:** pgvector, in the same Postgres the graph tables already
+  live in. No separate vector database.
+- **Graph storage and traversal:** Postgres tables + recursive CTEs, as
+  already designed. No Neo4j, no managed graph service.
+
+One consequence worth stating: `all-MiniLM-L6-v2` is English-trained. Since
+the flow already translates every query to English before it reaches
+retrieval (§"Basic flow"), that's not a gap — but it does mean
+`embedding_text` (`plain` + `aliases`) should stay English going forward,
+matching what pmfme's actual clauses already do. The clause spec technically
+allows native-script aliases (Hindi/Punjabi/Tamil phrasings) as retrieval
+bait; with a local English embedding model, mixing those into
+`embedding_text` would degrade the embedding rather than help it. If
+native-script aliases are wanted later for some other purpose, they need
+their own field, not a blend into the one an English-only model reads.
 
 ## GraphRAG
 
