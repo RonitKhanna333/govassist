@@ -6,6 +6,10 @@ venv/
 *.egg-info/
 data/.deps/
 
+# Local dev database (DATABASE_URL unset -> SQLite here). Real deployments
+# point DATABASE_URL at Neon/Postgres; nothing about this file is corpus.
+govassist.db
+
 # Drafts are working files: proposals awaiting human review, never committed.
 # Only reviewed scheme.md enters the corpus.
 data/schemes/*/scheme.draft.md
