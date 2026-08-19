@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "govassist-corpus"
 version = "0.1.0"
@@ -17,3 +21,11 @@ dev = ["pytest>=8.0"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["data/scripts", "."]
+
+[tool.setuptools.packages.find]
+# data/scripts/ is deliberately flat, non-package CLI tooling (see its own
+# docstrings) -- reached via pytest's pythonpath above, never pip-installed.
+# Only api/ is a real installable package. Without this, setuptools' flat-
+# layout auto-discovery finds "api" and "data" as two ambiguous top-level
+# packages and refuses to guess, and `pip install -e` fails outright.
+include = ["api*"]
