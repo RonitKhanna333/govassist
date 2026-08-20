@@ -13,10 +13,12 @@ dependencies = [
     "requests>=2.31.0",
     "PyYAML>=6.0",
     "SQLAlchemy>=2.0",
+    "fastapi>=0.110",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = ["pytest>=8.0", "httpx>=0.27"]
+serve = ["uvicorn>=0.29"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -29,3 +31,11 @@ pythonpath = ["data/scripts", "."]
 # layout auto-discovery finds "api" and "data" as two ambiguous top-level
 # packages and refuses to guess, and `pip install -e` fails outright.
 include = ["api*"]
+
+[tool.setuptools.package-data]
+# .txt prompt files aren't Python source, so setuptools won't include them
+# by default. Not load-bearing for `pip install -e` (editable installs read
+# straight from the source tree) but would silently break a real `pip
+# install .` or a container build that doesn't use -e -- worth getting right
+# now rather than relearning the pip-install-e lesson a second time.
+"api.agents.prompts" = ["*.txt"]
