@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_API_BASE": "https://govassist-api-ronit-khannas-projects.vercel.app"
+    }
+  }
+}
