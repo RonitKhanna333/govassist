@@ -14,6 +14,7 @@ dependencies = [
     "PyYAML>=6.0",
     "SQLAlchemy>=2.0",
     "fastapi>=0.110",
+    "PyJWT>=2.8",
 ]
 
 [project.optional-dependencies]

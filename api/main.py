@@ -21,6 +21,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from api.auth.router import router as auth_router
 from api.routers.chat import router as chat_router
 
 DEFAULT_ORIGINS = [
@@ -50,3 +51,4 @@ app.add_middleware(
 )
 
 app.include_router(chat_router)
+app.include_router(auth_router)

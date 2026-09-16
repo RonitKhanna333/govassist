@@ -45,7 +45,19 @@ def get_engine(url: str | None = None):
     url = normalize_url(url or os.environ.get("DATABASE_URL") or default_sqlite_url())
 
     if url.startswith("sqlite"):
-        return create_engine(url, connect_args={"check_same_thread": False})
+        connect_args = {"check_same_thread": False}
+
+        # In-memory SQLite gives every *connection* its own empty database.
+        # With a normal pool, a request handled on FastAPI's threadpool gets a
+        # different connection from the one the tables were created on, and
+        # the query fails with "no such table" against a database that was
+        # definitely set up. StaticPool keeps exactly one shared connection,
+        # which is what makes :memory: usable for tests at all.
+        if ":memory:" in url or "mode=memory" in url:
+            from sqlalchemy.pool import StaticPool
+            return create_engine(url, connect_args=connect_args, poolclass=StaticPool)
+
+        return create_engine(url, connect_args=connect_args)
 
     # Serverless: every cold start opens a new connection and the process may
     # be frozen between requests, so a long-lived pool is a liability. Recycle
