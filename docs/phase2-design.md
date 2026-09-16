@@ -81,11 +81,16 @@ api/
 │   ├── traverse.py      recursive CTEs, hop-capped, typed-edge whitelist
 │   └── retrieval.py     hybrid entry point: pgvector seed -> graph traversal
 ├── agents/
-│   ├── router.py        scheme | ITR (stub) | GST (stub)
+│   ├── router.py        scheme | ITR (stub) | GST (stub) -- keyword-based, see below
+│   ├── nlu.py             slot-filler, FAST tier
 │   ├── composer.py       drafts from an evidence set, never from memory
 │   ├── verifier.py       claim-by-claim check against the same evidence set
+│   ├── orchestrate.py      compose -> verify -> recompose once -> fallback
 │   ├── llm.py             Groq client, two model tiers (below), no other provider
-│   └── prompts/            versioned files, never inline strings
+│   └── prompts/            versioned .txt files, never inline strings
+├── routers/chat.py     POST /chat, GET /health
+├── deps.py               get_llm() -- the seam tests override to avoid real calls
+├── main.py                FastAPI app
 ├── language/           LanguageService, Bhashini provider, protect.py, round-trip
 ├── embeddings/
 │   └── local.py          sentence-transformers, in-process, no network call
@@ -238,43 +243,86 @@ composer actually used, which quietly defeats the entire verification step.
 
 ## Agents
 
-Five components, each with one job:
+Five components, each with one job. **Status as of the `/chat` endpoint
+(`api/routers/chat.py`), not just design intent:**
 
-1. **NLU / slot-filler** — extracts profile attributes the user *stated about
-   themselves* from free text into the typed vocabulary the graph already
-   uses (`age`, `annual_income`, ...). Never asserts a fact about a rule,
-   only about the person.
-2. **Router** — scheme today; ITR and GST return "not yet supported" stubs
-   that exercise the same interface so they're a data problem later, not an
-   architecture change.
-3. **Composer** (LLM) — drafts the English answer from the evidence set the
-   graph returned and nothing else. The prompt says this explicitly and says
-   what to do when the evidence is thin: ask, don't fill the gap.
-4. **Verifier** (LLM) — decomposes the draft into atomic claims; each must
-   match either a rule-engine-emitted fact (with its condition id) or an
-   entailment match against a clause in the same evidence set (with its
-   clause id). Unsupported claims get one recompose pass, then the honest
-   "not confident" fallback.
-5. **Round-trip translation check** — reuses `LanguageService` from the
-   original multilingual design: back-translate the localized answer,
-   compare, degrade to English on drift.
+1. **NLU / slot-filler** (`api/agents/nlu.py`) — ✅ built, FAST tier. Extracts
+   profile attributes the user *stated about themselves* from free text into
+   the typed vocabulary a scheme's conditions actually read
+   (`api.rules.engine.known_attributes`). Never asserts a fact about a rule,
+   only about the person; a hallucinated key is dropped even if the model
+   returns one, as defense in depth against the prompt not being followed.
+2. **Router** (`api/agents/router.py`) — ✅ built, **but keyword-based, not
+   LLM-based**, and that's a deliberate deviation from the original framing,
+   not an oversight. There is exactly one domain with real data behind it
+   today; classifying "which of three domains" with an LLM call buys nothing
+   when two of the three always return the same stub regardless of how
+   confident the classification was. Revisit the day a second domain (ITR or
+   GST) has a real rule pack to route to — the module docstring says so.
+3. **Composer** (`api/agents/composer.py`, LLM, REASONING tier) — ✅ built.
+   Drafts from `api.rules.engine.decide()`'s own resolved `citations` — for
+   the core eligibility answer, that citation resolution already **is** the
+   evidence set; no separate graph call is needed to re-fetch what the rule
+   engine already produced. (The five graph retrieval patterns in the
+   section above remain the evidence source for the *other* question types —
+   "what do I need to bring," "why was I excluded," the cross-scheme reverse
+   lookup — none of which `/chat` routes to yet. That's the next natural
+   extension, not built here.)
+4. **Verifier** (`api/agents/verifier.py`, LLM, REASONING tier) — ✅ built.
+   Decomposes the draft into atomic claims against the same citation set the
+   composer used, via `api/agents/orchestrate.py`'s compose → verify →
+   recompose-once → fallback loop. One outcome worth naming explicitly: the
+   verifier itself failing to run (bad LLM response, network error) is
+   treated as **not verified**, never as "verified, and it's fine" — an
+   unchecked answer must never ship silently just because the check itself
+   broke.
+5. **Round-trip translation check** — not built. Still `LanguageService`
+   from the original multilingual design; `/chat` today is English-only text,
+   no ASR/NMT/TTS layer wired in yet.
 
 The LLM sits in exactly two places that can affect what a user is told
 (composer, verifier) and never in the place that decides eligibility. That
-split is the whole architecture in one sentence.
+split is the whole architecture in one sentence, and it's now enforced by
+running code, not only by this document: `api/rules/engine.py` never
+imports `api/agents/llm.py`, and nothing in `api/agents/` can write to a
+`Decision`.
 
-## What's buildable this week, against real data
+**Provider used for every LLM call: Groq, and only Groq**
+(`api/agents/llm.py`), exactly as specified above — `llama-3.1-8b-instant`
+for NLU, `llama-3.3-70b-versatile` for composer/verifier, temperature 0. No
+call in this codebase can honestly be called *tested against the real Groq
+API* without a real `GROQ_API_KEY` supplied by whoever runs it — every
+automated test here (`tests/api/test_agents.py`, `test_llm.py`,
+`test_chat_endpoint.py`) uses a scripted fake LLM instead, which verifies
+the *logic* (the recompose loop, the fallback conditions, what reaches the
+prompt) without touching the network. That's a real and stated scope
+boundary, not a claim of end-to-end verification against Groq itself.
 
-`data/schemes/pmfme/build/graph.v1.json` and `rules.v1.json` already exist and
-are committed. The first real milestone isn't a stub — it's:
+## What's built, against real data — not just the first milestone anymore
+
+`POST /chat` (`api/main.py`, `api/routers/chat.py`) is a real, running
+FastAPI endpoint, verified three ways against the actual committed `pmfme`
+corpus:
 
 ```bash
-python api/graph/sync.py --scheme pmfme     # load the real graph into Postgres
-python api/rules/engine.py --scheme pmfme --profile '{"age": 25, ...}'
+python -m pytest tests/ -q                       # 242 passed, no network, no key
+uvicorn api.main:app --reload                     # then POST /chat for real
 ```
 
-and getting back an actual `ELIGIBLE` / `NOT_ELIGIBLE` / `INSUFFICIENT_INFO`
-verdict with real clause citations, before any agent or LLM code is written
-at all. The rule engine and the graph don't need the AI layer to be testable
-— that's deliberate, and it's the fastest way to find out if `grammar.py`'s
-interface needs to change before agent code is built on top of it.
+- An empty profile → `INSUFFICIENT_INFO`, a real next question — **no LLM
+  call happens on this path at all**, since the rule engine already has
+  everything it needs to ask.
+- A fully-qualifying profile → `ELIGIBLE`, 8 real citations resolved from
+  the actual PMFME guidelines PDF.
+- The same profile with `age: 16` → `NOT_ELIGIBLE`, citing the actual
+  age-and-education clause.
+- Run live with no `GROQ_API_KEY` set at all: the verdict and citations are
+  still correct (the rule engine needs no key), and the `answer` field
+  degrades to the honest "I don't have grounded facts to explain this with"
+  fallback rather than crashing or hanging — demonstrated against the real
+  running server, not mocked.
+
+What `/chat` does **not** do yet: voice, translation, any domain but scheme,
+or routing to the four graph retrieval patterns beyond eligibility. Each of
+those is a bounded next slice on top of a foundation that's now genuinely
+exercised, not just designed.

@@ -85,6 +85,17 @@ def load_clauses(scheme: str, root: Path) -> dict[str, dict]:
     return clauses
 
 
+def known_attributes(rules: dict) -> list[str]:
+    """Every attribute this scheme's conditions read -- the vocabulary the
+    NLU slot-filler is allowed to extract into, and nothing more."""
+    seen: list[str] = []
+    for condition in rules["conditions"]:
+        for attr in condition.get("reads", []):
+            if attr not in seen:
+                seen.append(attr)
+    return seen
+
+
 def decide(scheme: str, profile: dict, root: Path | None = None) -> EngineResult:
     """Evaluate `profile` against `scheme`'s current committed rule pack.
 
