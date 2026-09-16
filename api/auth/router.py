@@ -22,7 +22,7 @@ from api.auth.security import (
     hash_password,
     verify_password,
 )
-from api.db import get_session_factory, init_db
+from api.db import DatabaseConfigError, get_session_factory, init_db
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -31,8 +31,14 @@ MIN_PASSWORD_LENGTH = 10
 
 
 def get_sessions():
-    init_db()
-    return get_session_factory()
+    """Accounts need a real database. On a serverless host without
+    DATABASE_URL that's a configuration problem, and saying so beats the
+    bare 500 a read-only filesystem would otherwise produce."""
+    try:
+        init_db()
+        return get_session_factory()
+    except DatabaseConfigError as exc:
+        raise HTTPException(503, str(exc)) from exc
 
 
 def _public(user: User) -> dict:

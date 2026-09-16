@@ -41,8 +41,38 @@ def normalize_url(url: str) -> str:
     return url
 
 
+def is_serverless() -> bool:
+    return bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+
+
+class DatabaseConfigError(RuntimeError):
+    """Raised when the environment can't support the database we'd fall back to."""
+
+
+def resolve_url(url: str | None = None) -> str:
+    configured = url or os.environ.get("DATABASE_URL")
+    if configured:
+        return normalize_url(configured)
+
+    # A serverless filesystem is read-only outside /tmp, so the SQLite
+    # fallback can't even create its file -- sqlite raises OperationalError
+    # deep inside the first query and it surfaces as a bare 500 with no clue
+    # what went wrong. /tmp would "work" and then silently lose every account
+    # when the instance recycles, which is worse than failing. So: say what's
+    # missing, plainly.
+    if is_serverless():
+        raise DatabaseConfigError(
+            "DATABASE_URL is not set. This runs on a serverless host with a "
+            "read-only filesystem, so there is no local database to fall back "
+            "to. Set DATABASE_URL to a pooled Postgres connection string "
+            "(Neon's '-pooler' host) -- see docs/deploy.md."
+        )
+
+    return normalize_url(default_sqlite_url())
+
+
 def get_engine(url: str | None = None):
-    url = normalize_url(url or os.environ.get("DATABASE_URL") or default_sqlite_url())
+    url = resolve_url(url)
 
     if url.startswith("sqlite"):
         connect_args = {"check_same_thread": False}
