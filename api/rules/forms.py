@@ -81,6 +81,27 @@ class Field:
         }
 
 
+YES_NO = {
+    "en": ("Yes", "No"),
+    "hi": ("हाँ", "नहीं"),
+    "pa": ("ਹਾਂ", "ਨਹੀਂ"),
+    "ta": ("ஆம்", "இல்லை"),
+}
+
+
+def localized_entry(attribute: str, locale: str = "en") -> dict:
+    """The registry entry for `attribute`, with the `locale` wording laid over
+    the English. A missing translation falls back to English per field, never
+    to the raw attribute name -- a question in the wrong language is a bug,
+    but `worker_count` on a Tamil screen is a worse one."""
+    entry = dict(attribute_registry().get(attribute, {}))
+    translated = (entry.pop("i18n", None) or {}).get(locale) or {}
+    for key, value in translated.items():
+        if value:
+            entry[key] = value
+    return entry
+
+
 def _attribute_name(node: ast.AST) -> str | None:
     if (isinstance(node, ast.Attribute)
             and isinstance(node.value, ast.Name)
@@ -97,7 +118,7 @@ def _literal(node: ast.AST):
     return None
 
 
-def derive_fields(expr: str) -> list[Field]:
+def derive_fields(expr: str, locale: str = "en") -> list[Field]:
     """One Field per `profile.<attr>` comparison in `expr`, in source order."""
     tree = parse(expr)  # reuses the same restricted parser the engine trusts
     fields: list[Field] = []
@@ -137,7 +158,7 @@ def derive_fields(expr: str) -> list[Field]:
         else:
             continue
 
-        entry = attribute_registry().get(attribute, {})
+        entry = localized_entry(attribute, locale)
         found.ask = entry.get("ask")
         found.help = entry.get("help")
         found.unit = entry.get("unit")
@@ -149,10 +170,10 @@ def derive_fields(expr: str) -> list[Field]:
     return fields
 
 
-def unresolved_fields(expr: str, profile: dict) -> list[Field]:
+def unresolved_fields(expr: str, profile: dict, locale: str = "en") -> list[Field]:
     """Only the fields this profile hasn't answered yet."""
     return [
-        f for f in derive_fields(expr)
+        f for f in derive_fields(expr, locale)
         if profile.get(f.attribute) is None
     ]
 
@@ -201,7 +222,7 @@ def answer_yes_no(expr: str, profile: dict, affirmative: bool) -> dict:
 OTHER = "__other__"
 
 
-def summarize_profile(profile: dict) -> list[dict]:
+def summarize_profile(profile: dict, locale: str = "en") -> list[dict]:
     """The answers so far, in words a person would recognise.
 
     Raw state is `{"applicant_type": "__other__", "worker_count": 9}`.
@@ -209,20 +230,25 @@ def summarize_profile(profile: dict) -> list[dict]:
     into the interface -- which, for an app whose whole premise is replacing
     bureaucratic vocabulary, is the same failure in a different font.
     """
-    registry = attribute_registry()
+    yes, no = YES_NO.get(locale, YES_NO["en"])
     rows: list[dict] = []
 
     for attribute, value in profile.items():
-        entry = registry.get(attribute, {})
+        entry = localized_entry(attribute, locale)
         label = entry.get("label") or attribute.replace("_", " ").capitalize()
 
         if value is True:
-            shown = "Yes"
+            shown = yes
         elif value is False:
-            shown = "No"
+            shown = no
         elif value == OTHER:
             # Never show the sentinel. What they told us is a negative.
-            shown = "No"
+            shown = no
+        elif entry.get("affirmative_is") is not None and value == entry["affirmative_is"]:
+            # A single-option choice ("applying on your own?") was answered
+            # yes. Its stored value is the rule's option name -- `individual`
+            # -- which is an internal identifier, not something they said.
+            shown = yes
         elif entry.get("unit"):
             shown = f"{value} {entry['unit']}"
         else:

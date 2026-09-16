@@ -22,70 +22,286 @@
     "docs/phase2-design.md), so a question written once is reused -- which also",
     "means a careless edit affects every scheme that reads that attribute.",
     "",
-    "`label` is a short noun phrase for the 'what I know so far' summary -- a question reads wrong there, and a raw attribute name reads worse."
+    "`label` is a short noun phrase for the 'what I know so far' summary -- a question reads wrong there, and a raw attribute name reads worse.",
+    "",
+    "`i18n` holds the Hindi, Punjabi and Tamil wording. Static on purpose: the",
+    "questions are a fixed set, so translating them per request would add",
+    "latency and a model dependency for text that never changes. The polarity",
+    "rule applies in every language -- 'already' must survive as pehle hi /",
+    "pehlan hi / erkanave -- and a native speaker should review any edit."
   ],
   "applicant_type": {
     "ask": "Are you applying for your own business, on your own?",
     "help": "Choose this if the business is yours. Groups, cooperatives and companies apply a different way.",
     "affirmative_is": "individual",
-    "label": "Applying on your own"
+    "label": "Applying on your own",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप अपने खुद के काम के लिए, अकेले आवेदन कर रहे हैं?",
+        "help": "अगर काम आपका अपना है तो यह चुनें। समूह, सहकारी समिति और कंपनियाँ अलग तरीके से आवेदन करती हैं।",
+        "label": "खुद के लिए आवेदन"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਆਪਣੇ ਖ਼ੁਦ ਦੇ ਕੰਮ ਲਈ, ਇਕੱਲੇ ਅਰਜ਼ੀ ਦੇ ਰਹੇ ਹੋ?",
+        "help": "ਜੇ ਕੰਮ ਤੁਹਾਡਾ ਆਪਣਾ ਹੈ ਤਾਂ ਇਹ ਚੁਣੋ। ਸਮੂਹ, ਸਹਿਕਾਰੀ ਸਭਾਵਾਂ ਅਤੇ ਕੰਪਨੀਆਂ ਵੱਖਰੇ ਤਰੀਕੇ ਨਾਲ ਅਰਜ਼ੀ ਦਿੰਦੀਆਂ ਹਨ।",
+        "label": "ਆਪਣੇ ਲਈ ਅਰਜ਼ੀ"
+      },
+      "ta": {
+        "ask": "உங்கள் சொந்தத் தொழிலுக்காக நீங்களே தனியாக விண்ணப்பிக்கிறீர்களா?",
+        "help": "தொழில் உங்களுடையது என்றால் இதைத் தேர்ந்தெடுங்கள். குழுக்கள், கூட்டுறவுச் சங்கங்கள், நிறுவனங்கள் வேறு வழியில் விண்ணப்பிக்கின்றன.",
+        "label": "சொந்தமாக விண்ணப்பம்"
+      }
+    }
   },
   "is_existing_micro_food_processing_unit": {
     "ask": "Do you already make, process or pack food to sell?",
     "help": "For example: grinding flour, making pickles or papad, pressing oil, packing spices, a small bakery or dairy. It counts even if it is small or run from home.",
-    "label": "Already making food to sell"
+    "label": "Already making food to sell",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप पहले से बेचने के लिए खाने का सामान बनाते, तैयार करते या पैक करते हैं?",
+        "help": "जैसे: आटा पीसना, अचार या पापड़ बनाना, तेल निकालना, मसाले पैक करना, छोटी बेकरी या डेयरी। छोटा हो या घर से चलता हो, तब भी गिना जाएगा।",
+        "label": "पहले से खाने का सामान बनाते हैं"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਪਹਿਲਾਂ ਹੀ ਵੇਚਣ ਲਈ ਖਾਣ ਦਾ ਸਮਾਨ ਬਣਾਉਂਦੇ, ਤਿਆਰ ਕਰਦੇ ਜਾਂ ਪੈਕ ਕਰਦੇ ਹੋ?",
+        "help": "ਜਿਵੇਂ: ਆਟਾ ਪੀਹਣਾ, ਅਚਾਰ ਜਾਂ ਪਾਪੜ ਬਣਾਉਣਾ, ਤੇਲ ਕੱਢਣਾ, ਮਸਾਲੇ ਪੈਕ ਕਰਨਾ, ਛੋਟੀ ਬੇਕਰੀ ਜਾਂ ਡੇਅਰੀ। ਛੋਟਾ ਹੋਵੇ ਜਾਂ ਘਰੋਂ ਚੱਲਦਾ ਹੋਵੇ, ਤਾਂ ਵੀ ਗਿਣਿਆ ਜਾਵੇਗਾ।",
+        "label": "ਪਹਿਲਾਂ ਹੀ ਖਾਣ ਦਾ ਸਮਾਨ ਬਣਾਉਂਦੇ ਹੋ"
+      },
+      "ta": {
+        "ask": "விற்பதற்காக ஏற்கனவே உணவுப் பொருட்களைத் தயாரிக்கிறீர்களா, பதப்படுத்துகிறீர்களா அல்லது பொட்டலம் போடுகிறீர்களா?",
+        "help": "உதாரணம்: மாவு அரைத்தல், ஊறுகாய் அல்லது அப்பளம் செய்தல், எண்ணெய் ஆட்டுதல், மசாலா பொட்டலம் போடுதல், சிறிய பேக்கரி அல்லது பால் பண்ணை. சிறியதாக இருந்தாலும் வீட்டிலிருந்து நடந்தாலும் கணக்கில் வரும்.",
+        "label": "ஏற்கனவே உணவுப் பொருள் தயாரிக்கிறீர்கள்"
+      }
+    }
   },
   "identified_in_slup_or_verified": {
     "ask": "Has a government officer visited your business and added it to the district list?",
     "help": "Each district picks one main local food product and lists the people who make it. An officer usually visits to check. If you are not sure, ask at your block or district office — you can still apply.",
-    "label": "On the district list"
+    "label": "On the district list",
+    "i18n": {
+      "hi": {
+        "ask": "क्या किसी सरकारी अधिकारी ने आपका काम देखकर उसे ज़िले की सूची में जोड़ा है?",
+        "help": "हर ज़िला एक मुख्य स्थानीय खाद्य उत्पाद चुनता है और उसे बनाने वालों की सूची बनाता है। आमतौर पर एक अधिकारी जाँच के लिए आता है। पक्का न हो तो अपने ब्लॉक या ज़िला दफ़्तर में पूछें — आप फिर भी आवेदन कर सकते हैं।",
+        "label": "ज़िले की सूची में नाम"
+      },
+      "pa": {
+        "ask": "ਕੀ ਕਿਸੇ ਸਰਕਾਰੀ ਅਫ਼ਸਰ ਨੇ ਤੁਹਾਡਾ ਕੰਮ ਵੇਖ ਕੇ ਉਸ ਨੂੰ ਜ਼ਿਲ੍ਹੇ ਦੀ ਸੂਚੀ ਵਿੱਚ ਜੋੜਿਆ ਹੈ?",
+        "help": "ਹਰ ਜ਼ਿਲ੍ਹਾ ਇੱਕ ਮੁੱਖ ਸਥਾਨਕ ਖਾਣ ਵਾਲਾ ਉਤਪਾਦ ਚੁਣਦਾ ਹੈ ਅਤੇ ਉਸ ਨੂੰ ਬਣਾਉਣ ਵਾਲਿਆਂ ਦੀ ਸੂਚੀ ਬਣਾਉਂਦਾ ਹੈ। ਆਮ ਤੌਰ ਤੇ ਇੱਕ ਅਫ਼ਸਰ ਜਾਂਚ ਲਈ ਆਉਂਦਾ ਹੈ। ਪੱਕਾ ਨਾ ਹੋਵੇ ਤਾਂ ਆਪਣੇ ਬਲਾਕ ਜਾਂ ਜ਼ਿਲ੍ਹਾ ਦਫ਼ਤਰ ਵਿੱਚ ਪੁੱਛੋ — ਤੁਸੀਂ ਫਿਰ ਵੀ ਅਰਜ਼ੀ ਦੇ ਸਕਦੇ ਹੋ।",
+        "label": "ਜ਼ਿਲ੍ਹੇ ਦੀ ਸੂਚੀ ਵਿੱਚ ਨਾਂ"
+      },
+      "ta": {
+        "ask": "ஒரு அரசு அதிகாரி உங்கள் தொழிலைப் பார்வையிட்டு மாவட்டப் பட்டியலில் சேர்த்திருக்கிறாரா?",
+        "help": "ஒவ்வொரு மாவட்டமும் ஒரு முக்கிய உள்ளூர் உணவுப் பொருளைத் தேர்ந்தெடுத்து, அதைச் செய்பவர்களைப் பட்டியலிடுகிறது. பொதுவாக ஒரு அதிகாரி சரிபார்க்க வருவார். உறுதியாகத் தெரியாவிட்டால் உங்கள் வட்டார அல்லது மாவட்ட அலுவலகத்தில் கேளுங்கள் — நீங்கள் அப்போதும் விண்ணப்பிக்கலாம்.",
+        "label": "மாவட்டப் பட்டியலில் பெயர்"
+      }
+    }
   },
   "is_unincorporated": {
     "ask": "Do you run the business yourself or with family, rather than as a registered company?",
     "help": "Most small businesses are like this. Answer yes if you have not registered a private limited company.",
-    "label": "Not a registered company"
+    "label": "Not a registered company",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप काम खुद या परिवार के साथ चलाते हैं, कोई रजिस्टर्ड कंपनी बनाकर नहीं?",
+        "help": "ज़्यादातर छोटे काम ऐसे ही होते हैं। अगर आपने प्राइवेट लिमिटेड कंपनी रजिस्टर नहीं करवाई है तो हाँ कहें।",
+        "label": "रजिस्टर्ड कंपनी नहीं"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਕੰਮ ਆਪ ਜਾਂ ਪਰਿਵਾਰ ਨਾਲ ਚਲਾਉਂਦੇ ਹੋ, ਕੋਈ ਰਜਿਸਟਰਡ ਕੰਪਨੀ ਬਣਾ ਕੇ ਨਹੀਂ?",
+        "help": "ਜ਼ਿਆਦਾਤਰ ਛੋਟੇ ਕੰਮ ਇਸੇ ਤਰ੍ਹਾਂ ਹੁੰਦੇ ਹਨ। ਜੇ ਤੁਸੀਂ ਪ੍ਰਾਈਵੇਟ ਲਿਮਿਟਡ ਕੰਪਨੀ ਰਜਿਸਟਰ ਨਹੀਂ ਕਰਵਾਈ ਤਾਂ ਹਾਂ ਕਹੋ।",
+        "label": "ਰਜਿਸਟਰਡ ਕੰਪਨੀ ਨਹੀਂ"
+      },
+      "ta": {
+        "ask": "பதிவு செய்த நிறுவனமாக இல்லாமல், நீங்களோ உங்கள் குடும்பத்துடனோ தொழிலை நடத்துகிறீர்களா?",
+        "help": "பெரும்பாலான சிறு தொழில்கள் இப்படித்தான். நீங்கள் பிரைவேட் லிமிடெட் நிறுவனமாகப் பதிவு செய்யவில்லை என்றால் ஆம் என்று சொல்லுங்கள்.",
+        "label": "பதிவு செய்த நிறுவனம் அல்ல"
+      }
+    }
   },
   "worker_count": {
     "ask": "How many people work in your business?",
     "help": "Count everyone who works there, including yourself and any family members who help.",
     "unit": "people",
-    "label": "People working"
+    "label": "People working",
+    "i18n": {
+      "hi": {
+        "ask": "आपके काम में कितने लोग काम करते हैं?",
+        "help": "जो भी वहाँ काम करता है, सबको गिनें — आप खुद और मदद करने वाले परिवार के लोग भी।",
+        "unit": "लोग",
+        "label": "काम करने वाले लोग"
+      },
+      "pa": {
+        "ask": "ਤੁਹਾਡੇ ਕੰਮ ਵਿੱਚ ਕਿੰਨੇ ਲੋਕ ਕੰਮ ਕਰਦੇ ਹਨ?",
+        "help": "ਜੋ ਵੀ ਉੱਥੇ ਕੰਮ ਕਰਦਾ ਹੈ, ਸਭ ਨੂੰ ਗਿਣੋ — ਆਪ ਅਤੇ ਮਦਦ ਕਰਨ ਵਾਲੇ ਪਰਿਵਾਰ ਦੇ ਜੀਅ ਵੀ।",
+        "unit": "ਲੋਕ",
+        "label": "ਕੰਮ ਕਰਨ ਵਾਲੇ ਲੋਕ"
+      },
+      "ta": {
+        "ask": "உங்கள் தொழிலில் எத்தனை பேர் வேலை செய்கிறார்கள்?",
+        "help": "அங்கே வேலை செய்யும் அனைவரையும் எண்ணுங்கள் — நீங்களும், உதவும் குடும்பத்தினரும் உட்பட.",
+        "unit": "பேர்",
+        "label": "வேலை செய்பவர்கள்"
+      }
+    }
   },
   "has_enterprise_ownership_right": {
     "ask": "Is the business yours?",
     "help": "Answer yes if you own it — alone or as a partner. Answer no if you work in someone else's business.",
-    "label": "Business is yours"
+    "label": "Business is yours",
+    "i18n": {
+      "hi": {
+        "ask": "क्या यह काम आपका अपना है?",
+        "help": "अगर यह आपका है — अकेले या साझेदारी में — तो हाँ कहें। अगर आप किसी और के काम में नौकरी करते हैं तो नहीं कहें।",
+        "label": "काम आपका अपना"
+      },
+      "pa": {
+        "ask": "ਕੀ ਇਹ ਕੰਮ ਤੁਹਾਡਾ ਆਪਣਾ ਹੈ?",
+        "help": "ਜੇ ਇਹ ਤੁਹਾਡਾ ਹੈ — ਇਕੱਲੇ ਜਾਂ ਹਿੱਸੇਦਾਰੀ ਵਿੱਚ — ਤਾਂ ਹਾਂ ਕਹੋ। ਜੇ ਤੁਸੀਂ ਕਿਸੇ ਹੋਰ ਦੇ ਕੰਮ ਵਿੱਚ ਨੌਕਰੀ ਕਰਦੇ ਹੋ ਤਾਂ ਨਹੀਂ ਕਹੋ।",
+        "label": "ਕੰਮ ਤੁਹਾਡਾ ਆਪਣਾ"
+      },
+      "ta": {
+        "ask": "இந்தத் தொழில் உங்களுடையதா?",
+        "help": "இது உங்களுடையது என்றால் — தனியாகவோ கூட்டாகவோ — ஆம் என்று சொல்லுங்கள். வேறொருவரின் தொழிலில் வேலை செய்தால் இல்லை என்று சொல்லுங்கள்.",
+        "label": "தொழில் உங்களுடையது"
+      }
+    }
   },
   "age": {
     "ask": "How old are you?",
     "unit": "years",
-    "label": "Your age"
+    "label": "Your age",
+    "i18n": {
+      "hi": {
+        "ask": "आपकी उम्र कितनी है?",
+        "unit": "साल",
+        "label": "आपकी उम्र"
+      },
+      "pa": {
+        "ask": "ਤੁਹਾਡੀ ਉਮਰ ਕਿੰਨੀ ਹੈ?",
+        "unit": "ਸਾਲ",
+        "label": "ਤੁਹਾਡੀ ਉਮਰ"
+      },
+      "ta": {
+        "ask": "உங்கள் வயது என்ன?",
+        "unit": "வயது",
+        "label": "உங்கள் வயது"
+      }
+    }
   },
   "passed_class_8": {
     "ask": "Did you study up to class 8 or higher?",
     "help": "Class 8 is the minimum. Anything above it also counts.",
-    "label": "Studied to class 8"
+    "label": "Studied to class 8",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आपने कक्षा 8 या उससे ज़्यादा तक पढ़ाई की है?",
+        "help": "कम से कम कक्षा 8 ज़रूरी है। उससे ज़्यादा पढ़ाई भी मान्य है।",
+        "label": "कक्षा 8 तक पढ़ाई"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਅੱਠਵੀਂ ਜਮਾਤ ਜਾਂ ਉਸ ਤੋਂ ਵੱਧ ਤੱਕ ਪੜ੍ਹਾਈ ਕੀਤੀ ਹੈ?",
+        "help": "ਘੱਟੋ-ਘੱਟ ਅੱਠਵੀਂ ਜਮਾਤ ਜ਼ਰੂਰੀ ਹੈ। ਉਸ ਤੋਂ ਵੱਧ ਪੜ੍ਹਾਈ ਵੀ ਮੰਨੀ ਜਾਂਦੀ ਹੈ।",
+        "label": "ਅੱਠਵੀਂ ਤੱਕ ਪੜ੍ਹਾਈ"
+      },
+      "ta": {
+        "ask": "நீங்கள் 8-ஆம் வகுப்பு அல்லது அதற்கு மேல் படித்திருக்கிறீர்களா?",
+        "help": "குறைந்தது 8-ஆம் வகுப்பு தேவை. அதற்கு மேல் படித்திருந்தாலும் கணக்கில் வரும்.",
+        "label": "8-ஆம் வகுப்பு வரை படிப்பு"
+      }
+    }
   },
   "family_member_already_received_assistance": {
     "ask": "Has anyone in your family already taken money from this scheme?",
     "help": "Only one person per family can get help. Family here means you, your husband or wife, and your children.",
     "warn_if_yes": true,
-    "label": "Family already took this help"
+    "label": "Family already took this help",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आपके परिवार में किसी ने पहले ही इस योजना से पैसा लिया है?",
+        "help": "एक परिवार में सिर्फ़ एक ही व्यक्ति को मदद मिल सकती है। यहाँ परिवार का मतलब है — आप, आपके पति या पत्नी, और आपके बच्चे।",
+        "label": "परिवार में पहले ही मदद ली"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਹਾਡੇ ਪਰਿਵਾਰ ਵਿੱਚੋਂ ਕਿਸੇ ਨੇ ਪਹਿਲਾਂ ਹੀ ਇਸ ਸਕੀਮ ਤੋਂ ਪੈਸਾ ਲਿਆ ਹੈ?",
+        "help": "ਇੱਕ ਪਰਿਵਾਰ ਵਿੱਚ ਸਿਰਫ਼ ਇੱਕ ਹੀ ਜੀਅ ਨੂੰ ਮਦਦ ਮਿਲ ਸਕਦੀ ਹੈ। ਇੱਥੇ ਪਰਿਵਾਰ ਦਾ ਮਤਲਬ ਹੈ — ਆਪ, ਤੁਹਾਡਾ ਪਤੀ ਜਾਂ ਪਤਨੀ, ਅਤੇ ਤੁਹਾਡੇ ਬੱਚੇ।",
+        "label": "ਪਰਿਵਾਰ ਨੇ ਪਹਿਲਾਂ ਹੀ ਮਦਦ ਲਈ"
+      },
+      "ta": {
+        "ask": "உங்கள் குடும்பத்தில் யாராவது ஏற்கனவே இந்தத் திட்டத்திலிருந்து பணம் பெற்றிருக்கிறார்களா?",
+        "help": "ஒரு குடும்பத்தில் ஒருவருக்கு மட்டுமே உதவி கிடைக்கும். இங்கே குடும்பம் என்றால் — நீங்கள், உங்கள் கணவர் அல்லது மனைவி, உங்கள் பிள்ளைகள்.",
+        "label": "குடும்பத்தில் ஏற்கனவே உதவி பெற்றனர்"
+      }
+    }
   },
   "will_formalize": {
     "ask": "Are you willing to register your business officially?",
     "help": "Registering makes the business formal on paper. Help with this is part of the scheme.",
-    "label": "Willing to register"
+    "label": "Willing to register",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप अपना काम सरकारी तौर पर रजिस्टर करवाने को तैयार हैं?",
+        "help": "रजिस्टर करवाने से काम कागज़ों पर पक्का हो जाता है। इसमें मदद इस योजना का हिस्सा है।",
+        "label": "रजिस्टर करवाने को तैयार"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਆਪਣਾ ਕੰਮ ਸਰਕਾਰੀ ਤੌਰ ਤੇ ਰਜਿਸਟਰ ਕਰਵਾਉਣ ਲਈ ਤਿਆਰ ਹੋ?",
+        "help": "ਰਜਿਸਟਰ ਕਰਵਾਉਣ ਨਾਲ ਕੰਮ ਕਾਗ਼ਜ਼ਾਂ ਉੱਤੇ ਪੱਕਾ ਹੋ ਜਾਂਦਾ ਹੈ। ਇਸ ਵਿੱਚ ਮਦਦ ਇਸ ਸਕੀਮ ਦਾ ਹਿੱਸਾ ਹੈ।",
+        "label": "ਰਜਿਸਟਰ ਕਰਵਾਉਣ ਲਈ ਤਿਆਰ"
+      },
+      "ta": {
+        "ask": "உங்கள் தொழிலை அரசிடம் முறையாகப் பதிவு செய்யத் தயாரா?",
+        "help": "பதிவு செய்தால் தொழில் ஆவணங்களில் முறைப்படி உறுதியாகும். இதற்கான உதவியும் இந்தத் திட்டத்தின் ஒரு பகுதி.",
+        "label": "பதிவு செய்யத் தயார்"
+      }
+    }
   },
   "own_contribution_percent": {
     "ask": "What share of the total cost can you pay yourself?",
     "help": "You need to put in at least 10 out of every 100 rupees of the project cost. A bank loan can cover most of the rest.",
     "unit": "percent",
-    "label": "Share you can pay"
+    "label": "Share you can pay",
+    "i18n": {
+      "hi": {
+        "ask": "कुल खर्च का कितना हिस्सा आप खुद दे सकते हैं?",
+        "help": "हर 100 रुपये के खर्च में से कम से कम 10 रुपये आपको खुद लगाने होंगे। बाकी का ज़्यादातर हिस्सा बैंक लोन से हो सकता है।",
+        "unit": "प्रतिशत",
+        "label": "आप कितना हिस्सा देंगे"
+      },
+      "pa": {
+        "ask": "ਕੁੱਲ ਖ਼ਰਚੇ ਦਾ ਕਿੰਨਾ ਹਿੱਸਾ ਤੁਸੀਂ ਆਪ ਦੇ ਸਕਦੇ ਹੋ?",
+        "help": "ਹਰ 100 ਰੁਪਏ ਦੇ ਖ਼ਰਚੇ ਵਿੱਚੋਂ ਘੱਟੋ-ਘੱਟ 10 ਰੁਪਏ ਤੁਹਾਨੂੰ ਆਪ ਲਾਉਣੇ ਪੈਣਗੇ। ਬਾਕੀ ਦਾ ਬਹੁਤਾ ਹਿੱਸਾ ਬੈਂਕ ਕਰਜ਼ੇ ਨਾਲ ਹੋ ਸਕਦਾ ਹੈ।",
+        "unit": "ਪ੍ਰਤੀਸ਼ਤ",
+        "label": "ਤੁਸੀਂ ਕਿੰਨਾ ਹਿੱਸਾ ਦਿਓਗੇ"
+      },
+      "ta": {
+        "ask": "மொத்தச் செலவில் எவ்வளவு பங்கை நீங்களே செலுத்த முடியும்?",
+        "help": "ஒவ்வொரு 100 ரூபாய் செலவிலும் குறைந்தது 10 ரூபாயை நீங்களே போட வேண்டும். மீதியில் பெரும்பகுதி வங்கிக் கடனில் வரலாம்.",
+        "unit": "சதவீதம்",
+        "label": "நீங்கள் செலுத்தும் பங்கு"
+      }
+    }
   },
   "will_take_bank_loan": {
     "ask": "Are you willing to take a bank loan for the rest of the cost?",
     "help": "The scheme pays part of the cost as a subsidy. A bank loan usually covers the remainder.",
-    "label": "Willing to take a loan"
+    "label": "Willing to take a loan",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप बाकी खर्च के लिए बैंक से लोन लेने को तैयार हैं?",
+        "help": "योजना खर्च का कुछ हिस्सा सब्सिडी के रूप में देती है। बाकी आमतौर पर बैंक लोन से पूरा होता है।",
+        "label": "बैंक लोन लेने को तैयार"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਬਾਕੀ ਖ਼ਰਚੇ ਲਈ ਬੈਂਕ ਤੋਂ ਕਰਜ਼ਾ ਲੈਣ ਲਈ ਤਿਆਰ ਹੋ?",
+        "help": "ਸਕੀਮ ਖ਼ਰਚੇ ਦਾ ਕੁਝ ਹਿੱਸਾ ਸਬਸਿਡੀ ਵਜੋਂ ਦਿੰਦੀ ਹੈ। ਬਾਕੀ ਆਮ ਤੌਰ ਤੇ ਬੈਂਕ ਕਰਜ਼ੇ ਨਾਲ ਪੂਰਾ ਹੁੰਦਾ ਹੈ।",
+        "label": "ਬੈਂਕ ਕਰਜ਼ਾ ਲੈਣ ਲਈ ਤਿਆਰ"
+      },
+      "ta": {
+        "ask": "மீதிச் செலவுக்கு வங்கிக் கடன் வாங்கத் தயாரா?",
+        "help": "திட்டம் செலவின் ஒரு பகுதியை மானியமாகத் தருகிறது. மீதி பொதுவாக வங்கிக் கடனில் நிறைவடைகிறது.",
+        "label": "வங்கிக் கடன் வாங்கத் தயார்"
+      }
+    }
   }
 }

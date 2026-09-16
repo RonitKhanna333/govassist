@@ -57,27 +57,44 @@ def test_detect_locale_falls_back_to_english_for_unsupported():
     assert response.json()["locale"] == "en"
 
 
-def test_question_is_translated_into_the_requested_locale():
-    language = LanguageService(provider=EchoTranslator())
-    client = _client(language=language)
+def test_question_comes_from_the_static_hindi_bank_not_runtime_translation():
+    """The questions are a fixed set with reviewed translations. Sending them
+    through a model every turn would add latency and a failure point for
+    text that never changes."""
+    translator = EchoTranslator()
+    client = _client(language=LanguageService(provider=translator))
     body = client.post("/chat", json={
         "scheme": "pmfme", "profile": {}, "locale": "hi",
     }).json()
 
     assert body["verdict"] == "INSUFFICIENT_INFO"
-    assert body["next_question"].startswith("[hi]")
+    assert body["next_question"] == "क्या आप अपने खुद के काम के लिए, अकेले आवेदन कर रहे हैं?"
+    assert not body["next_question"].startswith("[hi]")   # no runtime translation
+    assert translator.calls == []
     assert body["locale"] == "hi"
 
 
-def test_without_a_provider_the_answer_stays_english_and_says_why():
+def test_questions_stay_localized_even_with_no_translation_provider():
+    """Before the static bank, a Tamil user with no provider configured got
+    every question in English."""
     client = _client(language=LanguageService(provider=None))
     body = client.post("/chat", json={
         "scheme": "pmfme", "profile": {}, "locale": "ta",
     }).json()
 
-    assert body["next_question"]
-    assert "[ta]" not in body["next_question"]      # untranslated
-    assert body["language_note"]                     # and the user is told why
+    assert body["next_question"].startswith("உங்கள்")
+    assert body["language_note"] is None
+
+
+def test_without_a_provider_a_composed_answer_stays_english_and_says_why():
+    llm = FakeLLM(["You qualify.", '{"claims_checked": 1, "unsupported": []}'])
+    client = _client(llm=llm, language=LanguageService(provider=None))
+    body = client.post("/chat", json={
+        "scheme": "pmfme", "profile": FULLY_QUALIFYING_PROFILE, "locale": "ta",
+    }).json()
+
+    assert body["answer"] == "You qualify."          # untranslated
+    assert body["language_note"]                      # and the user is told why
 
 
 def test_citations_are_never_translated():

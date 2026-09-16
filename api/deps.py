@@ -35,4 +35,11 @@ def get_language() -> LanguageService:
         from api.language.providers.bhashini import BhashiniProvider
         return LanguageService(provider=BhashiniProvider(),
                                protected_terms=PROTECTED_TERMS)
+    # Without Bhashini, Groq covers translation and speech-to-text. Every
+    # Hindi, Punjabi and Tamil user got English answers before this, because
+    # the only configured provider was the one nobody had registered for.
+    if os.environ.get("GROQ_API_KEY"):
+        from api.language.providers.groq import GroqLanguageProvider
+        return LanguageService(provider=GroqLanguageProvider(),
+                               protected_terms=PROTECTED_TERMS)
     return LanguageService(provider=None, protected_terms=PROTECTED_TERMS)

@@ -34,6 +34,8 @@ PIPELINE_ID = "64392f96daac500b55c543cd"  # MeitY's public pipeline id
 class BhashiniProvider:
     """Implements TranslationProvider, TTSProvider and ASRProvider."""
 
+    supports_tts = True
+
     def __init__(self, timeout: float = 30.0) -> None:
         self._timeout = timeout
         self._config_cache: dict[tuple[str, str, str], dict] = {}
@@ -148,7 +150,7 @@ class BhashiniProvider:
         except (KeyError, IndexError, TypeError, ValueError) as exc:
             raise LanguageError(f"unexpected tts response: {result}") from exc
 
-    def transcribe(self, audio: bytes, locale: str) -> str:
+    def transcribe(self, audio: bytes, locale: str, **_: object) -> str:
         config = self._config("asr", locale)
         result = self._compute(
             "asr",

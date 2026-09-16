@@ -152,7 +152,13 @@ class LanguageService:
         entry = get(locale)
         chunks = chunk_for_tts(text, locale)
 
-        if self._provider is not None and "tts" in entry.bhashini:
+        # A provider only earns the top rung if it can actually speak.
+        # Groq can translate and transcribe but has no Indic voices, so
+        # claiming "provider" there would promise audio that never arrives.
+        can_speak = self._provider is not None and getattr(
+            self._provider, "supports_tts", False,
+        )
+        if can_speak and "tts" in entry.bhashini:
             return SpeechPlan(chunks=chunks, locale=entry.code, rung=Rung.PROVIDER,
                               bcp47=entry.bcp47)
 
@@ -177,10 +183,15 @@ class LanguageService:
         except LanguageError:
             return None
 
-    def transcribe(self, audio: bytes, locale: str) -> str | None:
+    def can_transcribe(self) -> bool:
+        return self._provider is not None and hasattr(self._provider, "transcribe")
+
+    def transcribe(self, audio: bytes, locale: str, mime: str = "audio/webm",
+                   filename: str = "speech.webm") -> str:
+        """Raises LanguageError with the real reason rather than returning
+        None. A silent None is how "speech doesn't work" turned into a
+        guessing game -- the caller needs to know whether it was no
+        provider, no audio, or the provider refusing."""
         if self._provider is None:
-            return None
-        try:
-            return self._provider.transcribe(audio, locale)
-        except LanguageError:
-            return None
+            raise LanguageError("speech-to-text isn't configured")
+        return self._provider.transcribe(audio, locale, mime=mime, filename=filename)

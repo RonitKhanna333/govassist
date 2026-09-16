@@ -132,6 +132,8 @@ def test_an_unsplittable_sentence_comes_back_whole_not_truncated():
 
 
 class FakeProvider:
+    supports_tts = True
+
     def __init__(self, translations=None, fail=False):
         self._translations = translations or {}
         self._fail = fail
@@ -205,6 +207,16 @@ def test_speech_plan_uses_provider_when_available():
     plan = service.plan_speech("Hello there.", "hi")
     assert plan.rung is Rung.PROVIDER
     assert plan.chunks
+
+
+def test_a_provider_that_cannot_speak_does_not_claim_the_top_rung():
+    """Groq translates and transcribes but has no Indic voices. Claiming
+    the provider rung there would promise audio that never arrives."""
+    class TranslateOnly(FakeProvider):
+        supports_tts = False
+    plan = LanguageService(provider=TranslateOnly()).plan_speech("Hello.", "hi")
+    assert plan.rung is Rung.BROWSER
+    assert plan.bcp47 == "hi-IN"
 
 
 def test_speech_plan_falls_back_to_browser_without_a_provider():

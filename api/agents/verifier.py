@@ -26,6 +26,7 @@ class VerificationResult:
     checked: bool  # False if the verifier itself couldn't run (LLM failure) --
                    # distinct from `ok`, because "couldn't check" must never be
                    # treated the same as "checked, and it's fine"
+    busy: bool = False  # the check didn't run because of a rate limit
 
 
 def verify(llm: LLMProvider, draft: str, citations: list[Citation],
@@ -44,8 +45,9 @@ def verify(llm: LLMProvider, draft: str, citations: list[Citation],
 
     try:
         raw = llm.complete(_SYSTEM, user, Tier.REASONING)
-    except LLMError:
-        return VerificationResult(ok=False, unsupported_claims=[], checked=False)
+    except LLMError as exc:
+        return VerificationResult(ok=False, unsupported_claims=[], checked=False,
+                                  busy=getattr(exc, "rate_limited", False))
 
     parsed = extract_json(raw)
 

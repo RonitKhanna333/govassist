@@ -195,6 +195,9 @@ html, body {
 }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+.btn.recording { background: #b42318; color: #fff; border-color: #b42318; animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .7; } }
+@media (prefers-reduced-motion: reduce) { .btn.recording { animation: none; } }
 .btn:focus-visible { outline: 2px solid var(--stamp); outline-offset: 2px; }
 
 .quickrow { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }

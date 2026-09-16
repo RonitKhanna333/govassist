@@ -27,7 +27,7 @@ FALLBACK_UNVERIFIED = (
 def compose_verified_answer(llm: LLMProvider, verdict: str,
                             citations: list[Citation]) -> str:
     draft = composer.draft_answer(llm, verdict, citations)
-    if draft == composer.FALLBACK_NO_EVIDENCE:
+    if draft in (composer.FALLBACK_NO_EVIDENCE, composer.FALLBACK_BUSY):
         return draft  # nothing to verify -- the composer already declined
 
     result = verifier.verify(llm, draft, citations, verdict)
@@ -36,10 +36,10 @@ def compose_verified_answer(llm: LLMProvider, verdict: str,
     if not result.checked:
         # The verifier couldn't run at all -- an unverified answer must never
         # ship silently just because the check itself failed.
-        return FALLBACK_UNVERIFIED
+        return composer.FALLBACK_BUSY if result.busy else FALLBACK_UNVERIFIED
 
     draft = composer.draft_answer(llm, verdict, citations, avoid=result.unsupported_claims)
-    if draft == composer.FALLBACK_NO_EVIDENCE:
+    if draft in (composer.FALLBACK_NO_EVIDENCE, composer.FALLBACK_BUSY):
         return draft
 
     result = verifier.verify(llm, draft, citations, verdict)

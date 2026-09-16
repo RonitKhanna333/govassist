@@ -18,6 +18,7 @@ dependency for a single POST request.
 from __future__ import annotations
 
 import os
+import time
 from enum import Enum
 from typing import Protocol
 
@@ -69,13 +70,32 @@ def model_for(tier: Tier) -> str:
     return os.environ.get(_MODEL_ENV[tier]) or _DEFAULT_MODELS[tier]
 
 
+# How long to wait for a rate-limit window to reopen before giving up. Kept
+# short: this runs inside a serverless request with its own time limit, and a
+# person is waiting on the other end.
+MAX_RETRY_WAIT_SECONDS = 6.0
+MAX_ATTEMPTS = 3
+
+
 class LLMError(RuntimeError):
     """Raised on a missing key, a network failure, or a non-2xx response.
+
+    `rate_limited` is set when Groq said 429 and retrying didn't help. It is
+    the one cause callers must NOT report as "I don't know" -- the answer may
+    well exist, the service is just busy.
 
     Deliberately one exception type for all three -- callers (composer,
     verifier, nlu) should treat "the LLM didn't answer" as one condition to
     degrade gracefully from, not branch on which specific thing went wrong.
     """
+
+    rate_limited = False
+
+
+class _RateLimited(Exception):
+    def __init__(self, wait: float) -> None:
+        super().__init__(wait)
+        self.wait = wait
 
 
 class LLMProvider(Protocol):
@@ -104,6 +124,21 @@ class GroqLLM:
         return key
 
     def complete(self, system: str, user: str, tier: Tier) -> str:
+        for attempt in range(MAX_ATTEMPTS):
+            try:
+                return self._complete_once(system, user, tier)
+            except _RateLimited as limited:
+                if attempt == MAX_ATTEMPTS - 1 or limited.wait > MAX_RETRY_WAIT_SECONDS:
+                    error = LLMError(
+                        "Groq is rate limiting requests right now (HTTP 429). "
+                        "This is the free tier's per-minute limit, not a missing answer."
+                    )
+                    error.rate_limited = True
+                    raise error from None
+                time.sleep(limited.wait)
+        raise LLMError("unreachable")  # pragma: no cover
+
+    def _complete_once(self, system: str, user: str, tier: Tier) -> str:
         try:
             response = requests.post(
                 GROQ_CHAT_URL,
@@ -123,6 +158,12 @@ class GroqLLM:
                 },
                 timeout=self._timeout,
             )
+            if response.status_code == 429:
+                try:
+                    wait = float(response.headers.get("retry-after", "2"))
+                except ValueError:
+                    wait = 2.0
+                raise _RateLimited(max(0.5, wait))
             if response.status_code == 404:
                 # The single most misleading failure this client can produce:
                 # a retired model id looks identical to a broken key from the

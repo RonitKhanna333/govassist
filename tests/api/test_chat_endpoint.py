@@ -118,7 +118,10 @@ def test_unverified_answer_falls_back_honestly_rather_than_shipping_a_guess():
 
 
 def test_message_extracts_attributes_via_nlu_and_merges_into_profile():
-    llm = FakeLLM(['{"age": 25}'])  # only the NLU call -- still INSUFFICIENT_INFO after
+    # The message states an age but doesn't answer the question on screen
+    # ("are you applying on your own?"), so: intent says answer-without-value,
+    # then free-text extraction picks up the age.
+    llm = FakeLLM(['{"type": "answer", "value": null}', '{"age": 25}'])
     client = _client(llm)
     response = client.post("/chat", json={
         "scheme": "pmfme", "profile": {}, "message": "I am 25 years old",

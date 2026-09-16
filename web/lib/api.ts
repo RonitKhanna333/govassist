@@ -67,6 +67,14 @@ export interface ChatResponse {
    *  it altered a number. The UI shows this rather than hiding it. */
   language_note: string | null;
   speech: SpeechPlan | null;
+  /** What the helper says this turn, in order: maybe a greeting or a reply
+   *  to the person's own question, then the next question or the verdict. */
+  bot_messages?: string[];
+  /** Set when the person asked something of their own this turn. */
+  reply?: string | null;
+  reply_citations?: Citation[];
+  /** True when this turn recorded an answer to the question on screen. */
+  acknowledged?: boolean;
 }
 
 export class ApiError extends Error {
@@ -96,6 +104,8 @@ export async function sendChat(input: {
   scheme: string;
   profile: Record<string, unknown>;
   message?: string;
+  /** First turn: the helper greets before asking anything. */
+  start?: boolean;
   /** Deterministic answer to the pending question -- no model call. */
   answer?: "yes" | "no";
   answers?: Record<string, unknown>;
@@ -106,6 +116,7 @@ export async function sendChat(input: {
     scheme: input.scheme,
     profile: input.profile,
     message: input.message ?? "",
+    start: input.start ?? false,
     answer: input.answer,
     answers: input.answers,
     locale: input.locale,
@@ -122,4 +133,34 @@ export async function detectLocale(): Promise<string | null> {
   } catch {
     return null;
   }
+}
+
+/** Languages with voice input enabled. Mirrors VOICE_INPUT_LOCALES on the
+ *  server -- Hindi (and English) for now, by decision. */
+export const VOICE_INPUT_LOCALES: LocaleCode[] = ["en", "hi"];
+
+export class TranscribeError extends Error {}
+
+/** Send a recording to the server for Whisper transcription. */
+export async function transcribe(audio: Blob, locale: LocaleCode): Promise<string> {
+  let response: Response;
+  try {
+    response = await fetch(`${BASE}/transcribe?locale=${encodeURIComponent(locale)}`, {
+      method: "POST",
+      headers: { "Content-Type": audio.type || "audio/webm" },
+      body: audio,
+    });
+  } catch {
+    throw new ApiError("offline", true);
+  }
+  if (!response.ok) {
+    let detail = `${response.status}`;
+    try {
+      detail = ((await response.json()) as { detail?: string }).detail ?? detail;
+    } catch {
+      /* keep the status code */
+    }
+    throw new TranscribeError(detail);
+  }
+  return ((await response.json()) as { text: string }).text;
 }

@@ -20,6 +20,11 @@ from api.rules.engine import Citation
 
 _SYSTEM = load_prompt("composer")
 
+# Returned when Groq is throttling. The chat endpoint swaps it for the
+# person's-language "busy" phrase rather than showing either fallback below,
+# both of which would misdescribe a rate limit as a missing answer.
+FALLBACK_BUSY = "__busy__"
+
 FALLBACK_NO_EVIDENCE = (
     "I reached a decision but don't have grounded facts to explain it with. "
     "Rather than guess, I'll say so plainly: please check the official portal "
@@ -67,5 +72,5 @@ def draft_answer(llm: LLMProvider, verdict: str, citations: list[Citation],
 
     try:
         return llm.complete(_SYSTEM, user, Tier.REASONING).strip()
-    except LLMError:
-        return FALLBACK_NO_EVIDENCE
+    except LLMError as exc:
+        return FALLBACK_BUSY if exc.rate_limited else FALLBACK_NO_EVIDENCE

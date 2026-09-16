@@ -1,10 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ApiError, detectLocale, sendChat, type ChatResponse } from "@/lib/api";
+import {
+  ApiError,
+  TranscribeError,
+  VOICE_INPUT_LOCALES,
+  detectLocale,
+  sendChat,
+  transcribe,
+  type ChatResponse,
+  type Citation,
+} from "@/lib/api";
 import { makeTranslator } from "@/lib/i18n";
-import { LOCALES, resolveLocale, type LocaleCode } from "@/lib/registry";
-import { useDictation, useSpeech } from "@/lib/useSpeech";
+import { resolveLocale, type LocaleCode } from "@/lib/registry";
+import { useRecorder } from "@/lib/useRecorder";
+import { useSpeech } from "@/lib/useSpeech";
 import { AnswerControls } from "./AnswerControls";
 import { Citations } from "./Citations";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -33,7 +43,13 @@ export function Chat() {
 
   const t = makeTranslator(uiLocale);
   const { speak, stop, speaking, canSpeak } = useSpeech();
-  const dictation = useDictation(LOCALES[contentLocale].bcp47);
+  const recorder = useRecorder();
+  const [transcribing, setTranscribing] = useState(false);
+  const [micNote, setMicNote] = useState<string | null>(null);
+  // Answers to the person's own questions cite clauses too; keep them so
+  // the evidence panel shows everything the helper has relied on.
+  const [replyCitations, setReplyCitations] = useState<Citation[]>([]);
+  const voiceInput = VOICE_INPUT_LOCALES.includes(contentLocale);
   const threadEnd = useRef<HTMLDivElement>(null);
 
   // Restore an explicit choice; otherwise ask the server what the browser
@@ -92,7 +108,7 @@ export function Chat() {
     async (
       message: string,
       nextProfile?: Record<string, unknown>,
-      extra?: { answer?: "yes" | "no"; answers?: Record<string, unknown> },
+      extra?: { answer?: "yes" | "no"; answers?: Record<string, unknown>; start?: boolean },
     ) => {
       setBusy(true);
       setError(null);
@@ -102,6 +118,7 @@ export function Chat() {
           scheme: SCHEME,
           profile: nextProfile ?? profile,
           message,
+          start: extra?.start,
           answer: extra?.answer,
           answers: extra?.answers,
           locale: contentLocale,
@@ -109,13 +126,25 @@ export function Chat() {
         });
         setProfile(response.profile);
         setLatest(response);
-        // Prefer the plain-language question over the government's own
-        // wording. next_question is the technical phrasing from scheme.md,
-        // which is right for a reviewer and wrong for an applicant.
-        const plainAsk = response.pending?.fields?.[0]?.ask ?? null;
-        const text = response.answer ?? plainAsk ?? response.next_question ?? "";
-        if (text) {
-          setTurns((prev) => [...prev, { role: "bot", text, verdict: response.verdict }]);
+        // The server says what the helper says, in order: a greeting or a
+        // reply to the person's own question, then the next question or the
+        // verdict. Older servers only sent answer/next_question.
+        const messages = response.bot_messages?.length
+          ? response.bot_messages
+          : [response.answer ?? response.pending?.fields?.[0]?.ask ?? response.next_question ?? ""];
+        const said = messages.filter((text) => text.trim());
+        if (said.length) {
+          setTurns((prev) => [
+            ...prev,
+            ...said.map((text) => ({ role: "bot" as const, text, verdict: response.verdict })),
+          ]);
+        }
+        if (response.reply_citations?.length) {
+          const fresh = response.reply_citations;
+          setReplyCitations((prev) => [
+            ...prev,
+            ...fresh.filter((c) => !prev.some((p) => p.clause_id === c.clause_id)),
+          ]);
         }
       } catch (err) {
         setError(
@@ -133,7 +162,8 @@ export function Chat() {
     setTurns([]);
     setProfile({});
     setLatest(null);
-    await exchange("", {});
+    setReplyCitations([]);
+    await exchange("", {}, { start: true });
   };
 
   const send = async (text: string) => {
@@ -152,8 +182,36 @@ export function Chat() {
     await exchange("", undefined, { answers: values });
   };
 
+  const toggleMic = async () => {
+    setMicNote(null);
+    if (recorder.state === "recording") {
+      const audio = await recorder.stop();
+      if (!audio || audio.size < 1000) {
+        setMicNote(t("mic.empty"));
+        return;
+      }
+      setTranscribing(true);
+      try {
+        const text = (await transcribe(audio, contentLocale)).trim();
+        if (text) await send(text);
+        else setMicNote(t("mic.empty"));
+      } catch (err) {
+        setMicNote(
+          err instanceof TranscribeError ? t("mic.failed") : t("error.offline"),
+        );
+      } finally {
+        setTranscribing(false);
+      }
+      return;
+    }
+    stop();
+    const ok = await recorder.start();
+    if (!ok) setMicNote(t("mic.denied"));
+  };
+
   const restart = () => {
     stop();
+    setReplyCitations([]);
     setStarted(false);
     setTurns([]);
     setProfile({});
@@ -242,16 +300,19 @@ export function Chat() {
                 disabled={busy}
                 aria-label={t("chat.placeholder")}
               />
-              {dictation.supported && (
+              {voiceInput && recorder.state !== "unsupported" && (
                 <button
                   type="button"
-                  className="btn ghost"
-                  onClick={() =>
-                    dictation.listening ? dictation.cancel() : dictation.listen(send)
-                  }
-                  disabled={busy}
+                  className={`btn ghost${recorder.state === "recording" ? " recording" : ""}`}
+                  onClick={() => void toggleMic()}
+                  disabled={busy || transcribing}
+                  aria-pressed={recorder.state === "recording"}
                 >
-                  {dictation.listening ? t("mic.listening") : t("mic.start")}
+                  {transcribing
+                    ? t("mic.transcribing")
+                    : recorder.state === "recording"
+                      ? t("mic.stop")
+                      : t("mic.start")}
                 </button>
               )}
               <button
@@ -281,6 +342,14 @@ export function Chat() {
               </button>
             </div>
 
+            {recorder.state === "recording" && (
+              <p className="note">{t("mic.listening")}</p>
+            )}
+            {micNote && <p className="note error">{micNote}</p>}
+            {!voiceInput && <p className="note">{t("mic.voice_limited")}</p>}
+            {voiceInput && recorder.state === "unsupported" && (
+              <p className="note">{t("mic.unsupported")}</p>
+            )}
             {!speechAvailable && latest && (
               <p className="note">{t("speak.unavailable")}</p>
             )}
@@ -308,7 +377,17 @@ export function Chat() {
         )}
       </main>
 
-      {latest && <Citations citations={latest.citations} t={t} />}
+      {latest && (
+        <Citations
+          citations={[
+            ...latest.citations,
+            ...replyCitations.filter(
+              (c) => !latest.citations.some((l) => l.clause_id === c.clause_id),
+            ),
+          ]}
+          t={t}
+        />
+      )}
 
       <p className="disclaimer" lang={uiLocale}>
         {t("notice.notAdvice")}
