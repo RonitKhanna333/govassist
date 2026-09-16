@@ -30,5 +30,7 @@
   "error.generic": "Something went wrong. Please try again.",
   "notice.notAdvice": "This is guidance, not a decision. It never files anything for you.",
   "profile.known": "What I know so far",
-  "profile.empty": "Nothing yet"
+  "profile.empty": "Nothing yet",
+  "help.what": "What does this mean?",
+  "answer.more": "One more thing after this"
 }

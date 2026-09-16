@@ -109,7 +109,11 @@ export function Chat() {
         });
         setProfile(response.profile);
         setLatest(response);
-        const text = response.answer ?? response.next_question ?? "";
+        // Prefer the plain-language question over the government's own
+        // wording. next_question is the technical phrasing from scheme.md,
+        // which is right for a reviewer and wrong for an applicant.
+        const plainAsk = response.pending?.fields?.[0]?.ask ?? null;
+        const text = response.answer ?? plainAsk ?? response.next_question ?? "";
         if (text) {
           setTurns((prev) => [...prev, { role: "bot", text, verdict: response.verdict }]);
         }
@@ -139,21 +143,12 @@ export function Chat() {
     await exchange(text);
   };
 
-  const answerYesNo = async (affirmative: boolean) => {
+  /** `shownAs` is what the person sees in their own bubble -- "Yes", "9
+   *  people" -- rather than `worker_count: 9`, which is a variable name
+   *  leaking into a conversation. */
+  const answerValues = async (values: Record<string, unknown>, shownAs: string) => {
     if (busy) return;
-    setTurns((prev) => [
-      ...prev,
-      { role: "user", text: affirmative ? t("answer.yes") : t("answer.no") },
-    ]);
-    await exchange("", undefined, { answer: affirmative ? "yes" : "no" });
-  };
-
-  const answerValues = async (values: Record<string, unknown>) => {
-    if (busy) return;
-    const shown = Object.entries(values)
-      .map(([key, value]) => `${key.replace(/_/g, " ")}: ${String(value)}`)
-      .join(", ");
-    setTurns((prev) => [...prev, { role: "user", text: shown }]);
+    setTurns((prev) => [...prev, { role: "user", text: shownAs }]);
     await exchange("", undefined, { answers: values });
   };
 
@@ -230,7 +225,6 @@ export function Chat() {
               <AnswerControls
                 pending={latest.pending}
                 busy={busy}
-                onYesNo={answerYesNo}
                 onValues={answerValues}
                 t={t}
               />
@@ -299,12 +293,12 @@ export function Chat() {
             <div className="profilebox">
               <h3>{t("profile.known")}</h3>
               <div className="facts">
-                {Object.keys(profile).length === 0 ? (
+                {!latest?.profile_summary?.length ? (
                   <span className="fact">{t("profile.empty")}</span>
                 ) : (
-                  Object.entries(profile).map(([key, value]) => (
-                    <span key={key} className="fact">
-                      {key}: {String(value)}
+                  latest.profile_summary.map((row) => (
+                    <span key={row.attribute} className="fact">
+                      {row.label}: <strong>{row.value}</strong>
                     </span>
                   ))
                 )}

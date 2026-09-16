@@ -25,7 +25,10 @@ invents a bound, an option, or a default.
 from __future__ import annotations
 
 import ast
+import json
 from dataclasses import dataclass, field as dataclass_field
+from functools import lru_cache
+from pathlib import Path
 
 import api._corpus_bridge  # noqa: F401 -- must run before importing grammar
 from grammar import PROFILE, parse  # noqa: E402
@@ -33,6 +36,24 @@ from grammar import PROFILE, parse  # noqa: E402
 _NUMERIC_OPS = {
     ast.Lt: "<", ast.LtE: "<=", ast.Gt: ">", ast.GtE: ">=",
 }
+
+
+@lru_cache(maxsize=1)
+def attribute_registry() -> dict:
+    """Plain-language questions, one per attribute -- data/attributes.json.
+
+    The `asks` text in scheme.md follows the government's own wording, which
+    is the right thing for a reviewer checking a rule against its source and
+    the wrong thing to put in front of an applicant. A question there reads
+    "Has your unit been identified in the SLUP for an ODOP product or
+    verified by the Resource Person?"; the registry asks whether an officer
+    visited and added the business to the district list.
+    """
+    path = Path(__file__).resolve().parents[2] / "data" / "attributes.json"
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {k: v for k, v in data.items() if not k.startswith("_")}
 
 
 @dataclass
@@ -43,12 +64,20 @@ class Field:
     options: list = dataclass_field(default_factory=list)
     comparator: str | None = None   # for number, so the UI can hint the bound
     bound: object = None
+    # Plain-language wording. `ask` is what a person is shown; `help`
+    # explains any term they'd have no reason to know.
+    ask: str | None = None
+    help: str | None = None
+    unit: str | None = None
+    warn_if_yes: bool = False
 
     def to_dict(self) -> dict:
         return {
             "attribute": self.attribute, "kind": self.kind,
             "satisfied_by": self.satisfied_by, "options": self.options,
             "comparator": self.comparator, "bound": self.bound,
+            "ask": self.ask, "help": self.help, "unit": self.unit,
+            "warn_if_yes": self.warn_if_yes,
         }
 
 
@@ -108,6 +137,12 @@ def derive_fields(expr: str) -> list[Field]:
         else:
             continue
 
+        entry = attribute_registry().get(attribute, {})
+        found.ask = entry.get("ask")
+        found.help = entry.get("help")
+        found.unit = entry.get("unit")
+        found.warn_if_yes = bool(entry.get("warn_if_yes"))
+
         seen.add(attribute)
         fields.append(found)
 
@@ -159,3 +194,40 @@ def answer_yes_no(expr: str, profile: dict, affirmative: bool) -> dict:
             # resolves false instead of staying unknown and re-asking.
             answers[f.attribute] = "__other__"
     return answers
+
+
+# Sentinel recorded when someone says "no" to a single-option choice -- it
+# says what they are NOT, which the expression can't turn into a value.
+OTHER = "__other__"
+
+
+def summarize_profile(profile: dict) -> list[dict]:
+    """The answers so far, in words a person would recognise.
+
+    Raw state is `{"applicant_type": "__other__", "worker_count": 9}`.
+    Showing that verbatim leaks an internal sentinel and a variable name
+    into the interface -- which, for an app whose whole premise is replacing
+    bureaucratic vocabulary, is the same failure in a different font.
+    """
+    registry = attribute_registry()
+    rows: list[dict] = []
+
+    for attribute, value in profile.items():
+        entry = registry.get(attribute, {})
+        label = entry.get("label") or attribute.replace("_", " ").capitalize()
+
+        if value is True:
+            shown = "Yes"
+        elif value is False:
+            shown = "No"
+        elif value == OTHER:
+            # Never show the sentinel. What they told us is a negative.
+            shown = "No"
+        elif entry.get("unit"):
+            shown = f"{value} {entry['unit']}"
+        else:
+            shown = str(value)
+
+        rows.append({"attribute": attribute, "label": label, "value": shown})
+
+    return rows

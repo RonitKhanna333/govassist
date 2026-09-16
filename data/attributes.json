@@ -1,0 +1,91 @@
+{
+  "_README": [
+    "Plain-language questions, one per attribute, for people who do not work in a",
+    "district office. The `asks` text in each scheme.md is authored against the",
+    "government's own wording and stays there as the technical phrasing; this file",
+    "is what an actual applicant is shown.",
+    "",
+    "Why per attribute and not per condition: a condition like",
+    "`is_unincorporated == true and worker_count < 10` is two separate things to",
+    "ask a person, and a single Yes/No cannot answer it. One question per",
+    "attribute splits those naturally, and it makes polarity unambiguous -- one",
+    "question maps to exactly one value.",
+    "",
+    "POLARITY IS LOAD-BEARING. `yes` sets the attribute true and `no` sets it",
+    "false, so a question must be phrased to describe the ATTRIBUTE, never the",
+    "rule. 'Has anyone in your family already taken money from this scheme?' is",
+    "correct: yes -> already_received = true -> disqualified. Rewording it to",
+    "'Is your family free of previous claims?' would silently invert every",
+    "answer. Any edit here needs the same care as a Gate 5 rule review.",
+    "",
+    "Attribute names are shared across schemes on purpose (see",
+    "docs/phase2-design.md), so a question written once is reused -- which also",
+    "means a careless edit affects every scheme that reads that attribute.",
+    "",
+    "`label` is a short noun phrase for the 'what I know so far' summary -- a question reads wrong there, and a raw attribute name reads worse."
+  ],
+  "applicant_type": {
+    "ask": "Are you applying for your own business, on your own?",
+    "help": "Choose this if the business is yours. Groups, cooperatives and companies apply a different way.",
+    "affirmative_is": "individual",
+    "label": "Applying on your own"
+  },
+  "is_existing_micro_food_processing_unit": {
+    "ask": "Do you already make, process or pack food to sell?",
+    "help": "For example: grinding flour, making pickles or papad, pressing oil, packing spices, a small bakery or dairy. It counts even if it is small or run from home.",
+    "label": "Already making food to sell"
+  },
+  "identified_in_slup_or_verified": {
+    "ask": "Has a government officer visited your business and added it to the district list?",
+    "help": "Each district picks one main local food product and lists the people who make it. An officer usually visits to check. If you are not sure, ask at your block or district office — you can still apply.",
+    "label": "On the district list"
+  },
+  "is_unincorporated": {
+    "ask": "Do you run the business yourself or with family, rather than as a registered company?",
+    "help": "Most small businesses are like this. Answer yes if you have not registered a private limited company.",
+    "label": "Not a registered company"
+  },
+  "worker_count": {
+    "ask": "How many people work in your business?",
+    "help": "Count everyone who works there, including yourself and any family members who help.",
+    "unit": "people",
+    "label": "People working"
+  },
+  "has_enterprise_ownership_right": {
+    "ask": "Is the business yours?",
+    "help": "Answer yes if you own it — alone or as a partner. Answer no if you work in someone else's business.",
+    "label": "Business is yours"
+  },
+  "age": {
+    "ask": "How old are you?",
+    "unit": "years",
+    "label": "Your age"
+  },
+  "passed_class_8": {
+    "ask": "Did you study up to class 8 or higher?",
+    "help": "Class 8 is the minimum. Anything above it also counts.",
+    "label": "Studied to class 8"
+  },
+  "family_member_already_received_assistance": {
+    "ask": "Has anyone in your family already taken money from this scheme?",
+    "help": "Only one person per family can get help. Family here means you, your husband or wife, and your children.",
+    "warn_if_yes": true,
+    "label": "Family already took this help"
+  },
+  "will_formalize": {
+    "ask": "Are you willing to register your business officially?",
+    "help": "Registering makes the business formal on paper. Help with this is part of the scheme.",
+    "label": "Willing to register"
+  },
+  "own_contribution_percent": {
+    "ask": "What share of the total cost can you pay yourself?",
+    "help": "You need to put in at least 10 out of every 100 rupees of the project cost. A bank loan can cover most of the rest.",
+    "unit": "percent",
+    "label": "Share you can pay"
+  },
+  "will_take_bank_loan": {
+    "ask": "Are you willing to take a bank loan for the rest of the cost?",
+    "help": "The scheme pays part of the cost as a subsidy. A bank loan usually covers the remainder.",
+    "label": "Willing to take a loan"
+  }
+}

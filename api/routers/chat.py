@@ -38,7 +38,7 @@ from api.deps import get_language, get_llm
 from api.language.registry import CANONICAL_LOCALE, LOCALES, get as get_locale, negotiate
 from api.language.service import LanguageService
 from api.rules.engine import decide, known_attributes, load_rules
-from api.rules.forms import answer_yes_no
+from api.rules.forms import answer_yes_no, summarize_profile
 from parse_scheme import repo_root  # noqa: E402
 
 router = APIRouter()
@@ -189,6 +189,7 @@ def chat(body: dict,
             "missing_attributes": result.missing_attributes,
             "pending": result.pending.to_dict() if result.pending else None,
             "citations": [], "profile": profile,
+            "profile_summary": summarize_profile(profile),
             "locale": content_locale, "language_note": note,
             "speech": {"chunks": plan.chunks, "rung": plan.rung.value,
                        "bcp47": plan.bcp47, "note": plan.note},
@@ -218,6 +219,7 @@ def chat(body: dict,
         # Citations stay verbatim in their source language, always.
         "citations": [c.__dict__ for c in result.citations],
         "profile": profile,
+        "profile_summary": summarize_profile(profile),
         "locale": content_locale, "language_note": note,
         "speech": {"chunks": plan.chunks, "rung": plan.rung.value,
                    "bcp47": plan.bcp47, "note": plan.note},

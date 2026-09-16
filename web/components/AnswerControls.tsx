@@ -1,125 +1,147 @@
 "use client";
 
 import { useState } from "react";
-import type { Pending } from "@/lib/api";
+import type { AnswerField, Pending } from "@/lib/api";
 
 /**
- * Renders the control that can actually answer the pending question,
- * derived from the rule expression rather than assumed.
+ * One plain-language question at a time.
  *
- * The bug this replaces: a fixed Yes/No pair under every question. It
- * couldn't answer "how many workers do you employ", and the Yes it did
- * send was routed through an LLM to guess which attribute was meant --
- * so with no API key the profile never advanced and the same question
- * repeated forever.
+ * What this replaces: the government's own wording, put straight in front
+ * of an applicant -- "Has your unit been identified in the SLUP for an ODOP
+ * product or verified by the Resource Person?" -- with a fixed Yes/No pair
+ * under it and number inputs labelled `worker_count (< 10)`. That is the
+ * jargon-heavy PDF this project exists to replace, retyped into a chat box.
+ *
+ * Compound conditions are split, because "is it unincorporated, and does it
+ * employ fewer than 10 workers" is two questions to a person even though
+ * it is one rule to the engine.
  */
 export function AnswerControls({
   pending,
   busy,
-  onYesNo,
   onValues,
   t,
 }: {
   pending: Pending;
   busy: boolean;
-  onYesNo: (affirmative: boolean) => void;
-  onValues: (values: Record<string, unknown>) => void;
+  onValues: (values: Record<string, unknown>, shownAs: string) => void;
   t: (key: string) => string;
 }) {
   const [draft, setDraft] = useState<Record<string, string>>({});
+  const [openHelp, setOpenHelp] = useState<string | null>(null);
 
-  const numberFields = pending.fields.filter((f) => f.kind === "number");
-  const multiChoice = pending.fields.filter(
-    (f) => f.kind === "choice" && f.options.length > 1,
-  );
+  const fields = pending.fields;
+  if (fields.length === 0) return null;
 
-  // Yes/No is only honest when nothing here needs a value typed in.
-  const yesNoAnswerable = pending.fields.length > 0 && numberFields.length === 0
-    && multiChoice.length === 0;
+  // Ask one thing at a time. Answering a compound rule feels like several
+  // small questions rather than one dense one.
+  const current: AnswerField = fields[0];
+  const remaining = fields.length - 1;
 
-  const submitValues = () => {
-    const values: Record<string, unknown> = {};
-    for (const f of pending.fields) {
-      const raw = draft[f.attribute];
-      if (raw === undefined || raw === "") continue;
-      values[f.attribute] = f.kind === "number" ? Number(raw) : raw;
-    }
-    // Anything the typed fields didn't cover but Yes/No would have: a
-    // compound condition like "unincorporated AND under 10 workers" needs
-    // both halves, so the booleans come along with the number.
-    for (const f of pending.fields) {
-      if (f.kind === "boolean" && values[f.attribute] === undefined) {
-        values[f.attribute] = f.satisfied_by;
-      }
-    }
-    if (Object.keys(values).length > 0) onValues(values);
+  const label = current.ask ?? pending.asks ?? current.attribute.replace(/_/g, " ");
+
+  const submitNumber = () => {
+    const raw = draft[current.attribute];
+    if (raw === undefined || raw === "") return;
+    onValues({ [current.attribute]: Number(raw) }, `${raw}${current.unit ? " " + current.unit : ""}`);
     setDraft({});
   };
 
-  const ready = numberFields.every(
-    (f) => draft[f.attribute] !== undefined && draft[f.attribute] !== "",
-  );
+  /** Answer THIS field, not the whole condition.
+   *
+   *  A generic yes/no goes to the server's answer_yes_no, which refuses --
+   *  correctly -- when the same rule still has an unanswered number, so on a
+   *  compound like "unincorporated AND under 10 workers" the tap would
+   *  silently do nothing. The client knows which attribute is on screen, so
+   *  it answers that one. */
+  const answerYes = (affirmative: boolean) => {
+    const value =
+      current.kind === "choice"
+        ? affirmative
+          ? current.satisfied_by
+          : "__other__"
+        : affirmative;
+    onValues(
+      { [current.attribute]: value },
+      affirmative ? t("answer.yes") : t("answer.no"),
+    );
+  };
+
+  const helpOpen = openHelp === current.attribute;
 
   return (
     <div className="answers">
-      {yesNoAnswerable && (
-        <div className="quickrow">
-          <button type="button" className="btn ghost" disabled={busy}
-                  onClick={() => onYesNo(true)}>
-            {t("answer.yes")}
+      {current.help && (
+        <>
+          <button
+            type="button"
+            className="helptoggle"
+            aria-expanded={helpOpen}
+            onClick={() => setOpenHelp(helpOpen ? null : current.attribute)}
+          >
+            {helpOpen ? "−" : "?"} {t("help.what")}
           </button>
-          <button type="button" className="btn ghost" disabled={busy}
-                  onClick={() => onYesNo(false)}>
-            {t("answer.no")}
-          </button>
-        </div>
+          {helpOpen && <p className="help">{current.help}</p>}
+        </>
       )}
 
-      {multiChoice.map((f) => (
-        <div key={f.attribute} className="quickrow">
-          {f.options.map((option) => (
+      {current.kind === "number" ? (
+        <div className="numberrow">
+          <label className="numberfield">
+            <input
+              type="number"
+              inputMode="numeric"
+              autoFocus
+              value={draft[current.attribute] ?? ""}
+              disabled={busy}
+              aria-label={label}
+              onChange={(event) =>
+                setDraft({ [current.attribute]: event.target.value })
+              }
+              onKeyDown={(event) => {
+                if (event.key === "Enter") submitNumber();
+              }}
+            />
+            {current.unit && <span className="unit">{current.unit}</span>}
+          </label>
+          <button
+            type="button"
+            className="btn"
+            disabled={busy || !draft[current.attribute]}
+            onClick={submitNumber}
+          >
+            {t("chat.send")}
+          </button>
+        </div>
+      ) : current.kind === "choice" && current.options.length > 1 ? (
+        <div className="quickrow">
+          {current.options.map((option) => (
             <button
               key={String(option)}
               type="button"
               className="btn ghost"
               disabled={busy}
-              onClick={() => onValues({ [f.attribute]: option })}
+              onClick={() => onValues({ [current.attribute]: option }, String(option))}
             >
               {String(option)}
             </button>
           ))}
         </div>
-      ))}
-
-      {numberFields.length > 0 && (
-        <div className="numberrow">
-          {numberFields.map((f) => (
-            <label key={f.attribute} className="numberfield">
-              <span>
-                {f.attribute.replace(/_/g, " ")}
-                {f.comparator && f.bound !== null
-                  ? ` (${f.comparator} ${f.bound})`
-                  : ""}
-              </span>
-              <input
-                type="number"
-                inputMode="numeric"
-                value={draft[f.attribute] ?? ""}
-                disabled={busy}
-                onChange={(event) =>
-                  setDraft((prev) => ({ ...prev, [f.attribute]: event.target.value }))
-                }
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && ready) submitValues();
-                }}
-              />
-            </label>
-          ))}
-          <button type="button" className="btn" disabled={busy || !ready}
-                  onClick={submitValues}>
-            {t("chat.send")}
+      ) : (
+        <div className="quickrow">
+          <button type="button" className="btn ghost" disabled={busy}
+                  onClick={() => answerYes(true)}>
+            {t("answer.yes")}
+          </button>
+          <button type="button" className="btn ghost" disabled={busy}
+                  onClick={() => answerYes(false)}>
+            {t("answer.no")}
           </button>
         </div>
+      )}
+
+      {remaining > 0 && (
+        <p className="remaining">{t("answer.more")}</p>
       )}
     </div>
   );

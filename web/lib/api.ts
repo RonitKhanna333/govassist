@@ -31,6 +31,13 @@ export interface AnswerField {
   options: unknown[];
   comparator: string | null;
   bound: number | null;
+  /** Plain-language question from data/attributes.json. The technical
+   *  wording lives in `Pending.asks` and is for reviewers, not applicants. */
+  ask: string | null;
+  /** Explains any term someone would have no reason to know (ODOP, SLUP). */
+  help: string | null;
+  unit: string | null;
+  warn_if_yes: boolean;
 }
 
 /** The question being asked, plus what would actually answer it. Derived
@@ -52,6 +59,9 @@ export interface ChatResponse {
   pending: Pending | null;
   citations: Citation[];
   profile: Record<string, unknown>;
+  /** The same answers in words a person recognises -- never a raw attribute
+   *  name, never the __other__ sentinel. */
+  profile_summary?: { attribute: string; label: string; value: string }[];
   locale: LocaleCode;
   /** Set when the answer was degraded -- e.g. translation rejected because
    *  it altered a number. The UI shows this rather than hiding it. */
