@@ -66,6 +66,11 @@ class EngineResult:
     next_question: str | None
     citations: list[Citation] = field(default_factory=list)
     pending: Pending | None = None
+    # The clauses the profile actually FAILED. Explaining a denial from the
+    # full citation list forces the composer to assert something about the
+    # person ("you are 16") that the facts never state, which the verifier
+    # correctly rejects -- so a denial gets only its failing clauses.
+    failed_citations: list[Citation] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
@@ -75,6 +80,7 @@ class EngineResult:
             "missing_attributes": self.missing_attributes,
             "next_question": self.next_question,
             "citations": [c.__dict__ for c in self.citations],
+            "failed_citations": [c.__dict__ for c in self.failed_citations],
             "pending": self.pending.to_dict() if self.pending else None,
         }
 
@@ -141,6 +147,7 @@ def decide(scheme: str, profile: dict, root: Path | None = None) -> EngineResult
     # Cite only the conditions that actually decided the outcome -- a
     # condition still UNKNOWN told us nothing yet, so it earns no citation.
     citations: list[Citation] = []
+    failed: list[Citation] = []
     for result in decision.results:
         if result.value is grammar.UNKNOWN or not result.clause:
             continue
@@ -148,10 +155,13 @@ def decide(scheme: str, profile: dict, root: Path | None = None) -> EngineResult
         if row is None:
             continue  # a condition citing a clause that build.py already
                       # would have rejected at validate.py -- defensive only
-        citations.append(Citation(
+        citation = Citation(
             clause_id=row["id"], quote=row["quote"], plain=row["plain"],
             source_url=row["source_url"], page=row["page"],
-        ))
+        )
+        citations.append(citation)
+        if result.failed:
+            failed.append(citation)
 
     pending = None
     for result in decision.results:
@@ -176,6 +186,7 @@ def decide(scheme: str, profile: dict, root: Path | None = None) -> EngineResult
         next_question=decision.next_questions[0] if decision.next_questions else None,
         citations=citations,
         pending=pending,
+        failed_citations=failed,
     )
 
 

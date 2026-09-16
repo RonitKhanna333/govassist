@@ -34,11 +34,25 @@ def _client(llm) -> TestClient:
     return TestClient(app)
 
 
-def test_health():
+def test_health_reports_status_and_what_is_configured():
     client = _client(FakeLLM([]))
-    response = client.get("/health")
-    assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    body = client.get("/health").json()
+    assert body["status"] == "ok"
+    # Presence flags only -- a health endpoint must never echo a secret.
+    assert set(body["configured"]) == {"groq", "bhashini", "database", "auth"}
+    assert all(isinstance(v, bool) for v in body["configured"].values())
+
+
+def test_health_never_leaks_a_key_value(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "gsk_supersecretvalue")
+    client = _client(FakeLLM([]))
+    assert "gsk_supersecretvalue" not in client.get("/health").text
+
+
+def test_health_says_what_works_without_any_keys():
+    client = _client(FakeLLM([]))
+    works = client.get("/health").json()["works_without_keys"]
+    assert "verdict" in works and "citations" in works
 
 
 def test_insufficient_info_asks_a_real_question_no_llm_needed():

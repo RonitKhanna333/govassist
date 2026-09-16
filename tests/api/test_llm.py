@@ -35,9 +35,10 @@ def test_fast_and_reasoning_tiers_use_different_models():
         llm.complete("sys", "usr", Tier.REASONING)
         reasoning_model = mock_post.call_args.kwargs["json"]["model"]
 
+    # Asserting the split, not the names: hardcoding model ids here is what
+    # let a retired model reach production looking like a missing API key.
     assert fast_model != reasoning_model
-    assert fast_model == "llama-3.1-8b-instant"
-    assert reasoning_model == "llama-3.3-70b-versatile"
+    assert fast_model and reasoning_model
 
 
 def test_temperature_is_always_zero():
@@ -57,6 +58,24 @@ def test_network_failure_raises_llmerror_not_a_raw_requests_exception():
     with patch("api.agents.llm.requests.post",
                side_effect=requests.exceptions.ConnectionError("no route")):
         with pytest.raises(LLMError, match="Groq request failed"):
+            llm.complete("sys", "usr", Tier.FAST)
+
+
+def test_model_ids_are_overridable_without_a_code_change(monkeypatch):
+    """Groq retires model ids. An env override is the escape hatch that
+    avoids a redeploy-and-hope cycle next time."""
+    monkeypatch.setenv("GROQ_MODEL_FAST", "some/other-model")
+    from api.agents.llm import model_for
+    assert model_for(Tier.FAST) == "some/other-model"
+
+
+def test_404_says_the_model_is_missing_not_the_key():
+    """A retired model returns 404 and previously surfaced as the composer's
+    'no grounded facts' fallback -- indistinguishable from a bad key."""
+    llm = GroqLLM(api_key="test-key")
+    with patch("api.agents.llm.requests.post") as mock_post:
+        mock_post.return_value = MagicMock(status_code=404)
+        with pytest.raises(LLMError, match="has no model"):
             llm.complete("sys", "usr", Tier.FAST)
 
 

@@ -26,6 +26,8 @@ to. That's the next slice, not this one.
 
 from __future__ import annotations
 
+import os
+
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 import api._corpus_bridge  # noqa: F401 -- must run before importing parse_scheme
@@ -43,8 +45,42 @@ router = APIRouter()
 
 
 @router.get("/health")
-def health() -> dict:
-    return {"status": "ok"}
+def health(probe: str | None = None) -> dict:
+    """Liveness, plus which capabilities are actually configured.
+
+    This exists because of a real failure that took far too long to
+    diagnose: the composer catches every LLMError and returns the same
+    honest fallback sentence, so "no API key", "wrong API key", "model
+    retired" and "rate limited" all look identical from outside. The
+    answer field said one thing and the cause could have been any of four.
+
+    Reporting configuration is safe and free. `?probe=llm` goes further and
+    actually calls Groq once, returning the provider's real error text --
+    never the key itself, only whether it works and what it said.
+    """
+    report = {
+        "status": "ok",
+        "configured": {
+            # Presence only. Never the value, never a prefix of it.
+            "groq": bool(os.environ.get("GROQ_API_KEY")),
+            "bhashini": bool(os.environ.get("ULCA_USER_ID")
+                             and os.environ.get("ULCA_API_KEY")),
+            "database": bool(os.environ.get("DATABASE_URL")),
+            "auth": bool(os.environ.get("JWT_SECRET")),
+        },
+        # What still works regardless -- the whole point of the design.
+        "works_without_keys": ["verdict", "citations", "questions"],
+    }
+
+    if probe == "llm":
+        from api.agents.llm import GroqLLM, LLMError, Tier
+        try:
+            reply = GroqLLM().complete("Reply with the single word: ok.", "ping", Tier.FAST)
+            report["llm_probe"] = {"ok": True, "reply": reply.strip()[:80]}
+        except LLMError as exc:
+            report["llm_probe"] = {"ok": False, "error": str(exc)[:500]}
+
+    return report
 
 
 @router.get("/locales")
@@ -158,8 +194,17 @@ def chat(body: dict,
                        "bcp47": plan.bcp47, "note": plan.note},
         }
 
+    # A denial is explained by the rules it FAILED. Handing over all eight
+    # forces the composer to assert an unstated fact about the person to
+    # single one out, which the verifier then rejects -- correctly -- and the
+    # user gets a fallback instead of a reason.
+    evidence = (
+        result.failed_citations
+        if result.verdict.value == "NOT_ELIGIBLE" and result.failed_citations
+        else result.citations
+    )
     english_answer = orchestrate.compose_verified_answer(
-        llm, result.verdict.value, result.citations,
+        llm, result.verdict.value, evidence,
     )
     answer, note = _localize(language, english_answer, content_locale)
     plan = language.plan_speech(answer or "", content_locale)

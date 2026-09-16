@@ -27,6 +27,26 @@ FALLBACK_NO_EVIDENCE = (
 )
 
 
+def determination_facts(verdict: str, failed: bool) -> list[str]:
+    """What the rule engine itself established, stated as facts.
+
+    docs/phase2-design.md says a claim may be supported by EITHER a clause
+    OR a fact the rule engine emitted. Only the clause half was implemented,
+    so explaining a denial was impossible: the verifier saw the rule text
+    but not the determination, and correctly flagged "you do not meet this"
+    as an assertion about the person that nothing supported. These are
+    facts -- produced deterministically by grammar.py, not by a model.
+    """
+    if verdict == "ELIGIBLE":
+        return ["The eligibility check determined that this person MEETS every "
+                "requirement listed below."]
+    if verdict == "NOT_ELIGIBLE":
+        return ["The eligibility check determined that this person DOES NOT MEET "
+                "the requirement(s) listed below.",
+                "It is therefore established that they are not eligible."]
+    return []
+
+
 def draft_answer(llm: LLMProvider, verdict: str, citations: list[Citation],
                  avoid: list[str] | None = None) -> str:
     """`avoid` is set on the one recompose pass (see agents/orchestrate.py)

@@ -30,7 +30,7 @@ def compose_verified_answer(llm: LLMProvider, verdict: str,
     if draft == composer.FALLBACK_NO_EVIDENCE:
         return draft  # nothing to verify -- the composer already declined
 
-    result = verifier.verify(llm, draft, citations)
+    result = verifier.verify(llm, draft, citations, verdict)
     if result.ok:
         return draft
     if not result.checked:
@@ -42,7 +42,7 @@ def compose_verified_answer(llm: LLMProvider, verdict: str,
     if draft == composer.FALLBACK_NO_EVIDENCE:
         return draft
 
-    result = verifier.verify(llm, draft, citations)
+    result = verifier.verify(llm, draft, citations, verdict)
     if result.ok:
         return draft
 
