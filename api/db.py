@@ -26,10 +26,33 @@ def default_sqlite_url(root: Path | None = None) -> str:
     return f"sqlite:///{(root / 'govassist.db').as_posix()}"
 
 
+def normalize_url(url: str) -> str:
+    """Make a hosted Postgres URL work with the driver we actually ship.
+
+    Neon, Supabase and Heroku all hand out `postgres://` or `postgresql://`
+    URLs. SQLAlchemy maps both to psycopg2, which isn't in requirements.txt
+    (psycopg 3 is), so without this rewrite a correct connection string
+    fails at import with a confusing "No module named psycopg2".
+    """
+    if url.startswith("postgres://"):
+        url = "postgresql://" + url[len("postgres://"):]
+    if url.startswith("postgresql://"):
+        url = "postgresql+psycopg://" + url[len("postgresql://"):]
+    return url
+
+
 def get_engine(url: str | None = None):
-    url = url or os.environ.get("DATABASE_URL") or default_sqlite_url()
-    connect_args = {"check_same_thread": False} if url.startswith("sqlite") else {}
-    return create_engine(url, connect_args=connect_args)
+    url = normalize_url(url or os.environ.get("DATABASE_URL") or default_sqlite_url())
+
+    if url.startswith("sqlite"):
+        return create_engine(url, connect_args={"check_same_thread": False})
+
+    # Serverless: every cold start opens a new connection and the process may
+    # be frozen between requests, so a long-lived pool is a liability. Recycle
+    # aggressively and always check liveness before handing a connection out.
+    return create_engine(
+        url, pool_pre_ping=True, pool_recycle=280, pool_size=1, max_overflow=2,
+    )
 
 
 def get_session_factory(engine=None) -> sessionmaker[Session]:

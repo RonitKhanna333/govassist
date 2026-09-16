@@ -1,0 +1,11 @@
+# Runtime dependencies for the deployed API only.
+#
+# Deliberately NOT the same list as pyproject.toml's: the corpus toolchain's
+# heavy deps (pdfminer.six, pypdf) are build-time tools that never run in a
+# request, and shipping them would bloat the serverless bundle for nothing.
+# The corpus is consumed here as committed JSON, not re-parsed from PDFs.
+fastapi>=0.110
+requests>=2.31.0
+PyYAML>=6.0
+SQLAlchemy>=2.0
+psycopg[binary]>=3.1

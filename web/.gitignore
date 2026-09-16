@@ -1,0 +1,9 @@
+node_modules/
+.next/
+out/
+.vercel/
+next-env.d.ts
+*.tsbuildinfo
+# Next 16 generates these; the real ones live at the repo root.
+AGENTS.md
+CLAUDE.md
