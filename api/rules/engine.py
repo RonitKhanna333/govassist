@@ -22,6 +22,7 @@ from pathlib import Path
 
 import api._corpus_bridge  # noqa: F401 -- must run before importing grammar
 import grammar  # noqa: E402
+from api.rules.forms import unresolved_fields  # noqa: E402
 from parse_scheme import repo_root  # noqa: E402
 
 
@@ -35,6 +36,28 @@ class Citation:
 
 
 @dataclass
+class Pending:
+    """The question actually being asked, and what would answer it.
+
+    Carrying the fields alongside the prose is what lets a client answer
+    deterministically instead of sending free text to a model and hoping it
+    infers which attribute was meant.
+    """
+
+    condition_id: str
+    expr: str
+    asks: str | None
+    fields: list = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        return {
+            "condition_id": self.condition_id,
+            "asks": self.asks,
+            "fields": [f.to_dict() for f in self.fields],
+        }
+
+
+@dataclass
 class EngineResult:
     scheme: str
     version: int
@@ -42,6 +65,7 @@ class EngineResult:
     missing_attributes: list[str]
     next_question: str | None
     citations: list[Citation] = field(default_factory=list)
+    pending: Pending | None = None
 
     def to_dict(self) -> dict:
         return {
@@ -51,6 +75,7 @@ class EngineResult:
             "missing_attributes": self.missing_attributes,
             "next_question": self.next_question,
             "citations": [c.__dict__ for c in self.citations],
+            "pending": self.pending.to_dict() if self.pending else None,
         }
 
 
@@ -128,6 +153,21 @@ def decide(scheme: str, profile: dict, root: Path | None = None) -> EngineResult
             source_url=row["source_url"], page=row["page"],
         ))
 
+    pending = None
+    for result in decision.results:
+        if result.value is grammar.UNKNOWN:
+            source = next(
+                (c for c in rules["conditions"] if c["id"] == result.id), None,
+            )
+            if source:
+                pending = Pending(
+                    condition_id=result.id,
+                    expr=source["expr"],
+                    asks=result.asks,
+                    fields=unresolved_fields(source["expr"], profile),
+                )
+            break
+
     return EngineResult(
         scheme=scheme,
         version=rules["version"],
@@ -135,6 +175,7 @@ def decide(scheme: str, profile: dict, root: Path | None = None) -> EngineResult
         missing_attributes=decision.missing_attributes,
         next_question=decision.next_questions[0] if decision.next_questions else None,
         citations=citations,
+        pending=pending,
     )
 
 

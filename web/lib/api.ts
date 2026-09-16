@@ -24,6 +24,24 @@ export interface SpeechPlan {
   note: string | null;
 }
 
+export interface AnswerField {
+  attribute: string;
+  kind: "boolean" | "number" | "choice";
+  satisfied_by: unknown;
+  options: unknown[];
+  comparator: string | null;
+  bound: number | null;
+}
+
+/** The question being asked, plus what would actually answer it. Derived
+ *  server-side from the rule expression, so the client never has to guess
+ *  which attribute a "Yes" referred to. */
+export interface Pending {
+  condition_id: string;
+  asks: string | null;
+  fields: AnswerField[];
+}
+
 export interface ChatResponse {
   domain: string;
   supported: boolean;
@@ -31,6 +49,7 @@ export interface ChatResponse {
   answer: string | null;
   next_question: string | null;
   missing_attributes?: string[];
+  pending: Pending | null;
   citations: Citation[];
   profile: Record<string, unknown>;
   locale: LocaleCode;
@@ -67,6 +86,9 @@ export async function sendChat(input: {
   scheme: string;
   profile: Record<string, unknown>;
   message?: string;
+  /** Deterministic answer to the pending question -- no model call. */
+  answer?: "yes" | "no";
+  answers?: Record<string, unknown>;
   locale: LocaleCode;
   messageLocale?: LocaleCode;
 }): Promise<ChatResponse> {
@@ -74,6 +96,8 @@ export async function sendChat(input: {
     scheme: input.scheme,
     profile: input.profile,
     message: input.message ?? "",
+    answer: input.answer,
+    answers: input.answers,
     locale: input.locale,
     message_locale: input.messageLocale ?? input.locale,
   });

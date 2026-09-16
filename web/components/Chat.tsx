@@ -5,6 +5,7 @@ import { ApiError, detectLocale, sendChat, type ChatResponse } from "@/lib/api";
 import { makeTranslator } from "@/lib/i18n";
 import { LOCALES, resolveLocale, type LocaleCode } from "@/lib/registry";
 import { useDictation, useSpeech } from "@/lib/useSpeech";
+import { AnswerControls } from "./AnswerControls";
 import { Citations } from "./Citations";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
@@ -88,7 +89,11 @@ export function Chat() {
   };
 
   const exchange = useCallback(
-    async (message: string, nextProfile?: Record<string, unknown>) => {
+    async (
+      message: string,
+      nextProfile?: Record<string, unknown>,
+      extra?: { answer?: "yes" | "no"; answers?: Record<string, unknown> },
+    ) => {
       setBusy(true);
       setError(null);
       stop();
@@ -97,6 +102,8 @@ export function Chat() {
           scheme: SCHEME,
           profile: nextProfile ?? profile,
           message,
+          answer: extra?.answer,
+          answers: extra?.answers,
           locale: contentLocale,
           messageLocale: contentLocale,
         });
@@ -130,6 +137,24 @@ export function Chat() {
     setTurns((prev) => [...prev, { role: "user", text }]);
     setDraft("");
     await exchange(text);
+  };
+
+  const answerYesNo = async (affirmative: boolean) => {
+    if (busy) return;
+    setTurns((prev) => [
+      ...prev,
+      { role: "user", text: affirmative ? t("answer.yes") : t("answer.no") },
+    ]);
+    await exchange("", undefined, { answer: affirmative ? "yes" : "no" });
+  };
+
+  const answerValues = async (values: Record<string, unknown>) => {
+    if (busy) return;
+    const shown = Object.entries(values)
+      .map(([key, value]) => `${key.replace(/_/g, " ")}: ${String(value)}`)
+      .join(", ");
+    setTurns((prev) => [...prev, { role: "user", text: shown }]);
+    await exchange("", undefined, { answers: values });
   };
 
   const restart = () => {
@@ -201,15 +226,14 @@ export function Chat() {
               <div ref={threadEnd} />
             </div>
 
-            {latest?.next_question && !busy && (
-              <div className="quickrow">
-                <button type="button" className="btn ghost" onClick={() => send(t("answer.yes"))}>
-                  {t("answer.yes")}
-                </button>
-                <button type="button" className="btn ghost" onClick={() => send(t("answer.no"))}>
-                  {t("answer.no")}
-                </button>
-              </div>
+            {latest?.pending && !busy && (
+              <AnswerControls
+                pending={latest.pending}
+                busy={busy}
+                onYesNo={answerYesNo}
+                onValues={answerValues}
+                t={t}
+              />
             )}
 
             <div className="composer">

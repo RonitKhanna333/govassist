@@ -36,6 +36,7 @@ from api.deps import get_language, get_llm
 from api.language.registry import CANONICAL_LOCALE, LOCALES, get as get_locale, negotiate
 from api.language.service import LanguageService
 from api.rules.engine import decide, known_attributes, load_rules
+from api.rules.forms import answer_yes_no
 from parse_scheme import repo_root  # noqa: E402
 
 router = APIRouter()
@@ -114,6 +115,28 @@ def chat(body: dict,
     except FileNotFoundError as exc:
         raise HTTPException(404, str(exc)) from exc
 
+    # Structured answers first, and deterministically: the server already
+    # knows which condition it asked about, so a Yes/No or a typed value is
+    # applied by reading the rule expression -- never by asking a model to
+    # infer which attribute was meant. This is what makes answering work
+    # with no API key at all, and it's why the question no longer repeats
+    # forever when the LLM is unavailable.
+    answers = body.get("answers")
+    if isinstance(answers, dict) and answers:
+        allowed = set(known_attributes(rules))
+        profile = {**profile, **{k: v for k, v in answers.items() if k in allowed}}
+
+    yes_no = body.get("answer")
+    if yes_no in ("yes", "no"):
+        current = decide(scheme, profile)
+        if current.pending:
+            profile = {
+                **profile,
+                **answer_yes_no(current.pending.expr, profile, yes_no == "yes"),
+            }
+
+    # Free text still goes through the model, because that genuinely needs
+    # interpretation -- but it is no longer the only way to answer.
     if english_message:
         extracted = nlu.extract_attributes(llm, english_message, known_attributes(rules))
         profile = {**profile, **extracted}
@@ -128,6 +151,7 @@ def chat(body: dict,
             "verdict": result.verdict.value, "answer": None,
             "next_question": question,
             "missing_attributes": result.missing_attributes,
+            "pending": result.pending.to_dict() if result.pending else None,
             "citations": [], "profile": profile,
             "locale": content_locale, "language_note": note,
             "speech": {"chunks": plan.chunks, "rung": plan.rung.value,
@@ -145,6 +169,7 @@ def chat(body: dict,
         "verdict": result.verdict.value, "answer": answer,
         "next_question": None,
         "missing_attributes": [],
+        "pending": None,
         # Citations stay verbatim in their source language, always.
         "citations": [c.__dict__ for c in result.citations],
         "profile": profile,

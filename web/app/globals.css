@@ -275,3 +275,34 @@ html, body {
   .masthead { flex-direction: column; }
   .bubble { max-width: 100%; }
 }
+
+.answers { margin-top: 0.75rem; }
+
+.numberrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.numberfield { display: flex; flex-direction: column; gap: 0.25rem; }
+
+.numberfield span {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.numberfield input {
+  font: inherit;
+  width: 8.5rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 9px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  color: var(--ink);
+}
+.numberfield input:focus-visible { outline: 2px solid var(--stamp); outline-offset: 1px; }
