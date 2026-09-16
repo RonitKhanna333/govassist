@@ -17,3 +17,7 @@ data/schemes/*/draft-report.txt
 
 # Source PDFs and extracted .txt ARE committed on purpose -- they are the
 # provenance anchor. Do not add them here.
+
+# Secrets. .env.example is the committed template.
+.env
+.env.local
