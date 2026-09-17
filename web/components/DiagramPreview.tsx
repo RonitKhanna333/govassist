@@ -34,6 +34,47 @@ const palette = {
   line: "#7d8ba0",
 };
 
+const SEQUENCE_LEFT = 18;
+const SEQUENCE_GAP = 144;
+const SEQUENCE_LANE_WIDTH = 124;
+const SEQUENCE_STEP_START = 76;
+const SEQUENCE_STEP_GAP = 39;
+
+export function sequenceDiagramDimensions(
+  participantCount: number,
+  steps: SequenceSpec["steps"],
+) {
+  const participants = Math.max(1, participantCount);
+  const maxLines = Math.max(1, ...steps.map((step) => step.lines.length));
+  const lastStepY = SEQUENCE_STEP_START + Math.max(0, steps.length - 1) * SEQUENCE_STEP_GAP;
+  return {
+    width: Math.max(880, SEQUENCE_LEFT + (participants - 1) * SEQUENCE_GAP + SEQUENCE_LANE_WIDTH + 18),
+    height: Math.max(150, lastStepY + maxLines * 13 + 24),
+  };
+}
+
+export function useCaseDiagramDimensions(actorCount: number, caseCount: number) {
+  const actors = Math.max(1, actorCount);
+  const cases = Math.max(1, caseCount);
+  const lastActorLabel = 65 + (actors - 1) * 95 + 55;
+  const lastCaseBottom = 46 + (cases - 1) * 41 + 34;
+  return {
+    width: 880,
+    height: Math.max(360, Math.max(lastActorLabel, lastCaseBottom) + 36),
+  };
+}
+
+export function classDiagramDimensions(
+  nodes: ClassSpec["nodes"],
+) {
+  const maxX = Math.max(0, ...nodes.map((node) => node.x + node.w));
+  const maxY = Math.max(0, ...nodes.map((node) => node.y + node.h));
+  return {
+    width: Math.max(1000, maxX + 24),
+    height: Math.max(390, maxY + 24),
+  };
+}
+
 function Lines({ lines, x, y, size = 14, fill = palette.ink, anchor = "middle" }: {
   lines: string[];
   x: number;
@@ -66,14 +107,15 @@ function Actor({ label, x, y }: { label: string; x: number; y: number }) {
 function UseCaseDiagram({ spec }: { spec: UseCaseSpec }) {
   const slug = spec.id.replace(/[^a-z0-9]/gi, "-");
   const caseX = 325;
+  const { width, height } = useCaseDiagramDimensions(spec.actors.length, spec.cases.length);
   return (
-    <svg className="diagram-svg" viewBox="0 0 880 360" role="img" aria-label={`${spec.id} use case diagram`}>
+    <svg className="diagram-svg" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${spec.id} use case diagram`}>
       <defs>
         <marker id={`${slug}-arrow`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M0 0L10 5L0 10z" fill={palette.line} />
         </marker>
       </defs>
-      <rect x="210" y="15" width="650" height="330" rx="12" fill="none" stroke={palette.boundary} strokeDasharray="8 7" />
+      <rect x="210" y="15" width="650" height={height - 30} rx="12" fill="none" stroke={palette.boundary} strokeDasharray="8 7" />
       <Lines lines={["GovAssist"]} x={230} y={37} size={13} fill={palette.muted} anchor="start" />
       {spec.actors.map((actor, index) => <Actor key={actor} label={actor} x={88} y={65 + index * 95} />)}
       {spec.cases.map((item, index) => {
@@ -93,11 +135,12 @@ function UseCaseDiagram({ spec }: { spec: UseCaseSpec }) {
 
 function SequenceDiagram({ spec }: { spec: SequenceSpec }) {
   const slug = spec.id.replace(/[^a-z0-9]/gi, "-");
-  const left = 18;
-  const gap = 144;
+  const { width, height } = sequenceDiagramDimensions(spec.participants.length, spec.steps);
+  const left = SEQUENCE_LEFT;
+  const gap = SEQUENCE_GAP;
   const center = (index: number) => left + index * gap + 62;
   return (
-    <svg className="diagram-svg" viewBox="0 0 880 360" role="img" aria-label={`${spec.id} sequence diagram`}>
+    <svg className="diagram-svg" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${spec.id} sequence diagram`}>
       <defs>
         <marker id={`${slug}-arrow`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M0 0L10 5L0 10z" fill={palette.green} />
@@ -107,11 +150,11 @@ function SequenceDiagram({ spec }: { spec: SequenceSpec }) {
         <g key={participant}>
           <rect x={left + index * gap} y="12" width="124" height="38" rx="7" fill={palette.card} stroke={palette.accent} />
           <Lines lines={participant.split(" / ")} x={center(index)} y={participant.includes(" / ") ? 27 : 36} size={11} />
-          <line x1={center(index)} y1="50" x2={center(index)} y2="346" stroke={palette.boundary} strokeDasharray="4 5" />
+          <line x1={center(index)} y1="50" x2={center(index)} y2={height - 14} stroke={palette.boundary} strokeDasharray="4 5" />
         </g>
       ))}
       {spec.steps.map((step, index) => {
-        const y = 76 + index * 39;
+        const y = SEQUENCE_STEP_START + index * SEQUENCE_STEP_GAP;
         const x1 = center(step.from);
         const x2 = center(step.to);
         const direction = x2 >= x1 ? 1 : -1;
@@ -129,8 +172,9 @@ function SequenceDiagram({ spec }: { spec: SequenceSpec }) {
 function ClassDiagram({ spec }: { spec: ClassSpec }) {
   const slug = spec.id.replace(/[^a-z0-9]/gi, "-");
   const byId = Object.fromEntries(spec.nodes.map((node) => [node.id, node]));
+  const { width, height } = classDiagramDimensions(spec.nodes);
   return (
-    <svg className="diagram-svg" viewBox="0 0 1000 390" role="img" aria-label={`${spec.id} class diagram`}>
+    <svg className="diagram-svg" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${spec.id} class diagram`}>
       <defs>
         <marker id={`${slug}-arrow`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M0 0L10 5L0 10z" fill={palette.line} />

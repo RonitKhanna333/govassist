@@ -37,6 +37,13 @@ KNOWN_PRODUCTION_ORIGINS = [
     "https://govassist-web-git-main-ronit-khannas-projects.vercel.app",
 ]
 
+# Vercel branch/commit previews for this one frontend project. Keep the
+# project slug and account suffix anchored; never allow every *.vercel.app
+# origin while credentials are enabled.
+VERCEL_PREVIEW_ORIGIN_REGEX = (
+    r"^https://govassist-web-git-[a-z0-9-]+-ronit-khannas-projects\.vercel\.app$"
+)
+
 
 def allowed_origins() -> list[str]:
     configured = os.environ.get("CORS_ORIGINS", "")
@@ -49,8 +56,9 @@ app = FastAPI(title="GovAssist API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins(),
-    # Preview deployments must be explicitly listed in CORS_ORIGINS. Never
-    # use a broad *.vercel.app regex here: credentials are enabled.
+    allow_origin_regex=VERCEL_PREVIEW_ORIGIN_REGEX,
+    # This regex is scoped to the GovAssist web project. Never use a broad
+    # *.vercel.app regex here: credentials are enabled.
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],

@@ -39,9 +39,11 @@ cd web && npm install && npm run dev   # :3000  (use localhost, not 127.0.0.1)
 
 ## UCS503 presentation and demonstration
 
-The hosted-project presentation is the Next.js route `/presentation`. The
+The Vercel preview presentation is the Next.js route `/presentation`. The
 working signed-out PMFME prototype is `/`, and the evidence/remediation page is
-`/evidence`. Navigation between all three is built into the site.
+`/evidence`. Navigation between all three is built into the site. The PR
+preview is not the production deployment; configure its `NEXT_PUBLIC_API_BASE`
+to the matching API preview before treating it as backend evidence.
 
 The prepared demonstration uses only non-sensitive values. To show the
 reviewed boundary, use the complete individual-unit profile in
@@ -53,13 +55,14 @@ Hindi. PMFME is the only demonstrated production scheme.
 
 The repository contains exactly four use-case diagrams, five sequence diagrams
 and one detailed class diagram under [`docs/diagrams/`](docs/diagrams/). The
-presentation renders responsive previews from repository-controlled source
-descriptions; they are not screenshots of an editor canvas.
+presentation contains responsive DiagramSpec previews paired with the formal
+Mermaid/source artifacts; they are not screenshots of an editor canvas.
 
-The current change is not deployed or pushed by default. After the required
-human corpus review, redeploy the API and web projects and repeat the browser
-checks. See [`docs/human-review-remediation.md`](docs/human-review-remediation.md)
-and [`docs/deploy.md`](docs/deploy.md).
+This branch is pushed as PR #5 and has a Vercel preview, but it is not merged
+to `main` or production-approved. After the required human corpus review and
+preview browser checks, merge the PR and verify the production deployment. See
+[`docs/human-review-remediation.md`](docs/human-review-remediation.md) and
+[`docs/deploy.md`](docs/deploy.md).
 
 ## The one rule
 

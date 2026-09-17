@@ -400,6 +400,23 @@ html, body {
 .presentation-page .site-nav { border-bottom: 1px solid var(--presentation-line); padding-bottom: 1rem; }
 .presentation-page .site-nav a { color: var(--presentation-muted); border-color: var(--presentation-line); }
 .presentation-page .site-nav a:hover, .presentation-page .site-nav a.active { color: var(--presentation-ink); border-color: var(--presentation-gold); background: var(--presentation-panel); }
+.backend-target-notice {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.2rem 1rem;
+  align-items: center;
+  margin: 0.8rem 0 1.4rem;
+  padding: 0.8rem 0.95rem;
+  border: 1px solid var(--presentation-line);
+  background: var(--presentation-panel);
+}
+.backend-target-notice > div { display: grid; gap: 0.2rem; }
+.backend-target-label { color: var(--presentation-faint); font: 0.62rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
+.backend-target-notice strong { color: var(--presentation-ink); font-size: 0.86rem; }
+.backend-target-notice code { color: var(--presentation-gold); overflow-wrap: anywhere; font: 0.7rem var(--mono); text-align: right; }
+.backend-target-notice p { grid-column: 1 / -1; margin: 0.2rem 0 0; color: var(--presentation-muted); font-size: 0.78rem; line-height: 1.45; }
+.backend-target-notice.warning { border-color: rgba(226, 118, 104, 0.7); background: rgba(226, 118, 104, 0.1); }
+.backend-target-notice.warning strong, .backend-target-notice.warning code { color: #f0aaa0; }
 .presentation-hero { display: grid; grid-template-columns: minmax(0, 1fr) 220px; align-items: end; gap: 2.5rem; padding: 4rem 0 3.8rem; }
 .kicker, .architecture-layer, .card-index, .hero-stamp span, .status-label, .diagram-card-head > span {
   color: var(--presentation-gold);
@@ -517,4 +534,6 @@ html, body {
   .scope-header, .contribution-header { display: none; }
   .scope-row > span:nth-child(2), .contribution-row > span:nth-child(2) { justify-self: start; }
   .presentation-footer { flex-direction: column; }
+  .backend-target-notice { grid-template-columns: 1fr; }
+  .backend-target-notice code { text-align: left; }
 }

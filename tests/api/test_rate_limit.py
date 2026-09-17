@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from api.rate_limit import InMemoryRateLimiter
+from api.rate_limit import DEFAULT_LIMIT, InMemoryRateLimiter, configured_limit
 
 
 def test_rate_limiter_allows_limit_then_returns_retry_after():
@@ -22,3 +22,8 @@ def test_rate_limiter_keys_clients_independently():
     assert limiter.check("first").allowed
     assert not limiter.check("first").allowed
     assert limiter.check("second").allowed
+
+
+def test_default_limit_has_classroom_headroom(monkeypatch):
+    monkeypatch.delenv("GOVASSIST_RATE_LIMIT", raising=False)
+    assert configured_limit() == DEFAULT_LIMIT == 180

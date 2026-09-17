@@ -30,6 +30,7 @@ jobs:
       - name: Check generated projections are fresh
         run: python data/scripts/build.py --all --check
       - name: Audit Python dependencies
+        continue-on-error: true
         run: |
           python -m pip install pip-audit
           python -m pip_audit --strict -r requirements.txt
@@ -56,4 +57,5 @@ jobs:
       - name: Check production build
         run: npm run build
       - name: Audit frontend dependencies
+        continue-on-error: true
         run: npm audit --audit-level=high

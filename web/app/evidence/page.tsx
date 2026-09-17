@@ -1,6 +1,8 @@
 import { SiteNav } from "@/components/SiteNav";
+import { BackendTargetNotice } from "@/components/BackendTargetNotice";
 
 const REPOSITORY = "https://github.com/RonitKhanna333/govassist";
+const PR_URL = `${REPOSITORY}/pull/5`;
 const SOURCE_PDF = "https://pmfme.mofpi.gov.in/newsletters/docs/SchemeGuidelines.pdf";
 
 function EvidenceCard({ title, children }: { title: string; children: React.ReactNode }) {
@@ -16,6 +18,7 @@ export default function EvidencePage() {
           <h1>Show the work. Keep the boundary.</h1>
           <p className="hero-deck">A compact handoff for the UCS503 demonstration: what is backed by source, what is tested locally, what is configured, and what still needs a human.</p>
         </header>
+        <BackendTargetNotice />
         <div className="evidence-page-grid">
           <EvidenceCard title="Repository and official source">
             <p><a href={REPOSITORY} target="_blank" rel="noreferrer">github.com/RonitKhanna333/govassist ↗</a></p>
@@ -37,12 +40,12 @@ export default function EvidencePage() {
             <p className="muted-copy">Run interactively. Do not pipe answers or edit <code>.state.json</code>. Confirm: “above 18” means <code>&gt; 18</code>; age 18 fails and age 19 passes.</p>
           </EvidenceCard>
           <EvidenceCard title="Team contribution evidence">
-            <ul><li>RonitKhanna333 / Ronit Khanna — commit and merge history is present in the repository.</li><li><code>thorb</code> — corpus, Gate 5 and engine/graph commits are present in the repository.</li><li>Shreyas — <strong>Evidence pending</strong>.</li><li>Bhavneet — <strong>Evidence pending</strong>.</li></ul>
+            <ul><li>RonitKhanna333 / Ronit Khanna — commit and merge history is present in the repository.</li><li><code>thorb</code> — corpus, Gate 5 and engine/graph commits are present in the repository.</li><li>Shreyas / Shreyastacky — <a href={PR_URL} target="_blank" rel="noreferrer">PR #5</a>: presentation route, evidence page, UML presentation integration, navigation and supporting frontend work.</li><li>Bhavneet — <strong>Evidence pending</strong>.</li></ul>
             <p className="muted-copy">Add only exact commit, PR, issue, documentation or test links supplied by the team. No shared-work claim is inferred.</p>
           </EvidenceCard>
           <EvidenceCard title="Deployment handoff">
-            <p>This change has not been pushed or deployed. After human review:</p>
-            <ol><li>Commit the reviewed diff and push to <code>main</code>.</li><li>Deploy/redeploy the API and web Vercel projects with their configured environment variables.</li><li>Open <code>/presentation</code> signed out and repeat desktop/mobile, eligible/ineligible, age-18, language, link and console checks.</li></ol>
+            <p>Preview deployed by Vercel; this PR is not merged to <code>main</code> and is not production-approved.</p>
+            <ol><li>Configure the web Preview environment's <code>NEXT_PUBLIC_API_BASE</code> to the matching PR API preview URL.</li><li>Run human PMFME Gate 4/5 re-review for the corrected age boundary.</li><li>Open the matching preview signed out and repeat desktop/mobile, scheme picker, microphone, TTS, eligible/ineligible, age-18, language, link and console checks.</li><li>Merge PR #5 only after those checks; then verify the production deployment separately.</li></ol>
           </EvidenceCard>
         </div>
         <footer className="presentation-footer"><a href="/presentation">← Back to presentation</a><span>Evidence over theatre.</span></footer>

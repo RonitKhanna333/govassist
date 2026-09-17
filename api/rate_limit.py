@@ -15,7 +15,11 @@ import time
 from dataclasses import dataclass
 
 
-DEFAULT_LIMIT = 60
+# A classroom can put several students behind one NAT/proxy address. Keep the
+# warm-instance guard forgiving enough for a full guided flow by a small room;
+# this is still only an accidental-refresh safeguard, not an access-control
+# boundary.
+DEFAULT_LIMIT = 180
 DEFAULT_WINDOW_SECONDS = 60.0
 
 
