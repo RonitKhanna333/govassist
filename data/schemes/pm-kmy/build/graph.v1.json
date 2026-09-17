@@ -1,0 +1,441 @@
+{
+  "edges": [
+    {
+      "from": "clause:pmkmy-contribution",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkmy-eligibility",
+      "predicate": "BEARS_ON",
+      "to": "attribute:age"
+    },
+    {
+      "from": "clause:pmkmy-eligibility",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkmy-exclusion-higher-status",
+      "predicate": "BEARS_ON",
+      "to": "attribute:holds_or_held_public_office"
+    },
+    {
+      "from": "clause:pmkmy-exclusion-higher-status",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_government_employee"
+    },
+    {
+      "from": "clause:pmkmy-exclusion-higher-status",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_institutional_landholder"
+    },
+    {
+      "from": "clause:pmkmy-exclusion-higher-status",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_practising_professional"
+    },
+    {
+      "from": "clause:pmkmy-exclusion-higher-status",
+      "predicate": "BEARS_ON",
+      "to": "attribute:paid_income_tax_last_year"
+    },
+    {
+      "from": "clause:pmkmy-exclusion-higher-status",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkmy-exclusion-other-schemes",
+      "predicate": "BEARS_ON",
+      "to": "attribute:in_other_pension_or_social_security_scheme"
+    },
+    {
+      "from": "clause:pmkmy-exclusion-other-schemes",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkmy-government-match",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkmy-pension",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkmy-smf-definition",
+      "predicate": "BEARS_ON",
+      "to": "attribute:land_hectares"
+    },
+    {
+      "from": "clause:pmkmy-smf-definition",
+      "predicate": "BEARS_ON",
+      "to": "attribute:owns_cultivable_land"
+    },
+    {
+      "from": "clause:pmkmy-smf-definition",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "condition:age_18_to_40",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkmy-eligibility"
+    },
+    {
+      "from": "condition:age_18_to_40",
+      "predicate": "TESTS",
+      "to": "attribute:age"
+    },
+    {
+      "from": "condition:not_constitutional_or_elected",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkmy-exclusion-higher-status"
+    },
+    {
+      "from": "condition:not_constitutional_or_elected",
+      "predicate": "TESTS",
+      "to": "attribute:holds_or_held_public_office"
+    },
+    {
+      "from": "condition:not_government_employee",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkmy-exclusion-higher-status"
+    },
+    {
+      "from": "condition:not_government_employee",
+      "predicate": "TESTS",
+      "to": "attribute:is_government_employee"
+    },
+    {
+      "from": "condition:not_in_other_social_security",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkmy-exclusion-other-schemes"
+    },
+    {
+      "from": "condition:not_in_other_social_security",
+      "predicate": "TESTS",
+      "to": "attribute:in_other_pension_or_social_security_scheme"
+    },
+    {
+      "from": "condition:not_income_tax_payer",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkmy-exclusion-higher-status"
+    },
+    {
+      "from": "condition:not_income_tax_payer",
+      "predicate": "TESTS",
+      "to": "attribute:paid_income_tax_last_year"
+    },
+    {
+      "from": "condition:not_institutional_land",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkmy-exclusion-higher-status"
+    },
+    {
+      "from": "condition:not_institutional_land",
+      "predicate": "TESTS",
+      "to": "attribute:is_institutional_landholder"
+    },
+    {
+      "from": "condition:not_practising_professional",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkmy-exclusion-higher-status"
+    },
+    {
+      "from": "condition:not_practising_professional",
+      "predicate": "TESTS",
+      "to": "attribute:is_practising_professional"
+    },
+    {
+      "from": "condition:small_or_marginal_farmer",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkmy-smf-definition"
+    },
+    {
+      "from": "condition:small_or_marginal_farmer",
+      "predicate": "TESTS",
+      "to": "attribute:land_hectares"
+    },
+    {
+      "from": "condition:small_or_marginal_farmer",
+      "predicate": "TESTS",
+      "to": "attribute:owns_cultivable_land"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmkmy-exclusion-higher-status"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmkmy-exclusion-other-schemes"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkmy-contribution"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkmy-eligibility"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkmy-exclusion-higher-status"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkmy-exclusion-other-schemes"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkmy-government-match"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkmy-pension"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkmy-smf-definition"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "PROVIDES",
+      "to": "clause:pmkmy-government-match"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "PROVIDES",
+      "to": "clause:pmkmy-pension"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "REQUIRES",
+      "to": "condition:age_18_to_40"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "REQUIRES",
+      "to": "condition:not_constitutional_or_elected"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "REQUIRES",
+      "to": "condition:not_government_employee"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "REQUIRES",
+      "to": "condition:not_in_other_social_security"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "REQUIRES",
+      "to": "condition:not_income_tax_payer"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "REQUIRES",
+      "to": "condition:not_institutional_land"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "REQUIRES",
+      "to": "condition:not_practising_professional"
+    },
+    {
+      "from": "scheme:pm-kmy",
+      "predicate": "REQUIRES",
+      "to": "condition:small_or_marginal_farmer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "attribute:age",
+      "name": "age",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:holds_or_held_public_office",
+      "name": "holds_or_held_public_office",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:in_other_pension_or_social_security_scheme",
+      "name": "in_other_pension_or_social_security_scheme",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_government_employee",
+      "name": "is_government_employee",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_institutional_landholder",
+      "name": "is_institutional_landholder",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_practising_professional",
+      "name": "is_practising_professional",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:land_hectares",
+      "name": "land_hectares",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:owns_cultivable_land",
+      "name": "owns_cultivable_land",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:paid_income_tax_last_year",
+      "name": "paid_income_tax_last_year",
+      "type": "Attribute"
+    },
+    {
+      "clause_type": "procedure",
+      "id": "clause:pmkmy-contribution",
+      "page": 5,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:pmkmy-eligibility",
+      "page": 3,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmkmy-exclusion-higher-status",
+      "page": 3,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmkmy-exclusion-other-schemes",
+      "page": 3,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:pmkmy-government-match",
+      "page": 4,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:pmkmy-pension",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "definition",
+      "id": "clause:pmkmy-smf-definition",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "asks": "Are you of the age of 18 years and above and upto the age of 40 years?",
+      "expr": "profile.age >= 18 and profile.age <= 40",
+      "id": "condition:age_18_to_40",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you a former or present holder of a constitutional post, Minister, MP, MLA, Mayor or District Panchayat Chairperson?",
+      "expr": "profile.holds_or_held_public_office == false",
+      "id": "condition:not_constitutional_or_elected",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you a serving or retired officer or employee of Central/State Government, PSE or Local Body (other than MTS/Class IV/Group D)?",
+      "expr": "profile.is_government_employee == false",
+      "id": "condition:not_government_employee",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you covered under NPS, ESIC, EPFO, PM-SYM or PM-LVM?",
+      "expr": "profile.in_other_pension_or_social_security_scheme == false",
+      "id": "condition:not_in_other_social_security",
+      "type": "Condition"
+    },
+    {
+      "asks": "Did you pay Income Tax in the last assessment year?",
+      "expr": "profile.paid_income_tax_last_year == false",
+      "id": "condition:not_income_tax_payer",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you an institutional land holder?",
+      "expr": "profile.is_institutional_landholder == false",
+      "id": "condition:not_institutional_land",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you a registered practising Doctor, Engineer, Lawyer, Chartered Accountant or Architect?",
+      "expr": "profile.is_practising_professional == false",
+      "id": "condition:not_practising_professional",
+      "type": "Condition"
+    },
+    {
+      "asks": "Do you own cultivable land up to 2 hectare as per land records?",
+      "expr": "profile.owns_cultivable_land == true and profile.land_hectares <= 2",
+      "id": "condition:small_or_marginal_farmer",
+      "type": "Condition"
+    },
+    {
+      "authority": "Department of Agriculture, Cooperation & Farmers Welfare",
+      "effective_from": "2019-08-09",
+      "effective_to": null,
+      "id": "scheme:pm-kmy",
+      "name": "Pradhan Mantri Kisan Maan-Dhan Yojana (farmer pension)",
+      "tier": 1,
+      "type": "Scheme",
+      "version": 1
+    },
+    {
+      "checksum": "sha256:a60ec28b4d4344a60447efe61abbca5c45b8a291633518b353beb91aee8546ef",
+      "id": "source:operational-guidelines",
+      "retrieved_at": "2026-09-17",
+      "type": "SourceDocument",
+      "url": "https://pmkisan.gov.in/Documents/PMKMYOperationalGuidelines.pdf"
+    }
+  ],
+  "scheme": "pm-kmy",
+  "version": 1
+}

@@ -1,0 +1,252 @@
+{
+  "edges": [
+    {
+      "from": "clause:pmsby-benefits",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmsby-details",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmsby-eligibility",
+      "predicate": "BEARS_ON",
+      "to": "attribute:age"
+    },
+    {
+      "from": "clause:pmsby-eligibility",
+      "predicate": "BEARS_ON",
+      "to": "attribute:consents_to_auto_debit"
+    },
+    {
+      "from": "clause:pmsby-eligibility",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmsby-premium",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmsby-scope",
+      "predicate": "BEARS_ON",
+      "to": "attribute:age"
+    },
+    {
+      "from": "clause:pmsby-scope",
+      "predicate": "BEARS_ON",
+      "to": "attribute:has_bank_or_post_office_account"
+    },
+    {
+      "from": "clause:pmsby-scope",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmsby-termination",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "condition:age_18_to_70",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmsby-eligibility"
+    },
+    {
+      "from": "condition:age_18_to_70",
+      "predicate": "TESTS",
+      "to": "attribute:age"
+    },
+    {
+      "from": "condition:consents_to_auto_debit",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmsby-eligibility"
+    },
+    {
+      "from": "condition:consents_to_auto_debit",
+      "predicate": "TESTS",
+      "to": "attribute:consents_to_auto_debit"
+    },
+    {
+      "from": "condition:has_bank_account",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmsby-scope"
+    },
+    {
+      "from": "condition:has_bank_account",
+      "predicate": "TESTS",
+      "to": "attribute:has_bank_or_post_office_account"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmsby-termination"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmsby-benefits"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmsby-details"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmsby-eligibility"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmsby-premium"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmsby-scope"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmsby-termination"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "PROVIDES",
+      "to": "clause:pmsby-benefits"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "PROVIDES",
+      "to": "clause:pmsby-premium"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "REQUIRES",
+      "to": "condition:age_18_to_70"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "REQUIRES",
+      "to": "condition:consents_to_auto_debit"
+    },
+    {
+      "from": "scheme:pmsby",
+      "predicate": "REQUIRES",
+      "to": "condition:has_bank_account"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "attribute:age",
+      "name": "age",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:consents_to_auto_debit",
+      "name": "consents_to_auto_debit",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:has_bank_or_post_office_account",
+      "name": "has_bank_or_post_office_account",
+      "type": "Attribute"
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:pmsby-benefits",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "definition",
+      "id": "clause:pmsby-details",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:pmsby-eligibility",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:pmsby-premium",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:pmsby-scope",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmsby-termination",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "asks": "Are you aged between 18 years (completed) and 70 years?",
+      "expr": "profile.age >= 18 and profile.age <= 70",
+      "id": "condition:age_18_to_70",
+      "type": "Condition"
+    },
+    {
+      "asks": "Do you consent to join and enable auto-debit of the premium?",
+      "expr": "profile.consents_to_auto_debit == true",
+      "id": "condition:consents_to_auto_debit",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you an individual account holder of a participating bank or Post office?",
+      "expr": "profile.has_bank_or_post_office_account == true",
+      "id": "condition:has_bank_account",
+      "type": "Condition"
+    },
+    {
+      "authority": "Department of Financial Services, Ministry of Finance",
+      "effective_from": "2022-06-01",
+      "effective_to": null,
+      "id": "scheme:pmsby",
+      "name": "Pradhan Mantri Suraksha Bima Yojana (accident insurance)",
+      "tier": 1,
+      "type": "Scheme",
+      "version": 1
+    },
+    {
+      "checksum": "sha256:195a99298e85821bd84174c4973ad8f8be2ecf24cfb97f865799c702cae7feb5",
+      "id": "source:rules",
+      "retrieved_at": "2026-09-17",
+      "type": "SourceDocument",
+      "url": "https://jansuraksha.gov.in/Files/PMSBY/English/Rules.pdf"
+    }
+  ],
+  "scheme": "pmsby",
+  "version": 1
+}

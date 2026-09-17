@@ -178,3 +178,22 @@ export async function speakAudio(text: string, locale: LocaleCode): Promise<Blob
   if (!response.ok) throw new Error(`speak ${response.status}`);
   return response.blob();
 }
+
+export interface SchemeInfo {
+  id: string;
+  name: string;
+  name_en: string;
+  authority: string | null;
+  /** False until a person has approved the clause and rule-logic reviews. */
+  reviewed: boolean;
+}
+
+export async function listSchemes(locale: LocaleCode): Promise<SchemeInfo[]> {
+  try {
+    const response = await fetch(`${BASE}/schemes?locale=${encodeURIComponent(locale)}`);
+    if (!response.ok) return [];
+    return ((await response.json()) as { schemes: SchemeInfo[] }).schemes;
+  } catch {
+    return [];
+  }
+}

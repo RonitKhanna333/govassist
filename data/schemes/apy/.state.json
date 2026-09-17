@@ -1,0 +1,26 @@
+{
+  "clauses": {},
+  "conditions": {},
+  "created_at": "2026-09-17T05:22:32+00:00",
+  "gates": {
+    "0_source": {
+      "at": "2026-09-17T05:22:32+00:00",
+      "by": "thorb",
+      "note": "C:\\Users\\thorb\\AppData\\Local\\Temp\\claude\\C--Users-thorb\\5cde01c2-1013-41e8-b345-4ba209c60640\\scratchpad\\pdfs\\scheme-details.pdf",
+      "status": "approved"
+    },
+    "1_identity": {
+      "at": "2026-09-17T05:22:32+00:00",
+      "by": "thorb",
+      "note": "scheme-details.pdf sha256:3b7291f47c9e17dc3378745e0fb45100b3119deb699d9cf5cfc353b6390ef939",
+      "status": "approved"
+    },
+    "2_extraction": {
+      "at": "2026-09-17T05:22:34+00:00",
+      "by": "thorb",
+      "note": "4 pages, 8522 chars",
+      "status": "approved"
+    }
+  },
+  "scheme": "apy"
+}

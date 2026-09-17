@@ -340,3 +340,31 @@ def test_tts_falls_back_to_the_next_engine():
          patch("api.language.tts._edge", side_effect=broken), \
          patch("api.language.tts._google", return_value=b"mp3"):
         assert asyncio.run(tts.synthesize("नमस्ते", "hi")) == b"mp3"
+
+
+def test_schemes_lists_the_new_schemes_and_hides_the_fixture():
+    body = _client().get("/schemes?locale=hi").json()
+    ids = [s["id"] for s in body["schemes"]]
+    assert ids[0] == "pmfme"
+    assert {"pmsby", "pmjjby", "apy", "pm-kmy"} <= set(ids)
+    assert "demo-scheme" not in ids
+    reviewed = {s["id"]: s["reviewed"] for s in body["schemes"]}
+    # Review gates are never assumed: only the scheme a person approved.
+    assert reviewed["pmfme"] is True
+    assert reviewed["apy"] is False
+
+
+def test_an_unsafe_scheme_name_is_rejected():
+    assert _client().post("/chat", json={"scheme": "../x", "profile": {}}).status_code == 404
+
+
+@pytest.mark.parametrize("scheme,profile,verdict", [
+    ("apy", {"is_indian_citizen": True, "has_savings_bank_account": True,
+             "age": 41, "ever_paid_income_tax": False}, "NOT_ELIGIBLE"),
+    ("pmsby", {"has_bank_or_post_office_account": True, "age": 70,
+               "consents_to_auto_debit": True}, "ELIGIBLE"),
+    ("pm-kmy", {"owns_cultivable_land": True, "land_hectares": 2.5}, "NOT_ELIGIBLE"),
+])
+def test_new_scheme_boundaries(scheme, profile, verdict):
+    body = _client().post("/chat", json={"scheme": scheme, "profile": profile}).json()
+    assert body["verdict"] == verdict

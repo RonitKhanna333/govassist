@@ -39,5 +39,8 @@
   "mic.failed": "Couldn't understand the recording. Please try again or type your answer.",
   "mic.empty": "I didn't hear anything. Please try again.",
   "mic.voice_limited": "Voice input is available in हिन्दी and English for now. Please type your answer.",
-  "speak.loading": "Loading voice…"
+  "speak.loading": "Loading voice…",
+  "scheme.choose": "Which scheme do you want to check?",
+  "scheme.unreviewed": "not yet reviewed",
+  "scheme.unreviewed_note": "The rules for this scheme are quoted from the official document, but a person has not checked them yet. Treat the result as a first guide."
 }

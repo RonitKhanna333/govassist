@@ -1,0 +1,26 @@
+{
+  "clauses": {},
+  "conditions": {},
+  "created_at": "2026-09-17T05:22:34+00:00",
+  "gates": {
+    "0_source": {
+      "at": "2026-09-17T05:22:34+00:00",
+      "by": "thorb",
+      "note": "C:\\Users\\thorb\\AppData\\Local\\Temp\\claude\\C--Users-thorb\\5cde01c2-1013-41e8-b345-4ba209c60640\\scratchpad\\pdfs\\operational-guidelines.pdf",
+      "status": "approved"
+    },
+    "1_identity": {
+      "at": "2026-09-17T05:22:35+00:00",
+      "by": "thorb",
+      "note": "operational-guidelines.pdf sha256:a60ec28b4d4344a60447efe61abbca5c45b8a291633518b353beb91aee8546ef",
+      "status": "approved"
+    },
+    "2_extraction": {
+      "at": "2026-09-17T05:22:40+00:00",
+      "by": "thorb",
+      "note": "33 pages, 71092 chars",
+      "status": "approved"
+    }
+  },
+  "scheme": "pm-kmy"
+}

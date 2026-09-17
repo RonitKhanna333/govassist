@@ -1,0 +1,96 @@
+{
+  "authority": "Department of Agriculture, Cooperation & Farmers Welfare",
+  "conditions": [
+    {
+      "asks": "Do you own cultivable land up to 2 hectare as per land records?",
+      "clause": "pmkmy-smf-definition",
+      "expr": "profile.owns_cultivable_land == true and profile.land_hectares <= 2",
+      "id": "small_or_marginal_farmer",
+      "reads": [
+        "land_hectares",
+        "owns_cultivable_land"
+      ]
+    },
+    {
+      "asks": "Are you of the age of 18 years and above and upto the age of 40 years?",
+      "clause": "pmkmy-eligibility",
+      "expr": "profile.age >= 18 and profile.age <= 40",
+      "id": "age_18_to_40",
+      "reads": [
+        "age"
+      ]
+    },
+    {
+      "asks": "Are you covered under NPS, ESIC, EPFO, PM-SYM or PM-LVM?",
+      "clause": "pmkmy-exclusion-other-schemes",
+      "expr": "profile.in_other_pension_or_social_security_scheme == false",
+      "id": "not_in_other_social_security",
+      "reads": [
+        "in_other_pension_or_social_security_scheme"
+      ]
+    },
+    {
+      "asks": "Are you an institutional land holder?",
+      "clause": "pmkmy-exclusion-higher-status",
+      "expr": "profile.is_institutional_landholder == false",
+      "id": "not_institutional_land",
+      "reads": [
+        "is_institutional_landholder"
+      ]
+    },
+    {
+      "asks": "Are you a former or present holder of a constitutional post, Minister, MP, MLA, Mayor or District Panchayat Chairperson?",
+      "clause": "pmkmy-exclusion-higher-status",
+      "expr": "profile.holds_or_held_public_office == false",
+      "id": "not_constitutional_or_elected",
+      "reads": [
+        "holds_or_held_public_office"
+      ]
+    },
+    {
+      "asks": "Are you a serving or retired officer or employee of Central/State Government, PSE or Local Body (other than MTS/Class IV/Group D)?",
+      "clause": "pmkmy-exclusion-higher-status",
+      "expr": "profile.is_government_employee == false",
+      "id": "not_government_employee",
+      "reads": [
+        "is_government_employee"
+      ]
+    },
+    {
+      "asks": "Did you pay Income Tax in the last assessment year?",
+      "clause": "pmkmy-exclusion-higher-status",
+      "expr": "profile.paid_income_tax_last_year == false",
+      "id": "not_income_tax_payer",
+      "reads": [
+        "paid_income_tax_last_year"
+      ]
+    },
+    {
+      "asks": "Are you a registered practising Doctor, Engineer, Lawyer, Chartered Accountant or Architect?",
+      "clause": "pmkmy-exclusion-higher-status",
+      "expr": "profile.is_practising_professional == false",
+      "id": "not_practising_professional",
+      "reads": [
+        "is_practising_professional"
+      ]
+    }
+  ],
+  "decision": "ALL(conditions)",
+  "effective_from": "2019-08-09",
+  "effective_to": null,
+  "name_en": "Pradhan Mantri Kisan Maan-Dhan Yojana (farmer pension)",
+  "scheme": "pm-kmy",
+  "sources": [
+    {
+      "checksum": "sha256:a60ec28b4d4344a60447efe61abbca5c45b8a291633518b353beb91aee8546ef",
+      "extractor": "pdfminer.six",
+      "id": "operational-guidelines",
+      "pdf": "source/operational-guidelines.pdf",
+      "retrieved_at": "2026-09-17",
+      "txt": "source/operational-guidelines.txt",
+      "url": "https://pmkisan.gov.in/Documents/PMKMYOperationalGuidelines.pdf"
+    }
+  ],
+  "tier": 1,
+  "version": 1
+}

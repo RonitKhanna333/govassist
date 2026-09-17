@@ -1,0 +1,267 @@
+{
+  "edges": [
+    {
+      "from": "clause:apy-contribution",
+      "predicate": "FROM",
+      "to": "source:scheme-details"
+    },
+    {
+      "from": "clause:apy-eligibility",
+      "predicate": "BEARS_ON",
+      "to": "attribute:age"
+    },
+    {
+      "from": "clause:apy-eligibility",
+      "predicate": "BEARS_ON",
+      "to": "attribute:has_savings_bank_account"
+    },
+    {
+      "from": "clause:apy-eligibility",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_indian_citizen"
+    },
+    {
+      "from": "clause:apy-eligibility",
+      "predicate": "FROM",
+      "to": "source:scheme-details"
+    },
+    {
+      "from": "clause:apy-income-tax-exclusion",
+      "predicate": "BEARS_ON",
+      "to": "attribute:ever_paid_income_tax"
+    },
+    {
+      "from": "clause:apy-income-tax-exclusion",
+      "predicate": "FROM",
+      "to": "source:scheme-details"
+    },
+    {
+      "from": "clause:apy-nominee",
+      "predicate": "FROM",
+      "to": "source:scheme-details"
+    },
+    {
+      "from": "clause:apy-pension-amount",
+      "predicate": "FROM",
+      "to": "source:scheme-details"
+    },
+    {
+      "from": "clause:apy-spouse-pension",
+      "predicate": "FROM",
+      "to": "source:scheme-details"
+    },
+    {
+      "from": "condition:age_18_to_40",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:apy-eligibility"
+    },
+    {
+      "from": "condition:age_18_to_40",
+      "predicate": "TESTS",
+      "to": "attribute:age"
+    },
+    {
+      "from": "condition:citizen_with_savings_account",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:apy-eligibility"
+    },
+    {
+      "from": "condition:citizen_with_savings_account",
+      "predicate": "TESTS",
+      "to": "attribute:has_savings_bank_account"
+    },
+    {
+      "from": "condition:citizen_with_savings_account",
+      "predicate": "TESTS",
+      "to": "attribute:is_indian_citizen"
+    },
+    {
+      "from": "condition:never_income_tax_payer",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:apy-income-tax-exclusion"
+    },
+    {
+      "from": "condition:never_income_tax_payer",
+      "predicate": "TESTS",
+      "to": "attribute:ever_paid_income_tax"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "EXCLUDES",
+      "to": "clause:apy-income-tax-exclusion"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:apy-contribution"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:apy-eligibility"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:apy-income-tax-exclusion"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:apy-nominee"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:apy-pension-amount"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:apy-spouse-pension"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "PROVIDES",
+      "to": "clause:apy-nominee"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "PROVIDES",
+      "to": "clause:apy-pension-amount"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "PROVIDES",
+      "to": "clause:apy-spouse-pension"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "REQUIRES",
+      "to": "condition:age_18_to_40"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "REQUIRES",
+      "to": "condition:citizen_with_savings_account"
+    },
+    {
+      "from": "scheme:apy",
+      "predicate": "REQUIRES",
+      "to": "condition:never_income_tax_payer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "attribute:age",
+      "name": "age",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:ever_paid_income_tax",
+      "name": "ever_paid_income_tax",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:has_savings_bank_account",
+      "name": "has_savings_bank_account",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_indian_citizen",
+      "name": "is_indian_citizen",
+      "type": "Attribute"
+    },
+    {
+      "clause_type": "procedure",
+      "id": "clause:apy-contribution",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:apy-eligibility",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:apy-income-tax-exclusion",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:apy-nominee",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:apy-pension-amount",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:apy-spouse-pension",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "asks": "Is your age between 18 and 40 years?",
+      "expr": "profile.age >= 18 and profile.age <= 40",
+      "id": "condition:age_18_to_40",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you a citizen of India who has a savings bank account?",
+      "expr": "profile.is_indian_citizen == true and profile.has_savings_bank_account == true",
+      "id": "condition:citizen_with_savings_account",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you, or have you ever been, an income-tax payer?",
+      "expr": "profile.ever_paid_income_tax == false",
+      "id": "condition:never_income_tax_payer",
+      "type": "Condition"
+    },
+    {
+      "authority": "Department of Financial Services, Ministry of Finance",
+      "effective_from": "2015-06-01",
+      "effective_to": null,
+      "id": "scheme:apy",
+      "name": "Atal Pension Yojana",
+      "tier": 1,
+      "type": "Scheme",
+      "version": 1
+    },
+    {
+      "checksum": "sha256:3b7291f47c9e17dc3378745e0fb45100b3119deb699d9cf5cfc353b6390ef939",
+      "id": "source:scheme-details",
+      "retrieved_at": "2026-09-17",
+      "type": "SourceDocument",
+      "url": "https://jansuraksha.gov.in/Files/APY/ENGLISH/APY.pdf"
+    }
+  ],
+  "scheme": "apy",
+  "version": 1
+}

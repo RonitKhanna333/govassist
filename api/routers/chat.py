@@ -25,7 +25,9 @@ Three things this endpoint will not do, by design:
 
 from __future__ import annotations
 
+import json
 import os
+import re
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from starlette.concurrency import run_in_threadpool
@@ -119,6 +121,75 @@ def locales() -> dict:
 def detect_locale(request: Request) -> dict:
     """What the browser asked for, resolved against what we support."""
     return {"locale": negotiate(request.headers.get("accept-language"))}
+
+
+# The fixture scheme exists for tests, not for applicants.
+_HIDDEN_SCHEMES = {"demo-scheme"}
+_SLUG = re.compile(r"[a-z0-9][a-z0-9-]{0,63}")
+
+# Names people actually use, per language. The official English name stays
+# in `name_en`.
+_SCHEME_NAMES = {
+    "pmfme": {"en": "Food processing business support (PMFME)",
+              "hi": "खाद्य प्रसंस्करण उद्यम सहायता (PMFME)",
+              "pa": "ਖ਼ੁਰਾਕ ਪ੍ਰੋਸੈਸਿੰਗ ਕਾਰੋਬਾਰ ਸਹਾਇਤਾ (PMFME)",
+              "ta": "உணவு பதப்படுத்தும் தொழில் உதவி (PMFME)"},
+    "pmsby": {"en": "Accident insurance for Rs. 20 a year (PMSBY)",
+              "hi": "₹20 सालाना दुर्घटना बीमा (PMSBY)",
+              "pa": "₹20 ਸਾਲਾਨਾ ਹਾਦਸਾ ਬੀਮਾ (PMSBY)",
+              "ta": "ஆண்டுக்கு ₹20 விபத்துக் காப்பீடு (PMSBY)"},
+    "pmjjby": {"en": "Life insurance of Rs. 2 lakh (PMJJBY)",
+               "hi": "₹2 लाख जीवन बीमा (PMJJBY)",
+               "pa": "₹2 ਲੱਖ ਜੀਵਨ ਬੀਮਾ (PMJJBY)",
+               "ta": "₹2 லட்சம் ஆயுள் காப்பீடு (PMJJBY)"},
+    "apy": {"en": "Pension after 60 (Atal Pension Yojana)",
+            "hi": "60 साल के बाद पेंशन (अटल पेंशन योजना)",
+            "pa": "60 ਸਾਲ ਤੋਂ ਬਾਅਦ ਪੈਨਸ਼ਨ (ਅਟਲ ਪੈਨਸ਼ਨ ਯੋਜਨਾ)",
+            "ta": "60 வயதுக்குப் பிறகு ஓய்வூதியம் (அடல் பென்ஷன் யோஜனா)"},
+    "pm-kmy": {"en": "Farmer pension of Rs. 3000 a month (PM-KMY)",
+               "hi": "किसान पेंशन ₹3000 महीना (PM किसान मानधन)",
+               "pa": "ਕਿਸਾਨ ਪੈਨਸ਼ਨ ₹3000 ਮਹੀਨਾ (PM ਕਿਸਾਨ ਮਾਨਧਨ)",
+               "ta": "விவசாயி ஓய்வூதியம் மாதம் ₹3000 (PM-KMY)"},
+}
+
+
+def _reviewed(slug: str) -> bool:
+    """Both human rule-review gates approved. Never inferred or assumed."""
+    path = repo_root() / "data" / "schemes" / slug / ".state.json"
+    try:
+        gates = json.loads(path.read_text(encoding="utf-8")).get("gates", {})
+    except (OSError, ValueError):
+        return False
+    return all((gates.get(g) or {}).get("status") == "approved"
+               for g in ("4_clauses", "5_conditions"))
+
+
+@router.get("/schemes")
+def schemes(locale: str | None = None) -> dict:
+    """Every scheme with built rules. `reviewed` is false until a person has
+    approved the clause and rule-logic gates -- the UI says so."""
+    code = get_locale(locale).code
+    root = repo_root() / "data" / "schemes"
+    out = []
+    for directory in sorted(root.iterdir()):
+        slug = directory.name
+        if slug in _HIDDEN_SCHEMES or not (directory / "build").is_dir():
+            continue
+        try:
+            rules = load_rules(slug, repo_root())
+        except FileNotFoundError:
+            continue
+        names = _SCHEME_NAMES.get(slug, {})
+        out.append({
+            "id": slug,
+            "name": names.get(code) or names.get("en") or rules.get("name_en", slug),
+            "name_en": rules.get("name_en", slug),
+            "authority": rules.get("authority"),
+            "reviewed": _reviewed(slug),
+        })
+    # The original, fully reviewed scheme first.
+    out.sort(key=lambda s: (not s["reviewed"], s["id"] != "pmfme", s["id"]))
+    return {"schemes": out}
 
 
 @router.post("/transcribe")
@@ -216,6 +287,8 @@ def chat(body: dict,
 
     if not scheme:
         raise HTTPException(422, "scheme is required")
+    if not _SLUG.fullmatch(str(scheme)):
+        raise HTTPException(404, f"unknown scheme '{scheme}'")
 
     try:
         rules = load_rules(scheme, repo_root())

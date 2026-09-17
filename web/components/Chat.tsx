@@ -8,10 +8,12 @@ import {
   VOICE_OUTPUT_LOCALES,
   speakAudio,
   detectLocale,
+  listSchemes,
   sendChat,
   transcribe,
   type ChatResponse,
   type Citation,
+  type SchemeInfo,
 } from "@/lib/api";
 import { makeTranslator } from "@/lib/i18n";
 import { resolveLocale, type LocaleCode } from "@/lib/registry";
@@ -21,7 +23,7 @@ import { AnswerControls } from "./AnswerControls";
 import { Citations } from "./Citations";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
-const SCHEME = "pmfme";
+const DEFAULT_SCHEME = "pmfme";
 const STORAGE_KEY = "govassist.language";
 
 interface Turn {
@@ -42,6 +44,8 @@ export function Chat() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [started, setStarted] = useState(false);
+  const [schemes, setSchemes] = useState<SchemeInfo[]>([]);
+  const [scheme, setScheme] = useState(DEFAULT_SCHEME);
 
   const t = makeTranslator(uiLocale);
   const browserSpeech = useSpeech();
@@ -139,6 +143,16 @@ export function Chat() {
   }, [uiLocale, contentLocale, contentFollows]);
 
   useEffect(() => {
+    let live = true;
+    listSchemes(contentLocale).then((list) => {
+      if (live) setSchemes(list);
+    });
+    return () => {
+      live = false;
+    };
+  }, [contentLocale]);
+
+  useEffect(() => {
     threadEnd.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [turns]);
 
@@ -163,7 +177,7 @@ export function Chat() {
       stop();
       try {
         const response = await sendChat({
-          scheme: SCHEME,
+          scheme,
           profile: nextProfile ?? profile,
           message,
           start: extra?.start,
@@ -206,7 +220,7 @@ export function Chat() {
         setBusy(false);
       }
     },
-    [contentLocale, profile, speakText, stop, t],
+    [contentLocale, profile, scheme, speakText, stop, t],
   );
 
   const start = async () => {
@@ -319,11 +333,37 @@ export function Chat() {
 
       <main className="panel">
         {!started ? (
-          <button type="button" className="btn" onClick={start} disabled={busy}>
-            {t("chat.start")}
-          </button>
+          <div className="startbox">
+            {schemes.length > 0 && (
+              <fieldset className="schemepick">
+                <legend>{t("scheme.choose")}</legend>
+                {schemes.map((item) => (
+                  <label key={item.id} className={`schemeopt${item.id === scheme ? " on" : ""}`}>
+                    <input
+                      type="radio"
+                      name="scheme"
+                      value={item.id}
+                      checked={item.id === scheme}
+                      onChange={() => setScheme(item.id)}
+                    />
+                    <span lang={contentLocale}>{item.name}</span>
+                    {!item.reviewed && <em className="tag">{t("scheme.unreviewed")}</em>}
+                  </label>
+                ))}
+              </fieldset>
+            )}
+            {schemes.find((item) => item.id === scheme)?.reviewed === false && (
+              <p className="note">{t("scheme.unreviewed_note")}</p>
+            )}
+            <button type="button" className="btn" onClick={start} disabled={busy}>
+              {t("chat.start")}
+            </button>
+          </div>
         ) : (
           <>
+            <p className="schemename" lang={contentLocale}>
+              {schemes.find((item) => item.id === scheme)?.name ?? scheme}
+            </p>
             {latest?.verdict && (
               <div className={`verdict ${verdictClass}`}>{verdictLabel}</div>
             )}

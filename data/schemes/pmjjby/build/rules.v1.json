@@ -1,0 +1,50 @@
+{
+  "authority": "Department of Financial Services, Ministry of Finance",
+  "conditions": [
+    {
+      "asks": "Are you an individual account holder of a participating bank or Post office?",
+      "clause": "pmjjby-scope",
+      "expr": "profile.has_bank_or_post_office_account == true",
+      "id": "has_bank_account",
+      "reads": [
+        "has_bank_or_post_office_account"
+      ]
+    },
+    {
+      "asks": "Are you aged between 18 years (completed) and 50 years?",
+      "clause": "pmjjby-eligibility",
+      "expr": "profile.age >= 18 and profile.age <= 50",
+      "id": "age_18_to_50",
+      "reads": [
+        "age"
+      ]
+    },
+    {
+      "asks": "Do you consent to join and enable auto-debit of the premium?",
+      "clause": "pmjjby-eligibility",
+      "expr": "profile.consents_to_auto_debit == true",
+      "id": "consents_to_auto_debit",
+      "reads": [
+        "consents_to_auto_debit"
+      ]
+    }
+  ],
+  "decision": "ALL(conditions)",
+  "effective_from": "2022-06-01",
+  "effective_to": null,
+  "name_en": "Pradhan Mantri Jeevan Jyoti Bima Yojana (life insurance)",
+  "scheme": "pmjjby",
+  "sources": [
+    {
+      "checksum": "sha256:a184cbee3339abe0483e8d10a56f71f5d9e6eda6415660844940349e3d216745",
+      "extractor": "pdfminer.six",
+      "id": "rules",
+      "pdf": "source/rules.pdf",
+      "retrieved_at": "2026-09-17",
+      "txt": "source/rules.txt",
+      "url": "https://jansuraksha.gov.in/Files/PMJJBY/English/Rules.pdf"
+    }
+  ],
+  "tier": 1,
+  "version": 1
+}
