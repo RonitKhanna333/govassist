@@ -12,6 +12,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * does the recognition.
  */
 export type RecorderState = "idle" | "recording" | "unsupported" | "denied";
+/** Why the microphone could not start, from the browser's own error name. */
+export type RecorderError = "denied" | "no_device" | "busy" | "insecure" | "other";
 
 // Best-supported first. Safari records mp4; Chrome, Edge, Brave and Firefox
 // record webm/opus.
@@ -34,6 +36,7 @@ const NO_SPEECH_GIVE_UP_MS = 8_000; // never spoke -> stop quietly
 
 export function useRecorder() {
   const [state, setState] = useState<RecorderState>("idle");
+  const [error, setError] = useState<RecorderError | null>(null);
   const recorder = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
   const stream = useRef<MediaStream | null>(null);
@@ -42,10 +45,12 @@ export function useRecorder() {
   const audioCtx = useRef<AudioContext | null>(null);
   const vadTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const heardSpeech = useRef(false);
+  const [level, setLevel] = useState(0);
 
   const stopVad = () => {
     if (vadTimer.current) clearInterval(vadTimer.current);
     vadTimer.current = null;
+    setLevel(0);
     void audioCtx.current?.close().catch(() => undefined);
     audioCtx.current = null;
   };
@@ -67,16 +72,32 @@ export function useRecorder() {
 
   /** `onSilence` fires when the person has finished speaking (or never
    *  started); the caller then calls stop() and sends the audio. */
-  const start = useCallback(async (onSilence?: () => void): Promise<boolean> => {
+  const start = useCallback(async (onSilence?: () => void): Promise<RecorderError | null> => {
     if (typeof MediaRecorder === "undefined") {
       setState("unsupported");
-      return false;
+      return "other";
+    }
+    setError(null);
+    if (typeof window !== "undefined" && !window.isSecureContext) {
+      setError("insecure");
+      return "insecure";
     }
     try {
       stream.current = await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch {
-      setState("denied");
-      return false;
+    } catch (err) {
+      const name = err instanceof DOMException ? err.name : "";
+      console.warn("microphone failed:", name, err);
+      const kind: RecorderError =
+        name === "NotAllowedError" || name === "SecurityError"
+          ? "denied"
+          : name === "NotFoundError" || name === "OverconstrainedError"
+            ? "no_device"
+            : name === "NotReadableError" || name === "AbortError"
+              ? "busy"
+              : "other";
+      setError(kind);
+      if (kind === "denied") setState("denied");
+      return kind;
     }
 
     const mimeType = MIME_CANDIDATES.find((type) => MediaRecorder.isTypeSupported(type));
@@ -91,9 +112,11 @@ export function useRecorder() {
       stream.current = null;
       if (timer.current) clearTimeout(timer.current);
       stopVad();
-      // Nothing louder than room noise was ever heard: don't send it --
-      // Whisper invents words for silence.
-      const blob = chunks.current.length && heardSpeech.current
+      // Always hand back what was recorded. An earlier version dropped
+      // recordings the level meter judged silent -- but the meter reads zeros
+      // whenever the browser keeps its AudioContext suspended, so real speech
+      // was thrown away before it was ever sent. The server filters silence.
+      const blob = chunks.current.length
         ? new Blob(chunks.current, { type: instance.mimeType || "audio/webm" })
         : null;
       setState("idle");
@@ -103,7 +126,8 @@ export function useRecorder() {
 
     recorder.current = instance;
     heardSpeech.current = false;
-    instance.start();
+    // Timeslice: chunks arrive while recording, so an abrupt stop still has audio.
+    instance.start(250);
     setState("recording");
 
     try {
@@ -112,6 +136,11 @@ export function useRecorder() {
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const ctx = new Ctx();
       audioCtx.current = ctx;
+      // Created after an await, so browsers may start it suspended. A
+      // suspended context reports pure silence; without it running, rely on
+      // the Stop button instead of guessing.
+      if (ctx.state !== "running") await ctx.resume().catch(() => undefined);
+      if (ctx.state !== "running") throw new Error("audio context suspended");
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 1024;
       ctx.createMediaStreamSource(stream.current).connect(analyser);
@@ -130,19 +159,20 @@ export function useRecorder() {
         }
         const finished = heardSpeech.current && now - lastLoud > SILENCE_AFTER_SPEECH_MS;
         const gaveUp = !heardSpeech.current && now - began > NO_SPEECH_GIVE_UP_MS;
+        setLevel(Math.min(1, rms * 8));
         if ((finished || gaveUp) && recorder.current?.state === "recording") {
           stopVad();
           onSilence?.();
         }
       }, 100);
     } catch {
-      // No Web Audio: fall back to the Stop button, and trust the audio.
-      heardSpeech.current = true;
+      // No usable Web Audio: the Stop button (and the 30 s cap) end it.
+      stopVad();
     }
     timer.current = setTimeout(() => {
       if (recorder.current?.state === "recording") recorder.current.stop();
     }, MAX_RECORDING_MS);
-    return true;
+    return null;
   }, []);
 
   /** Stops recording and resolves with the audio, or null if nothing was said. */
@@ -157,5 +187,5 @@ export function useRecorder() {
     });
   }, []);
 
-  return { state, start, stop };
+  return { state, error, level, start, stop };
 }

@@ -353,3 +353,7 @@ html, body {
 .schemeopt input { accent-color: var(--ink); }
 .schemeopt .tag { font-style: normal; font-size: 0.75rem; padding: 0.1rem 0.45rem; border-radius: 999px; border: 1px solid var(--line-strong); opacity: 0.8; }
 .schemename { font-weight: 600; margin: 0 0 0.5rem; }
+
+.listening { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.meter { display: inline-block; width: 120px; height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--good); transition: width 90ms linear; }

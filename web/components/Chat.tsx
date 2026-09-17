@@ -250,7 +250,7 @@ export function Chat() {
 
   const finishRecording = async () => {
     const audio = await recorder.stop();
-    if (!audio || audio.size < 1000) {
+    if (!audio || audio.size === 0) {
       setMicNote(t("mic.empty"));
       return;
     }
@@ -281,8 +281,8 @@ export function Chat() {
       return;
     }
     stop();
-    const ok = await recorder.start(() => void finishRef.current());
-    if (!ok) setMicNote(t("mic.denied"));
+    const failure = await recorder.start(() => void finishRef.current());
+    if (failure) setMicNote(t(`mic.error.${failure}`));
   };
 
   const restart = () => {
@@ -446,7 +446,12 @@ export function Chat() {
             </div>
 
             {recorder.state === "recording" && (
-              <p className="note">{t("mic.listening")}</p>
+              <div className="note listening">
+                <span>{t("mic.listening")}</span>
+                <span className="meter" aria-hidden="true">
+                  <span style={{ width: `${Math.round(recorder.level * 100)}%` }} />
+                </span>
+              </div>
             )}
             {micNote && <p className="note error">{micNote}</p>}
             {!voiceInput && <p className="note">{t("mic.voice_limited")}</p>}

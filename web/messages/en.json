@@ -35,12 +35,16 @@
   "answer.more": "One more thing after this",
   "mic.stop": "Stop and send",
   "mic.transcribing": "Understanding…",
-  "mic.denied": "Microphone permission was blocked. Allow the microphone for this site and try again.",
   "mic.failed": "Couldn't understand the recording. Please try again or type your answer.",
   "mic.empty": "I didn't hear anything. Please try again.",
   "mic.voice_limited": "Voice input is available in हिन्दी and English for now. Please type your answer.",
   "speak.loading": "Loading voice…",
   "scheme.choose": "Which scheme do you want to check?",
   "scheme.unreviewed": "not yet reviewed",
-  "scheme.unreviewed_note": "The rules for this scheme are quoted from the official document, but a person has not checked them yet. Treat the result as a first guide."
+  "scheme.unreviewed_note": "The rules for this scheme are quoted from the official document, but a person has not checked them yet. Treat the result as a first guide.",
+  "mic.error.denied": "The microphone is blocked. Tap the lock icon next to the web address, allow Microphone, then try again.",
+  "mic.error.no_device": "No microphone was found on this device.",
+  "mic.error.busy": "The microphone is being used by another app. Close it and try again.",
+  "mic.error.insecure": "Voice input needs a secure (https) page.",
+  "mic.error.other": "Couldn't start the microphone. Please type your answer instead."
 }
