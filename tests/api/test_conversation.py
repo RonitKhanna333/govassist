@@ -291,3 +291,33 @@ def test_locales_report_which_languages_have_voice_input():
     body = _client().get("/locales").json()
     voice = {loc["code"]: loc["voice_input"] for loc in body["locales"]}
     assert voice == {"en": True, "hi": True, "pa": False, "ta": False}
+
+
+# -- /speak and Whisper's non-speech filter ----------------------------------
+
+
+def test_speak_returns_mp3_for_hindi():
+    async def fake(text, locale):
+        return b"ID3fake"
+    with patch("api.language.tts.synthesize", side_effect=fake):
+        response = _client().post("/speak", json={"text": "नमस्ते", "locale": "hi"})
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "audio/mpeg"
+    assert response.content == b"ID3fake"
+
+
+def test_speak_refuses_languages_without_a_server_voice():
+    assert _client().post("/speak", json={"text": "x", "locale": "ta"}).status_code == 422
+
+
+def test_whisper_drops_segments_that_are_not_speech():
+    from api.language.providers.groq import GroqLanguageProvider
+    ok = MagicMock(status_code=200)
+    ok.raise_for_status = lambda: None
+    ok.json = lambda: {"text": "करते हैं हाँ", "segments": [
+        {"text": "करते हैं", "no_speech_prob": 0.9, "avg_logprob": -0.2},
+        {"text": " हाँ", "no_speech_prob": 0.1, "avg_logprob": -0.3},
+    ]}
+    with patch.dict("os.environ", {"GROQ_API_KEY": "k"}), \
+         patch("api.language.providers.groq.requests.post", return_value=ok):
+        assert GroqLanguageProvider().transcribe(b"x", "hi") == "हाँ"

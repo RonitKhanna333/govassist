@@ -25,6 +25,13 @@ const MIME_CANDIDATES = [
 // A long ramble is expensive to transcribe and unlikely to be an answer.
 const MAX_RECORDING_MS = 30_000;
 
+// Voice activity detection, so a person can just speak and pause instead of
+// having to find and press a Stop button -- the reason taps on the mic
+// seemed to do nothing.
+const SPEECH_RMS = 0.02; // louder than this counts as speech
+const SILENCE_AFTER_SPEECH_MS = 1_500; // pause this long after speaking -> done
+const NO_SPEECH_GIVE_UP_MS = 8_000; // never spoke -> stop quietly
+
 export function useRecorder() {
   const [state, setState] = useState<RecorderState>("idle");
   const recorder = useRef<MediaRecorder | null>(null);
@@ -32,6 +39,16 @@ export function useRecorder() {
   const stream = useRef<MediaStream | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const resolveStop = useRef<((blob: Blob | null) => void) | null>(null);
+  const audioCtx = useRef<AudioContext | null>(null);
+  const vadTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const heardSpeech = useRef(false);
+
+  const stopVad = () => {
+    if (vadTimer.current) clearInterval(vadTimer.current);
+    vadTimer.current = null;
+    void audioCtx.current?.close().catch(() => undefined);
+    audioCtx.current = null;
+  };
 
   useEffect(() => {
     if (
@@ -44,10 +61,13 @@ export function useRecorder() {
     return () => {
       stream.current?.getTracks().forEach((track) => track.stop());
       if (timer.current) clearTimeout(timer.current);
+      stopVad();
     };
   }, []);
 
-  const start = useCallback(async (): Promise<boolean> => {
+  /** `onSilence` fires when the person has finished speaking (or never
+   *  started); the caller then calls stop() and sends the audio. */
+  const start = useCallback(async (onSilence?: () => void): Promise<boolean> => {
     if (typeof MediaRecorder === "undefined") {
       setState("unsupported");
       return false;
@@ -70,7 +90,10 @@ export function useRecorder() {
       stream.current?.getTracks().forEach((track) => track.stop());
       stream.current = null;
       if (timer.current) clearTimeout(timer.current);
-      const blob = chunks.current.length
+      stopVad();
+      // Nothing louder than room noise was ever heard: don't send it --
+      // Whisper invents words for silence.
+      const blob = chunks.current.length && heardSpeech.current
         ? new Blob(chunks.current, { type: instance.mimeType || "audio/webm" })
         : null;
       setState("idle");
@@ -79,8 +102,43 @@ export function useRecorder() {
     };
 
     recorder.current = instance;
+    heardSpeech.current = false;
     instance.start();
     setState("recording");
+
+    try {
+      const Ctx =
+        window.AudioContext ??
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = new Ctx();
+      audioCtx.current = ctx;
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 1024;
+      ctx.createMediaStreamSource(stream.current).connect(analyser);
+      const samples = new Float32Array(analyser.fftSize);
+      const began = Date.now();
+      let lastLoud = 0;
+      vadTimer.current = setInterval(() => {
+        analyser.getFloatTimeDomainData(samples);
+        let sum = 0;
+        for (const v of samples) sum += v * v;
+        const rms = Math.sqrt(sum / samples.length);
+        const now = Date.now();
+        if (rms > SPEECH_RMS) {
+          heardSpeech.current = true;
+          lastLoud = now;
+        }
+        const finished = heardSpeech.current && now - lastLoud > SILENCE_AFTER_SPEECH_MS;
+        const gaveUp = !heardSpeech.current && now - began > NO_SPEECH_GIVE_UP_MS;
+        if ((finished || gaveUp) && recorder.current?.state === "recording") {
+          stopVad();
+          onSilence?.();
+        }
+      }, 100);
+    } catch {
+      // No Web Audio: fall back to the Stop button, and trust the audio.
+      heardSpeech.current = true;
+    }
     timer.current = setTimeout(() => {
       if (recorder.current?.state === "recording") recorder.current.stop();
     }, MAX_RECORDING_MS);

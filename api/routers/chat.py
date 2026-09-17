@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import os
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from starlette.concurrency import run_in_threadpool
 
 import api._corpus_bridge  # noqa: F401 -- must run before importing parse_scheme
@@ -36,6 +36,7 @@ from api.agents.llm import LLMProvider
 from api.agents.phrases import phrase
 from api.agents.router import route
 from api.deps import get_language, get_llm
+from api.language import tts
 from api.language.providers.base import LanguageError
 from api.language.registry import CANONICAL_LOCALE, LOCALES, get as get_locale, negotiate
 from api.language.service import LanguageService
@@ -150,6 +151,23 @@ async def transcribe(request: Request, locale: str = "hi",
     except LanguageError as exc:
         raise HTTPException(503, f"Couldn't transcribe: {exc}") from exc
     return {"text": text, "locale": code}
+
+
+@router.post("/speak")
+async def speak(body: dict) -> Response:
+    """Text to speech for Hindi and English, returned as MP3."""
+    code = get_locale(str(body.get("locale") or "hi")).code
+    text = str(body.get("text") or "")
+    if code not in tts.VOICES:
+        raise HTTPException(422, f"Server speech isn't available in {code} yet.")
+    if not text.strip():
+        raise HTTPException(422, "Nothing to say.")
+    try:
+        audio = await tts.synthesize(text, code)
+    except LanguageError as exc:
+        raise HTTPException(503, f"Couldn't make speech: {exc}") from exc
+    return Response(audio, media_type="audio/mpeg",
+                    headers={"Cache-Control": "private, max-age=3600"})
 
 
 def _localize(language: LanguageService, text: str | None, target: str):
