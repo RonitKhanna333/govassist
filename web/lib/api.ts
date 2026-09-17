@@ -78,7 +78,11 @@ export interface ChatResponse {
 }
 
 export class ApiError extends Error {
-  constructor(message: string, readonly offline = false) {
+  constructor(
+    message: string,
+    readonly offline = false,
+    readonly status: number | null = null,
+  ) {
     super(message);
   }
 }
@@ -95,7 +99,13 @@ async function post<T>(path: string, body: unknown): Promise<T> {
     throw new ApiError("offline", true);
   }
   if (!response.ok) {
-    throw new ApiError(`${response.status}`);
+    let detail = `${response.status}`;
+    try {
+      detail = ((await response.json()) as { detail?: string }).detail ?? detail;
+    } catch {
+      /* keep the status code */
+    }
+    throw new ApiError(detail, false, response.status);
   }
   return response.json() as Promise<T>;
 }

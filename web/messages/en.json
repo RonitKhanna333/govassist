@@ -1,6 +1,9 @@
 {
   "app.title": "GovAssist",
   "app.tagline": "Check government scheme eligibility — with the exact rule quoted.",
+  "nav.presentation": "Presentation",
+  "nav.live": "Live prototype",
+  "nav.evidence": "Evidence / repository",
   "scheme.label": "Scheme",
   "chat.placeholder": "Tell me about your situation…",
   "chat.send": "Send",
@@ -28,6 +31,7 @@
   "answer.no": "No",
   "error.offline": "Couldn't reach the server. Check that the API is running.",
   "error.generic": "Something went wrong. Please try again.",
+  "error.rateLimited": "This demo is busy. Please wait a moment and try again.",
   "notice.notAdvice": "This is guidance, not a decision. It never files anything for you.",
   "profile.known": "What I know so far",
   "profile.empty": "Nothing yet",

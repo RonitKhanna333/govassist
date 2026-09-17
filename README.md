@@ -4,7 +4,7 @@ A **grounded** government-scheme eligibility assistant: every statement it makes
 traces back to a verbatim quote from an official document, and that link is
 checked automatically rather than trusted.
 
-**Live:** [app](https://govassist-web-ronit-khannas-projects.vercel.app) ·
+**Live:** [app](https://govassist-web-git-main-ronit-khannas-projects.vercel.app) ·
 [api](https://govassist-api-ronit-khannas-projects.vercel.app/health)
 
 ## What's built
@@ -15,12 +15,15 @@ checked automatically rather than trusted.
 | Rule engine (`api/rules/`) | deterministic; the LLM never decides eligibility |
 | Graph store (`api/graph/`) | 5 retrieval patterns, hop-capped, typed |
 | Agents (`api/agents/`) | Groq: NLU, composer, verifier, recompose loop |
-| Language (`api/language/`) | Bhashini, entity protection, fallback ladder |
+| Language (`api/language/`) | four text locales; Groq fallback; Bhashini provider code |
 | Auth (`api/auth/`) | optional accounts, scrypt + JWT |
 | Frontend (`web/`) | Next.js, four languages, voice, citation panel |
-| Deployment | two Vercel projects, auto-deploy on push |
+| CI (`.github/workflows/`) | backend corpus/API checks and frontend test/build checks |
+| Deployment | two Vercel projects; deployment state must be verified separately |
 
-**295 tests, no network calls, no API keys needed to run them.**
+The automated suite uses committed corpus data and mocks; it needs no production
+API keys or network calls. Run the commands below for the current result rather
+than relying on a hard-coded test count.
 
 The single most important property: **the verdict and its citations need no
 API key at all.** The rule engine is deterministic and the corpus is committed
@@ -33,6 +36,30 @@ pip install -e ".[dev,serve]" && pytest -q
 uvicorn api.main:app --reload          # :8000
 cd web && npm install && npm run dev   # :3000  (use localhost, not 127.0.0.1)
 ```
+
+## UCS503 presentation and demonstration
+
+The hosted-project presentation is the Next.js route `/presentation`. The
+working signed-out PMFME prototype is `/`, and the evidence/remediation page is
+`/evidence`. Navigation between all three is built into the site.
+
+The prepared demonstration uses only non-sensitive values. To show the
+reviewed boundary, use the complete individual-unit profile in
+`docs/human-review-remediation.md` or the evidence page and change only
+`age`: **18 must return `NOT_ELIGIBLE` with the age citation; 19 must return
+`ELIGIBLE` when every other condition passes**. Punjabi and Tamil text flows
+are supported; microphone input is intentionally enabled only for English and
+Hindi. PMFME is the only demonstrated production scheme.
+
+The repository contains exactly four use-case diagrams, five sequence diagrams
+and one detailed class diagram under [`docs/diagrams/`](docs/diagrams/). The
+presentation renders responsive previews from repository-controlled source
+descriptions; they are not screenshots of an editor canvas.
+
+The current change is not deployed or pushed by default. After the required
+human corpus review, redeploy the API and web projects and repeat the browser
+checks. See [`docs/human-review-remediation.md`](docs/human-review-remediation.md)
+and [`docs/deploy.md`](docs/deploy.md).
 
 ## The one rule
 
@@ -56,16 +83,18 @@ The rule is enforced, not merely documented:
 
 ## Setup
 
-Windows, macOS or Linux. No system packages, no poppler, no API keys.
+Windows, macOS or Linux. The corpus and test suite need no system packages or
+production API keys; Groq, Bhashini and Postgres are optional runtime
+configuration.
 
 ```bash
-pip install -e ".[dev]"
+pip install -e ".[dev,serve]"
 ```
 
 Then confirm everything works:
 
 ```bash
-pytest
+python -m pytest -q
 ```
 
 ## Workflow
@@ -264,7 +293,14 @@ denying someone because we forgot to ask a question.
 ## Testing
 
 ```bash
-pytest                                    # everything
-pytest tests/test_normalize.py            # the provenance spine
-pytest tests/test_validate.py -k Fabricated   # the meta-test
+python -m pytest -q                        # everything
+python -m pytest tests/test_normalize.py   # the provenance spine
+python -m pytest tests/test_validate.py -k Fabricated   # the meta-test
+python data/scripts/validate.py --all
+python data/scripts/build.py --all --check
+cd web && npm ci && npm test && npm run build
 ```
+
+GitHub Actions runs the backend checks, generated-build freshness check,
+frontend tests/build and dependency audits on pull requests and pushes to
+`main`.

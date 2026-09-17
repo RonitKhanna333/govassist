@@ -39,6 +39,7 @@ from api.deps import get_language, get_llm
 from api.language.providers.base import LanguageError
 from api.language.registry import CANONICAL_LOCALE, LOCALES, get as get_locale, negotiate
 from api.language.service import LanguageService
+from api.rate_limit import chat_rate_limiter
 from api.rules.engine import Citation, decide, known_attributes, load_clauses, load_rules
 from api.rules.forms import OTHER, answer_yes_no, summarize_profile, unresolved_fields
 from api.rules.spoken import interpret
@@ -183,11 +184,21 @@ def _all_clauses(scheme: str) -> list[Citation]:
 
 @router.post("/chat")
 def chat(body: dict,
+         request: Request,
          llm: LLMProvider = Depends(get_llm),
          language: LanguageService = Depends(get_language)) -> dict:
     """One conversational turn. `bot_messages` is what the helper says this
     turn, in order -- a reply to their question and the next question arrive
     as two natural messages instead of one repeated prompt."""
+    client_key = request.client.host if request.client else "unknown"
+    limit = chat_rate_limiter.check(client_key)
+    if not limit.allowed:
+        raise HTTPException(
+            429,
+            "This demo is receiving a lot of requests. Please wait and try again.",
+            headers={"Retry-After": str(limit.retry_after or 1)},
+        )
+
     scheme = body.get("scheme")
     profile = dict(body.get("profile") or {})
     message = (body.get("message") or "").strip()

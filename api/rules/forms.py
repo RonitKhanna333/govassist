@@ -12,7 +12,7 @@ So this reads the condition's own AST and reports what would satisfy it:
 
     profile.is_unincorporated == true        -> boolean, satisfied by True
     profile.applicant_type == "individual"   -> choice, satisfied by "individual"
-    profile.age >= 18                        -> number, >= 18
+    profile.age > 18                         -> number, > 18 (exclusive)
     profile.category in ["sc", "st"]         -> choice of two
 
 A compound condition yields one field per attribute, which is also better

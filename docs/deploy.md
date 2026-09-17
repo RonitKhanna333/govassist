@@ -1,12 +1,14 @@
 # Deployment
 
-Two Vercel projects from one repository, both auto-deploying on every push
-to `main`:
+Two Vercel projects can be deployed from one repository:
 
 | Project | Root | What it is | URL |
 |---|---|---|---|
 | `govassist-api` | repo root | FastAPI on Vercel's Python runtime | https://govassist-api-ronit-khannas-projects.vercel.app |
-| `govassist-web` | `web/` | Next.js 16 frontend | https://govassist-web-ronit-khannas-projects.vercel.app |
+| `govassist-web` | `web/` | Next.js 16 frontend | https://govassist-web-git-main-ronit-khannas-projects.vercel.app |
+
+The repository does not deploy or push as part of local development. Treat
+these URLs as public examples and verify the current deployment separately.
 
 ## What runs without any credentials
 
@@ -27,7 +29,7 @@ Each key adds one capability, and its absence is visible rather than silent:
 |---|---|---|
 | `GROQ_API_KEY` | verdict, citations, questions | `answer` becomes the honest "no grounded facts to explain with" fallback |
 | `ULCA_*` | all four UI languages, verdicts | answers stay English with a stated reason; speech drops to browser voices |
-| `DATABASE_URL` | everything | falls back to local SQLite (fine for dev, wrong for serverless) |
+| `DATABASE_URL` | public chat and eligibility flow | optional account/graph persistence is unavailable; serverless auth/database routes must not be claimed as enabled |
 
 ## Setting secrets
 
@@ -35,12 +37,28 @@ Neither key is in the repo and neither should be. Add them per project in
 **Vercel → Project → Settings → Environment Variables**:
 
 - `govassist-api`: `GROQ_API_KEY`, optionally `ULCA_USER_ID` /
-  `ULCA_API_KEY` / `BHASHINI_INFERENCE_KEY`, optionally `DATABASE_URL`.
+  `ULCA_API_KEY` / `BHASHINI_INFERENCE_KEY`, optionally `DATABASE_URL`, and
+  optionally `CORS_ORIGINS` for exact preview origins. `GOVASSIST_RATE_LIMIT`
+  defaults to 60 requests per client IP per 60 seconds on each warm function
+  instance.
 - `govassist-web`: nothing required — `NEXT_PUBLIC_API_BASE` is committed
   in `web/vercel.json` so the frontend is self-configuring.
 
 Redeploy after adding them; Vercel does not re-run a build on an env change
 by itself.
+
+## CORS and demo abuse protection
+
+The API allows localhost plus the two known public GovAssist frontend origins.
+Additional preview origins must be supplied as a comma-separated list of exact
+origins in `CORS_ORIGINS`. There is no wildcard `*.vercel.app` rule because
+credentials are enabled.
+
+`POST /chat` has a modest in-memory fixed-window safeguard: 60 requests per
+client IP per 60 seconds per warm function instance, returning HTTP 429 with a
+`Retry-After` header. The frontend shows a specific busy message and never
+turns a rate-limit response into a verdict. This is not a distributed quota;
+configure a Vercel/deployment-level limit before a larger public launch.
 
 ## Postgres
 
