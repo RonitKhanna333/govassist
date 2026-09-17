@@ -174,3 +174,36 @@ export async function transcribe(audio: Blob, locale: LocaleCode): Promise<strin
   }
   return ((await response.json()) as { text: string }).text;
 }
+
+/** Languages the server can speak aloud (Hindi and English, for now). */
+export const VOICE_OUTPUT_LOCALES: LocaleCode[] = ["hi", "en"];
+
+/** Server-side speech: MP3 audio for `text`. */
+export async function speakAudio(text: string, locale: LocaleCode): Promise<Blob> {
+  const response = await fetch(`${BASE}/speak`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, locale }),
+  });
+  if (!response.ok) throw new Error(`speak ${response.status}`);
+  return response.blob();
+}
+
+export interface SchemeInfo {
+  id: string;
+  name: string;
+  name_en: string;
+  authority: string | null;
+  /** False until a person has approved the clause and rule-logic reviews. */
+  reviewed: boolean;
+}
+
+export async function listSchemes(locale: LocaleCode): Promise<SchemeInfo[]> {
+  try {
+    const response = await fetch(`${BASE}/schemes?locale=${encodeURIComponent(locale)}`);
+    if (!response.ok) return [];
+    return ((await response.json()) as { schemes: SchemeInfo[] }).schemes;
+  } catch {
+    return [];
+  }
+}

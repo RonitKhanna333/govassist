@@ -39,12 +39,24 @@ def test_readme_keys_are_excluded(registry):
     assert not any(k.startswith("_") for k in registry)
 
 
-def test_every_asked_attribute_has_a_plain_question(registry):
+SCHEMES = ["pmfme", "pmsby", "pmjjby", "apy", "pm-kmy"]
+
+
+@pytest.mark.parametrize("scheme", SCHEMES)
+def test_every_asked_attribute_has_a_plain_question(registry, scheme):
     """An attribute with no entry falls back to the government's wording,
     which is exactly what this file exists to avoid."""
-    rules = load_rules("pmfme", repo_root())
+    rules = load_rules(scheme, repo_root())
     missing = [a for a in known_attributes(rules) if a not in registry]
     assert not missing, f"no plain-language question for: {missing}"
+
+
+@pytest.mark.parametrize("scheme", SCHEMES)
+def test_every_asked_attribute_is_translated(registry, scheme):
+    rules = load_rules(scheme, repo_root())
+    for attribute in known_attributes(rules):
+        for locale in ("hi", "pa", "ta"):
+            assert registry[attribute].get("i18n", {}).get(locale, {}).get("ask"),                 f"{attribute}: no {locale} question"
 
 
 def test_no_question_contains_jargon(registry):
@@ -76,9 +88,10 @@ def test_help_text_exists_wherever_a_term_needs_explaining(registry):
         assert registry[attribute].get("help"), f"{attribute} needs help text"
 
 
-def test_number_questions_carry_a_unit(registry):
+@pytest.mark.parametrize("scheme", SCHEMES)
+def test_number_questions_carry_a_unit(registry, scheme):
     """"How many?" without a unit leaves someone guessing what to type."""
-    rules = load_rules("pmfme", repo_root())
+    rules = load_rules(scheme, repo_root())
     for condition in rules["conditions"]:
         for f in derive_fields(condition["expr"]):
             if f.kind == "number" and f.attribute in registry:

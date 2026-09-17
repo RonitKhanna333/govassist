@@ -1,0 +1,10 @@
+{
+  "id": "rules",
+  "url": "https://jansuraksha.gov.in/Files/PMSBY/English/Rules.pdf",
+  "retrieved_at": "2026-09-17",
+  "checksum": "sha256:195a99298e85821bd84174c4973ad8f8be2ecf24cfb97f865799c702cae7feb5",
+  "extractor": "pdfminer.six",
+  "pages": 3,
+  "characters": 6789,
+  "hand_corrected": false
+}

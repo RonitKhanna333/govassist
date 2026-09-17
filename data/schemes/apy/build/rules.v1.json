@@ -1,0 +1,51 @@
+{
+  "authority": "Department of Financial Services, Ministry of Finance",
+  "conditions": [
+    {
+      "asks": "Are you a citizen of India who has a savings bank account?",
+      "clause": "apy-eligibility",
+      "expr": "profile.is_indian_citizen == true and profile.has_savings_bank_account == true",
+      "id": "citizen_with_savings_account",
+      "reads": [
+        "has_savings_bank_account",
+        "is_indian_citizen"
+      ]
+    },
+    {
+      "asks": "Is your age between 18 and 40 years?",
+      "clause": "apy-eligibility",
+      "expr": "profile.age >= 18 and profile.age <= 40",
+      "id": "age_18_to_40",
+      "reads": [
+        "age"
+      ]
+    },
+    {
+      "asks": "Are you, or have you ever been, an income-tax payer?",
+      "clause": "apy-income-tax-exclusion",
+      "expr": "profile.ever_paid_income_tax == false",
+      "id": "never_income_tax_payer",
+      "reads": [
+        "ever_paid_income_tax"
+      ]
+    }
+  ],
+  "decision": "ALL(conditions)",
+  "effective_from": "2015-06-01",
+  "effective_to": null,
+  "name_en": "Atal Pension Yojana",
+  "scheme": "apy",
+  "sources": [
+    {
+      "checksum": "sha256:3b7291f47c9e17dc3378745e0fb45100b3119deb699d9cf5cfc353b6390ef939",
+      "extractor": "pdfminer.six",
+      "id": "scheme-details",
+      "pdf": "source/scheme-details.pdf",
+      "retrieved_at": "2026-09-17",
+      "txt": "source/scheme-details.txt",
+      "url": "https://jansuraksha.gov.in/Files/APY/ENGLISH/APY.pdf"
+    }
+  ],
+  "tier": 1,
+  "version": 1
+}

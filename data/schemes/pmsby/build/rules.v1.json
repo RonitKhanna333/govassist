@@ -1,0 +1,50 @@
+{
+  "authority": "Department of Financial Services, Ministry of Finance",
+  "conditions": [
+    {
+      "asks": "Are you an individual account holder of a participating bank or Post office?",
+      "clause": "pmsby-scope",
+      "expr": "profile.has_bank_or_post_office_account == true",
+      "id": "has_bank_account",
+      "reads": [
+        "has_bank_or_post_office_account"
+      ]
+    },
+    {
+      "asks": "Are you aged between 18 years (completed) and 70 years?",
+      "clause": "pmsby-eligibility",
+      "expr": "profile.age >= 18 and profile.age <= 70",
+      "id": "age_18_to_70",
+      "reads": [
+        "age"
+      ]
+    },
+    {
+      "asks": "Do you consent to join and enable auto-debit of the premium?",
+      "clause": "pmsby-eligibility",
+      "expr": "profile.consents_to_auto_debit == true",
+      "id": "consents_to_auto_debit",
+      "reads": [
+        "consents_to_auto_debit"
+      ]
+    }
+  ],
+  "decision": "ALL(conditions)",
+  "effective_from": "2022-06-01",
+  "effective_to": null,
+  "name_en": "Pradhan Mantri Suraksha Bima Yojana (accident insurance)",
+  "scheme": "pmsby",
+  "sources": [
+    {
+      "checksum": "sha256:195a99298e85821bd84174c4973ad8f8be2ecf24cfb97f865799c702cae7feb5",
+      "extractor": "pdfminer.six",
+      "id": "rules",
+      "pdf": "source/rules.pdf",
+      "retrieved_at": "2026-09-17",
+      "txt": "source/rules.txt",
+      "url": "https://jansuraksha.gov.in/Files/PMSBY/English/Rules.pdf"
+    }
+  ],
+  "tier": 1,
+  "version": 1
+}

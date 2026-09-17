@@ -90,7 +90,8 @@ export function AnswerControls({
           <label className="numberfield">
             <input
               type="number"
-              inputMode="numeric"
+              inputMode="decimal"
+              step="any"
               autoFocus
               value={draft[current.attribute] ?? ""}
               disabled={busy}

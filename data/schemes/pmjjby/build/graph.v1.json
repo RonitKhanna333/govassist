@@ -1,0 +1,276 @@
+{
+  "edges": [
+    {
+      "from": "clause:pmjjby-benefit",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmjjby-details",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmjjby-eligibility",
+      "predicate": "BEARS_ON",
+      "to": "attribute:age"
+    },
+    {
+      "from": "clause:pmjjby-eligibility",
+      "predicate": "BEARS_ON",
+      "to": "attribute:consents_to_auto_debit"
+    },
+    {
+      "from": "clause:pmjjby-eligibility",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmjjby-lien-period",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmjjby-premium",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmjjby-scope",
+      "predicate": "BEARS_ON",
+      "to": "attribute:age"
+    },
+    {
+      "from": "clause:pmjjby-scope",
+      "predicate": "BEARS_ON",
+      "to": "attribute:has_bank_or_post_office_account"
+    },
+    {
+      "from": "clause:pmjjby-scope",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "clause:pmjjby-termination-age",
+      "predicate": "FROM",
+      "to": "source:rules"
+    },
+    {
+      "from": "condition:age_18_to_50",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmjjby-eligibility"
+    },
+    {
+      "from": "condition:age_18_to_50",
+      "predicate": "TESTS",
+      "to": "attribute:age"
+    },
+    {
+      "from": "condition:consents_to_auto_debit",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmjjby-eligibility"
+    },
+    {
+      "from": "condition:consents_to_auto_debit",
+      "predicate": "TESTS",
+      "to": "attribute:consents_to_auto_debit"
+    },
+    {
+      "from": "condition:has_bank_account",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmjjby-scope"
+    },
+    {
+      "from": "condition:has_bank_account",
+      "predicate": "TESTS",
+      "to": "attribute:has_bank_or_post_office_account"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmjjby-lien-period"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmjjby-termination-age"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmjjby-benefit"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmjjby-details"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmjjby-eligibility"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmjjby-lien-period"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmjjby-premium"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmjjby-scope"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmjjby-termination-age"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "PROVIDES",
+      "to": "clause:pmjjby-benefit"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "PROVIDES",
+      "to": "clause:pmjjby-premium"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "REQUIRES",
+      "to": "condition:age_18_to_50"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "REQUIRES",
+      "to": "condition:consents_to_auto_debit"
+    },
+    {
+      "from": "scheme:pmjjby",
+      "predicate": "REQUIRES",
+      "to": "condition:has_bank_account"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "attribute:age",
+      "name": "age",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:consents_to_auto_debit",
+      "name": "consents_to_auto_debit",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:has_bank_or_post_office_account",
+      "name": "has_bank_or_post_office_account",
+      "type": "Attribute"
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:pmjjby-benefit",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "definition",
+      "id": "clause:pmjjby-details",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:pmjjby-eligibility",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmjjby-lien-period",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:pmjjby-premium",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:pmjjby-scope",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmjjby-termination-age",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "asks": "Are you aged between 18 years (completed) and 50 years?",
+      "expr": "profile.age >= 18 and profile.age <= 50",
+      "id": "condition:age_18_to_50",
+      "type": "Condition"
+    },
+    {
+      "asks": "Do you consent to join and enable auto-debit of the premium?",
+      "expr": "profile.consents_to_auto_debit == true",
+      "id": "condition:consents_to_auto_debit",
+      "type": "Condition"
+    },
+    {
+      "asks": "Are you an individual account holder of a participating bank or Post office?",
+      "expr": "profile.has_bank_or_post_office_account == true",
+      "id": "condition:has_bank_account",
+      "type": "Condition"
+    },
+    {
+      "authority": "Department of Financial Services, Ministry of Finance",
+      "effective_from": "2022-06-01",
+      "effective_to": null,
+      "id": "scheme:pmjjby",
+      "name": "Pradhan Mantri Jeevan Jyoti Bima Yojana (life insurance)",
+      "tier": 1,
+      "type": "Scheme",
+      "version": 1
+    },
+    {
+      "checksum": "sha256:a184cbee3339abe0483e8d10a56f71f5d9e6eda6415660844940349e3d216745",
+      "id": "source:rules",
+      "retrieved_at": "2026-09-17",
+      "type": "SourceDocument",
+      "url": "https://jansuraksha.gov.in/Files/PMJJBY/English/Rules.pdf"
+    }
+  ],
+  "scheme": "pmjjby",
+  "version": 1
+}

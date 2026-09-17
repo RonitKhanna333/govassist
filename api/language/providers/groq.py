@@ -38,6 +38,11 @@ TRANSCRIBE_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
 # the smaller model gives ground. Overridable, like the chat models.
 DEFAULT_WHISPER = "whisper-large-v3"
 
+# Segments Whisper itself rates as probably-not-speech, or decodes with very
+# low confidence, are dropped rather than returned as an answer.
+NO_SPEECH_THRESHOLD = 0.6
+MIN_AVG_LOGPROB = -1.0
+
 # Whisper takes ISO 639-1 codes, which our locale codes already are.
 _WHISPER_LANG = {"en": "en", "hi": "hi", "pa": "pa", "ta": "ta"}
 
@@ -97,7 +102,10 @@ class GroqLanguageProvider:
         if not audio:
             raise LanguageError("no audio received")
         model = os.environ.get("GROQ_WHISPER_MODEL") or DEFAULT_WHISPER
-        data = {"model": model, "response_format": "json", "temperature": "0"}
+        # verbose_json carries per-segment no_speech_prob. Whisper invents
+        # fluent text for silence or background hum ("करते हैं" from a pure
+        # tone, in testing), and that would be recorded as an answer.
+        data = {"model": model, "response_format": "verbose_json", "temperature": "0"}
         language = _WHISPER_LANG.get(locale)
         if language:
             # Telling Whisper the language matters a lot for short clips: a
@@ -116,8 +124,17 @@ class GroqLanguageProvider:
             raise LanguageError(f"Groq transcription failed: {exc}") from exc
 
         try:
-            return str(response.json()["text"]).strip()
-        except (KeyError, ValueError) as exc:
+            payload = response.json()
+            segments = payload.get("segments") or []
+            spoken = [
+                str(seg.get("text", "")) for seg in segments
+                if float(seg.get("no_speech_prob", 0.0)) < NO_SPEECH_THRESHOLD
+                and float(seg.get("avg_logprob", 0.0)) > MIN_AVG_LOGPROB
+            ]
+            if segments:
+                return " ".join(t.strip() for t in spoken).strip()
+            return str(payload["text"]).strip()
+        except (KeyError, ValueError, TypeError, AttributeError) as exc:
             raise LanguageError(f"unexpected transcription response: {response.text[:200]}") from exc
 
     def synthesize(self, text: str, locale: str) -> bytes:

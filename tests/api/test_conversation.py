@@ -291,3 +291,80 @@ def test_locales_report_which_languages_have_voice_input():
     body = _client().get("/locales").json()
     voice = {loc["code"]: loc["voice_input"] for loc in body["locales"]}
     assert voice == {"en": True, "hi": True, "pa": False, "ta": False}
+
+
+# -- /speak and Whisper's non-speech filter ----------------------------------
+
+
+def test_speak_returns_mp3_for_hindi():
+    async def fake(text, locale):
+        return b"ID3fake"
+    with patch("api.language.tts.synthesize", side_effect=fake):
+        response = _client().post("/speak", json={"text": "नमस्ते", "locale": "hi"})
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "audio/mpeg"
+    assert response.content == b"ID3fake"
+
+
+def test_speak_refuses_languages_without_a_server_voice():
+    assert _client().post("/speak", json={"text": "x", "locale": "ta"}).status_code == 422
+
+
+def test_whisper_drops_segments_that_are_not_speech():
+    from api.language.providers.groq import GroqLanguageProvider
+    ok = MagicMock(status_code=200)
+    ok.raise_for_status = lambda: None
+    ok.json = lambda: {"text": "करते हैं हाँ", "segments": [
+        {"text": "करते हैं", "no_speech_prob": 0.9, "avg_logprob": -0.2},
+        {"text": " हाँ", "no_speech_prob": 0.1, "avg_logprob": -0.3},
+    ]}
+    with patch.dict("os.environ", {"GROQ_API_KEY": "k"}), \
+         patch("api.language.providers.groq.requests.post", return_value=ok):
+        assert GroqLanguageProvider().transcribe(b"x", "hi") == "हाँ"
+
+
+def test_google_tts_chunks_stay_under_the_limit_and_keep_words_whole():
+    from api.language.tts import split_for_google
+    text = ("क्या आप अपने खुद के काम के लिए आवेदन कर रहे हैं? " * 12).strip()
+    pieces = split_for_google(text, limit=60)
+    assert all(len(p) <= 60 for p in pieces)
+    assert " ".join(pieces).split() == text.split()
+
+
+def test_tts_falls_back_to_the_next_engine():
+    import asyncio
+    from api.language import tts
+    async def broken(text, locale):
+        raise tts.LanguageError("no audio")
+    with patch.dict("os.environ", {"TTS_ENGINES": "edge,google"}), \
+         patch("api.language.tts._edge", side_effect=broken), \
+         patch("api.language.tts._google", return_value=b"mp3"):
+        assert asyncio.run(tts.synthesize("नमस्ते", "hi")) == b"mp3"
+
+
+def test_schemes_lists_the_new_schemes_and_hides_the_fixture():
+    body = _client().get("/schemes?locale=hi").json()
+    ids = [s["id"] for s in body["schemes"]]
+    assert ids[0] == "pmfme"
+    assert {"pmsby", "pmjjby", "apy", "pm-kmy"} <= set(ids)
+    assert "demo-scheme" not in ids
+    reviewed = {s["id"]: s["reviewed"] for s in body["schemes"]}
+    # Review gates are never assumed: only the scheme a person approved.
+    assert reviewed["pmfme"] is True
+    assert reviewed["apy"] is False
+
+
+def test_an_unsafe_scheme_name_is_rejected():
+    assert _client().post("/chat", json={"scheme": "../x", "profile": {}}).status_code == 404
+
+
+@pytest.mark.parametrize("scheme,profile,verdict", [
+    ("apy", {"is_indian_citizen": True, "has_savings_bank_account": True,
+             "age": 41, "ever_paid_income_tax": False}, "NOT_ELIGIBLE"),
+    ("pmsby", {"has_bank_or_post_office_account": True, "age": 70,
+               "consents_to_auto_debit": True}, "ELIGIBLE"),
+    ("pm-kmy", {"owns_cultivable_land": True, "land_hectares": 2.5}, "NOT_ELIGIBLE"),
+])
+def test_new_scheme_boundaries(scheme, profile, verdict):
+    body = _client().post("/chat", json={"scheme": scheme, "profile": profile}).json()
+    assert body["verdict"] == verdict

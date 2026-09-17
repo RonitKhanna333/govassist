@@ -1,0 +1,10 @@
+{
+  "id": "operational-guidelines",
+  "url": "https://pmkisan.gov.in/Documents/PMKMYOperationalGuidelines.pdf",
+  "retrieved_at": "2026-09-17",
+  "checksum": "sha256:a60ec28b4d4344a60447efe61abbca5c45b8a291633518b353beb91aee8546ef",
+  "extractor": "pdfminer.six",
+  "pages": 33,
+  "characters": 71060,
+  "hand_corrected": false
+}

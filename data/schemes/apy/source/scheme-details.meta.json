@@ -1,0 +1,10 @@
+{
+  "id": "scheme-details",
+  "url": "https://jansuraksha.gov.in/Files/APY/ENGLISH/APY.pdf",
+  "retrieved_at": "2026-09-17",
+  "checksum": "sha256:3b7291f47c9e17dc3378745e0fb45100b3119deb699d9cf5cfc353b6390ef939",
+  "extractor": "pdfminer.six",
+  "pages": 4,
+  "characters": 8519,
+  "hand_corrected": false
+}

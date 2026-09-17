@@ -1,0 +1,26 @@
+{
+  "clauses": {},
+  "conditions": {},
+  "created_at": "2026-09-17T05:22:32+00:00",
+  "gates": {
+    "0_source": {
+      "at": "2026-09-17T05:22:32+00:00",
+      "by": "Claude (AI assistant, on request) -- needs human confirmation",
+      "note": "https://jansuraksha.gov.in/Files/APY/ENGLISH/APY.pdf",
+      "status": "approved"
+    },
+    "1_identity": {
+      "at": "2026-09-17T05:22:32+00:00",
+      "by": "Claude (AI assistant, on request) -- needs human confirmation",
+      "note": "scheme-details.pdf sha256:3b7291f47c9e17dc3378745e0fb45100b3119deb699d9cf5cfc353b6390ef939",
+      "status": "approved"
+    },
+    "2_extraction": {
+      "at": "2026-09-17T05:22:34+00:00",
+      "by": "Claude (AI assistant, on request) -- needs human confirmation",
+      "note": "4 pages, 8522 chars",
+      "status": "approved"
+    }
+  },
+  "scheme": "apy"
+}

@@ -303,5 +303,290 @@
         "label": "வங்கிக் கடன் வாங்கத் தயார்"
       }
     }
+  },
+  "has_bank_or_post_office_account": {
+    "ask": "Do you have your own bank or Post office account?",
+    "help": "The yearly fee is taken from this account. A joint or family member's account does not count.",
+    "label": "Has a bank or Post office account",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आपका अपना बैंक या डाकघर (पोस्ट ऑफ़िस) खाता है?",
+        "help": "सालाना पैसा इसी खाते से कटता है। परिवार के किसी और का खाता नहीं चलेगा।",
+        "label": "बैंक या डाकघर खाता है"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਹਾਡਾ ਆਪਣਾ ਬੈਂਕ ਜਾਂ ਡਾਕਘਰ ਖਾਤਾ ਹੈ?",
+        "help": "ਸਾਲਾਨਾ ਪੈਸਾ ਇਸੇ ਖਾਤੇ ਵਿੱਚੋਂ ਕੱਟਿਆ ਜਾਂਦਾ ਹੈ। ਪਰਿਵਾਰ ਦੇ ਕਿਸੇ ਹੋਰ ਦਾ ਖਾਤਾ ਨਹੀਂ ਚੱਲੇਗਾ।",
+        "label": "ਬੈਂਕ ਜਾਂ ਡਾਕਘਰ ਖਾਤਾ ਹੈ"
+      },
+      "ta": {
+        "ask": "உங்களுக்குச் சொந்தமாக வங்கி அல்லது அஞ்சலக கணக்கு இருக்கிறதா?",
+        "help": "ஆண்டுக் கட்டணம் இந்தக் கணக்கிலிருந்து எடுக்கப்படும். குடும்பத்தினரின் கணக்கு செல்லாது.",
+        "label": "வங்கி அல்லது அஞ்சலக கணக்கு உள்ளது"
+      }
+    }
+  },
+  "consents_to_auto_debit": {
+    "ask": "Are you willing to let the bank take the yearly fee from your account automatically?",
+    "help": "This is called auto-debit. You sign a form at the bank once, and the fee is taken every year.",
+    "label": "Agrees to automatic fee payment",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप बैंक को हर साल का पैसा आपके खाते से अपने-आप काटने देंगे?",
+        "help": "इसे ऑटो-डेबिट कहते हैं। बैंक में एक बार फ़ॉर्म भरना होता है, फिर हर साल पैसा कट जाता है।",
+        "label": "अपने-आप पैसा कटने की सहमति"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਬੈਂਕ ਨੂੰ ਹਰ ਸਾਲ ਦਾ ਪੈਸਾ ਤੁਹਾਡੇ ਖਾਤੇ ਵਿੱਚੋਂ ਆਪਣੇ-ਆਪ ਕੱਟਣ ਦਿਓਗੇ?",
+        "help": "ਇਸਨੂੰ ਆਟੋ-ਡੈਬਿਟ ਕਹਿੰਦੇ ਹਨ। ਬੈਂਕ ਵਿੱਚ ਇੱਕ ਵਾਰ ਫ਼ਾਰਮ ਭਰਨਾ ਹੁੰਦਾ ਹੈ।",
+        "label": "ਆਪਣੇ-ਆਪ ਪੈਸਾ ਕੱਟਣ ਦੀ ਸਹਿਮਤੀ"
+      },
+      "ta": {
+        "ask": "ஆண்டுக் கட்டணத்தை உங்கள் கணக்கிலிருந்து வங்கி தானாக எடுக்க நீங்கள் சம்மதிக்கிறீர்களா?",
+        "help": "இது ஆட்டோ-டெபிட் எனப்படும். வங்கியில் ஒரு முறை படிவம் கொடுத்தால் போதும்.",
+        "label": "தானியங்கி கட்டணத்துக்குச் சம்மதம்"
+      }
+    }
+  },
+  "is_indian_citizen": {
+    "ask": "Are you a citizen of India?",
+    "label": "Indian citizen",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप भारत के नागरिक हैं?",
+        "label": "भारत के नागरिक"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਭਾਰਤ ਦੇ ਨਾਗਰਿਕ ਹੋ?",
+        "label": "ਭਾਰਤ ਦੇ ਨਾਗਰਿਕ"
+      },
+      "ta": {
+        "ask": "நீங்கள் இந்தியக் குடிமகனா?",
+        "label": "இந்தியக் குடிமகன்"
+      }
+    }
+  },
+  "has_savings_bank_account": {
+    "ask": "Do you have a savings account in a bank?",
+    "help": "The monthly payment is taken from this account.",
+    "label": "Has a savings bank account",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आपका किसी बैंक में बचत (सेविंग्स) खाता है?",
+        "help": "हर महीने का पैसा इसी खाते से कटता है।",
+        "label": "बैंक में बचत खाता है"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਹਾਡਾ ਕਿਸੇ ਬੈਂਕ ਵਿੱਚ ਬੱਚਤ (ਸੇਵਿੰਗਜ਼) ਖਾਤਾ ਹੈ?",
+        "help": "ਹਰ ਮਹੀਨੇ ਦਾ ਪੈਸਾ ਇਸੇ ਖਾਤੇ ਵਿੱਚੋਂ ਕੱਟਿਆ ਜਾਂਦਾ ਹੈ।",
+        "label": "ਬੈਂਕ ਵਿੱਚ ਬੱਚਤ ਖਾਤਾ ਹੈ"
+      },
+      "ta": {
+        "ask": "உங்களுக்கு வங்கியில் சேமிப்புக் கணக்கு இருக்கிறதா?",
+        "help": "மாதத் தொகை இந்தக் கணக்கிலிருந்து எடுக்கப்படும்.",
+        "label": "வங்கி சேமிப்புக் கணக்கு உள்ளது"
+      }
+    }
+  },
+  "ever_paid_income_tax": {
+    "ask": "Have you ever paid income tax?",
+    "help": "Income tax is the tax on earnings that people with higher income file every year. Most farmers and daily workers do not pay it.",
+    "warn_if_yes": true,
+    "label": "Has paid income tax",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आपने कभी इनकम टैक्स (आयकर) भरा है?",
+        "help": "इनकम टैक्स ज़्यादा कमाई वाले लोग हर साल भरते हैं। ज़्यादातर किसान और मज़दूर इसे नहीं भरते।",
+        "label": "इनकम टैक्स भरा है"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਕਦੇ ਇਨਕਮ ਟੈਕਸ (ਆਮਦਨ ਕਰ) ਭਰਿਆ ਹੈ?",
+        "help": "ਇਨਕਮ ਟੈਕਸ ਵੱਧ ਕਮਾਈ ਵਾਲੇ ਲੋਕ ਹਰ ਸਾਲ ਭਰਦੇ ਹਨ। ਜ਼ਿਆਦਾਤਰ ਕਿਸਾਨ ਅਤੇ ਮਜ਼ਦੂਰ ਇਹ ਨਹੀਂ ਭਰਦੇ।",
+        "label": "ਇਨਕਮ ਟੈਕਸ ਭਰਿਆ ਹੈ"
+      },
+      "ta": {
+        "ask": "நீங்கள் எப்போதாவது வருமான வரி கட்டியிருக்கிறீர்களா?",
+        "help": "அதிக வருமானம் உள்ளவர்கள் ஆண்டுதோறும் வருமான வரி கட்டுவார்கள். பெரும்பாலான விவசாயிகளும் தொழிலாளர்களும் கட்டுவதில்லை.",
+        "label": "வருமான வரி கட்டியுள்ளார்"
+      }
+    }
+  },
+  "paid_income_tax_last_year": {
+    "ask": "Did you pay income tax last year?",
+    "help": "Income tax is the tax on earnings that people with higher income file every year. Most farmers do not pay it.",
+    "warn_if_yes": true,
+    "label": "Paid income tax last year",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आपने पिछले साल इनकम टैक्स (आयकर) भरा था?",
+        "help": "इनकम टैक्स ज़्यादा कमाई वाले लोग हर साल भरते हैं। ज़्यादातर किसान इसे नहीं भरते।",
+        "label": "पिछले साल इनकम टैक्स भरा"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਪਿਛਲੇ ਸਾਲ ਇਨਕਮ ਟੈਕਸ (ਆਮਦਨ ਕਰ) ਭਰਿਆ ਸੀ?",
+        "help": "ਇਨਕਮ ਟੈਕਸ ਵੱਧ ਕਮਾਈ ਵਾਲੇ ਲੋਕ ਹਰ ਸਾਲ ਭਰਦੇ ਹਨ। ਜ਼ਿਆਦਾਤਰ ਕਿਸਾਨ ਇਹ ਨਹੀਂ ਭਰਦੇ।",
+        "label": "ਪਿਛਲੇ ਸਾਲ ਇਨਕਮ ਟੈਕਸ ਭਰਿਆ"
+      },
+      "ta": {
+        "ask": "கடந்த ஆண்டு நீங்கள் வருமான வரி கட்டினீர்களா?",
+        "help": "அதிக வருமானம் உள்ளவர்கள் ஆண்டுதோறும் வருமான வரி கட்டுவார்கள். பெரும்பாலான விவசாயிகள் கட்டுவதில்லை.",
+        "label": "கடந்த ஆண்டு வருமான வரி கட்டினார்"
+      }
+    }
+  },
+  "owns_cultivable_land": {
+    "ask": "Do you own farmland in your name?",
+    "help": "The land must be in the government land records in your name. Land you only rent or farm for someone else does not count.",
+    "label": "Owns farmland",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आपके नाम पर खेती की ज़मीन है?",
+        "help": "ज़मीन सरकारी रिकॉर्ड (खसरा/खतौनी) में आपके नाम होनी चाहिए। किराए या बटाई की ज़मीन नहीं गिनी जाती।",
+        "label": "खेती की ज़मीन है"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਹਾਡੇ ਨਾਂ 'ਤੇ ਖੇਤੀ ਵਾਲੀ ਜ਼ਮੀਨ ਹੈ?",
+        "help": "ਜ਼ਮੀਨ ਸਰਕਾਰੀ ਰਿਕਾਰਡ (ਜਮ੍ਹਾਂਬੰਦੀ) ਵਿੱਚ ਤੁਹਾਡੇ ਨਾਂ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ। ਠੇਕੇ ਵਾਲੀ ਜ਼ਮੀਨ ਨਹੀਂ ਗਿਣੀ ਜਾਂਦੀ।",
+        "label": "ਖੇਤੀ ਵਾਲੀ ਜ਼ਮੀਨ ਹੈ"
+      },
+      "ta": {
+        "ask": "உங்கள் பெயரில் விவசாய நிலம் இருக்கிறதா?",
+        "help": "நிலம் அரசு நிலப் பதிவேட்டில் உங்கள் பெயரில் இருக்க வேண்டும். குத்தகை நிலம் கணக்கில் வராது.",
+        "label": "விவசாய நிலம் உள்ளது"
+      }
+    }
+  },
+  "land_hectares": {
+    "ask": "How much farmland do you own, in hectares?",
+    "help": "1 hectare is about 2.5 acres. So 2 hectares is about 5 acres.",
+    "unit": "hectares",
+    "label": "Land owned",
+    "i18n": {
+      "hi": {
+        "ask": "आपके पास कितनी खेती की ज़मीन है, हेक्टेयर में?",
+        "help": "1 हेक्टेयर लगभग 2.5 एकड़ होता है। यानी 2 हेक्टेयर लगभग 5 एकड़।",
+        "unit": "हेक्टेयर",
+        "label": "ज़मीन"
+      },
+      "pa": {
+        "ask": "ਤੁਹਾਡੇ ਕੋਲ ਕਿੰਨੀ ਖੇਤੀ ਵਾਲੀ ਜ਼ਮੀਨ ਹੈ, ਹੈਕਟੇਅਰ ਵਿੱਚ?",
+        "help": "1 ਹੈਕਟੇਅਰ ਲਗਭਗ 2.5 ਏਕੜ ਹੁੰਦਾ ਹੈ। ਯਾਨੀ 2 ਹੈਕਟੇਅਰ ਲਗਭਗ 5 ਏਕੜ।",
+        "unit": "ਹੈਕਟੇਅਰ",
+        "label": "ਜ਼ਮੀਨ"
+      },
+      "ta": {
+        "ask": "உங்களிடம் எத்தனை ஹெக்டேர் விவசாய நிலம் உள்ளது?",
+        "help": "1 ஹெக்டேர் என்பது சுமார் 2.5 ஏக்கர். அதாவது 2 ஹெக்டேர் சுமார் 5 ஏக்கர்.",
+        "unit": "ஹெக்டேர்",
+        "label": "நிலம்"
+      }
+    }
+  },
+  "in_other_pension_or_social_security_scheme": {
+    "ask": "Are you already in another pension fund, like NPS, PF (EPFO), ESIC, PM-SYM or PM-LVM?",
+    "help": "PF and ESIC are usually deducted from the salary of factory or office workers. NPS, PM-SYM and PM-LVM are other government pension plans.",
+    "warn_if_yes": true,
+    "label": "Already in another pension fund",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप पहले से किसी और पेंशन योजना में हैं, जैसे NPS, PF, ESIC, PM-SYM या PM-LVM?",
+        "help": "PF और ESIC आमतौर पर फ़ैक्टरी या दफ़्तर की तनख़्वाह से कटते हैं। NPS, PM-SYM और PM-LVM दूसरी सरकारी पेंशन योजनाएँ हैं।",
+        "label": "दूसरी पेंशन योजना में हैं"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਪਹਿਲਾਂ ਹੀ ਕਿਸੇ ਹੋਰ ਪੈਨਸ਼ਨ ਯੋਜਨਾ ਵਿੱਚ ਹੋ, ਜਿਵੇਂ NPS, PF, ESIC, PM-SYM ਜਾਂ PM-LVM?",
+        "help": "PF ਅਤੇ ESIC ਆਮ ਤੌਰ 'ਤੇ ਫ਼ੈਕਟਰੀ ਜਾਂ ਦਫ਼ਤਰ ਦੀ ਤਨਖ਼ਾਹ ਵਿੱਚੋਂ ਕੱਟੇ ਜਾਂਦੇ ਹਨ।",
+        "label": "ਹੋਰ ਪੈਨਸ਼ਨ ਯੋਜਨਾ ਵਿੱਚ ਹਨ"
+      },
+      "ta": {
+        "ask": "நீங்கள் ஏற்கனவே NPS, PF, ESIC, PM-SYM அல்லது PM-LVM போன்ற வேறு ஓய்வூதியத் திட்டத்தில் இருக்கிறீர்களா?",
+        "help": "PF, ESIC பொதுவாக தொழிற்சாலை அல்லது அலுவலகச் சம்பளத்திலிருந்து பிடிக்கப்படும்.",
+        "label": "வேறு ஓய்வூதியத் திட்டத்தில் உள்ளார்"
+      }
+    }
+  },
+  "is_institutional_landholder": {
+    "ask": "Is the land owned by a trust, company or organisation rather than a person?",
+    "warn_if_yes": true,
+    "label": "Land owned by an organisation",
+    "i18n": {
+      "hi": {
+        "ask": "क्या ज़मीन किसी व्यक्ति की जगह किसी ट्रस्ट, कंपनी या संस्था के नाम पर है?",
+        "label": "ज़मीन संस्था के नाम"
+      },
+      "pa": {
+        "ask": "ਕੀ ਜ਼ਮੀਨ ਕਿਸੇ ਵਿਅਕਤੀ ਦੀ ਥਾਂ ਕਿਸੇ ਟਰੱਸਟ, ਕੰਪਨੀ ਜਾਂ ਸੰਸਥਾ ਦੇ ਨਾਂ 'ਤੇ ਹੈ?",
+        "label": "ਜ਼ਮੀਨ ਸੰਸਥਾ ਦੇ ਨਾਂ"
+      },
+      "ta": {
+        "ask": "நிலம் ஒரு நபரின் பெயரில் இல்லாமல் அறக்கட்டளை, நிறுவனம் அல்லது அமைப்பின் பெயரில் உள்ளதா?",
+        "label": "நிலம் அமைப்பின் பெயரில்"
+      }
+    }
+  },
+  "holds_or_held_public_office": {
+    "ask": "Are you now, or were you ever, a minister, MP, MLA, mayor or district panchayat head?",
+    "help": "This also covers constitutional posts such as judges and governors. Village sarpanch is not in this list.",
+    "warn_if_yes": true,
+    "label": "Holds or held a high public post",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप अभी या पहले कभी मंत्री, सांसद, विधायक, मेयर या ज़िला पंचायत अध्यक्ष रहे हैं?",
+        "help": "इसमें जज, राज्यपाल जैसे संवैधानिक पद भी आते हैं। गाँव के सरपंच इसमें नहीं आते।",
+        "label": "बड़े सरकारी पद पर रहे"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਹੁਣ ਜਾਂ ਪਹਿਲਾਂ ਕਦੇ ਮੰਤਰੀ, ਸੰਸਦ ਮੈਂਬਰ, ਵਿਧਾਇਕ, ਮੇਅਰ ਜਾਂ ਜ਼ਿਲ੍ਹਾ ਪਰਿਸ਼ਦ ਚੇਅਰਮੈਨ ਰਹੇ ਹੋ?",
+        "help": "ਇਸ ਵਿੱਚ ਜੱਜ, ਰਾਜਪਾਲ ਵਰਗੇ ਸੰਵਿਧਾਨਕ ਅਹੁਦੇ ਵੀ ਆਉਂਦੇ ਹਨ। ਪਿੰਡ ਦਾ ਸਰਪੰਚ ਇਸ ਵਿੱਚ ਨਹੀਂ ਆਉਂਦਾ।",
+        "label": "ਵੱਡੇ ਸਰਕਾਰੀ ਅਹੁਦੇ 'ਤੇ ਰਹੇ"
+      },
+      "ta": {
+        "ask": "நீங்கள் இப்போது அல்லது முன்பு அமைச்சர், எம்.பி., எம்.எல்.ஏ., மேயர் அல்லது மாவட்ட ஊராட்சித் தலைவராக இருந்தீர்களா?",
+        "help": "நீதிபதி, ஆளுநர் போன்ற அரசியலமைப்புப் பதவிகளும் இதில் அடங்கும். கிராம ஊராட்சித் தலைவர் இதில் அடங்கமாட்டார்.",
+        "label": "உயர் அரசுப் பதவி வகித்தவர்"
+      }
+    }
+  },
+  "is_government_employee": {
+    "ask": "Do you work, or did you retire, as a government or public sector employee?",
+    "help": "Peons, helpers and other Group D or Class IV staff are not counted here, so answer No if that was your job.",
+    "warn_if_yes": true,
+    "label": "Government employee",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप सरकारी या सरकारी कंपनी के कर्मचारी हैं, या वहाँ से रिटायर हुए हैं?",
+        "help": "चपरासी, सहायक और दूसरे ग्रुप D या चतुर्थ श्रेणी कर्मचारी इसमें नहीं गिने जाते — ऐसा हो तो 'नहीं' चुनें।",
+        "label": "सरकारी कर्मचारी"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਸਰਕਾਰੀ ਜਾਂ ਸਰਕਾਰੀ ਕੰਪਨੀ ਦੇ ਮੁਲਾਜ਼ਮ ਹੋ, ਜਾਂ ਉੱਥੋਂ ਰਿਟਾਇਰ ਹੋਏ ਹੋ?",
+        "help": "ਚਪੜਾਸੀ, ਸਹਾਇਕ ਅਤੇ ਹੋਰ ਗਰੁੱਪ D ਜਾਂ ਚੌਥਾ ਦਰਜਾ ਮੁਲਾਜ਼ਮ ਇਸ ਵਿੱਚ ਨਹੀਂ ਗਿਣੇ ਜਾਂਦੇ — ਇਸ ਲਈ 'ਨਹੀਂ' ਚੁਣੋ।",
+        "label": "ਸਰਕਾਰੀ ਮੁਲਾਜ਼ਮ"
+      },
+      "ta": {
+        "ask": "நீங்கள் அரசு அல்லது பொதுத்துறை ஊழியரா, அல்லது அங்கிருந்து ஓய்வு பெற்றவரா?",
+        "help": "உதவியாளர்கள் போன்ற குரூப் D / நான்காம் நிலை ஊழியர்கள் இதில் சேர்க்கப்படமாட்டார்கள் — அப்படியானால் 'இல்லை' எனச் சொல்லுங்கள்.",
+        "label": "அரசு ஊழியர்"
+      }
+    }
+  },
+  "is_practising_professional": {
+    "ask": "Do you work as a registered doctor, engineer, lawyer, chartered accountant or architect?",
+    "warn_if_yes": true,
+    "label": "Practising professional",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप रजिस्टर्ड डॉक्टर, इंजीनियर, वकील, चार्टर्ड अकाउंटेंट या आर्किटेक्ट के रूप में काम करते हैं?",
+        "label": "डॉक्टर/वकील जैसा पेशा"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਰਜਿਸਟਰਡ ਡਾਕਟਰ, ਇੰਜੀਨੀਅਰ, ਵਕੀਲ, ਚਾਰਟਰਡ ਅਕਾਊਂਟੈਂਟ ਜਾਂ ਆਰਕੀਟੈਕਟ ਵਜੋਂ ਕੰਮ ਕਰਦੇ ਹੋ?",
+        "label": "ਡਾਕਟਰ/ਵਕੀਲ ਵਰਗਾ ਪੇਸ਼ਾ"
+      },
+      "ta": {
+        "ask": "நீங்கள் பதிவுசெய்த மருத்துவர், பொறியாளர், வழக்கறிஞர், பட்டயக் கணக்காளர் அல்லது கட்டடக் கலைஞராகப் பணிபுரிகிறீர்களா?",
+        "label": "மருத்துவர்/வழக்கறிஞர் போன்ற தொழில்"
+      }
+    }
   }
 }
