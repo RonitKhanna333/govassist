@@ -19,7 +19,7 @@ checked automatically rather than trusted.
 | Auth (`api/auth/`) | optional accounts, scrypt + JWT |
 | Frontend (`web/`) | Next.js, four languages, voice, citation panel |
 | CI (`.github/workflows/`) | backend corpus/API checks and frontend test/build checks |
-| Deployment | two Vercel projects; deployment state must be verified separately |
+| Deployment | two Vercel projects; production deployment completed after PR #5 merged |
 
 The automated suite uses committed corpus data and mocks; it needs no production
 API keys or network calls. Run the commands below for the current result rather
@@ -39,28 +39,30 @@ cd web && npm install && npm run dev   # :3000  (use localhost, not 127.0.0.1)
 
 ## UCS503 presentation and demonstration
 
-The Vercel preview presentation is the Next.js route `/presentation`. The
-working signed-out PMFME prototype is `/`, and the evidence/remediation page is
-`/evidence`. Navigation between all three is built into the site. The PR
-preview is not the production deployment; configure its `NEXT_PUBLIC_API_BASE`
-to the matching API preview before treating it as backend evidence.
+The production web deployment serves the Next.js routes `/presentation`, `/`,
+and `/evidence`; navigation between all three is built into the site. PR #5 has
+been merged to `main`, CI passed on `main` after the merge, and both Vercel
+production deployments completed.
 
-The prepared demonstration uses only non-sensitive values. To show the
-reviewed boundary, use the complete individual-unit profile in
-`docs/human-review-remediation.md` or the evidence page and change only
-`age`: **18 must return `NOT_ELIGIBLE` with the age citation; 19 must return
-`ELIGIBLE` when every other condition passes**. Punjabi and Tamil text flows
-are supported; microphone input is intentionally enabled only for English and
-Hindi. PMFME is the only demonstrated production scheme.
+The prepared demonstration uses only non-sensitive values. The PMFME age
+boundary is implemented as `profile.age > 18`: use the complete
+individual-unit profile in `docs/human-review-remediation.md` or the evidence
+page and change only `age`; **18 must return `NOT_ELIGIBLE` with the age
+citation, while 19 must return `ELIGIBLE` when every other condition passes**.
+Punjabi and Tamil text flows are supported; microphone input is intentionally
+enabled only for English and Hindi. PMFME is the only demonstrated production
+scheme.
 
 The repository contains exactly four use-case diagrams, five sequence diagrams
 and one detailed class diagram under [`docs/diagrams/`](docs/diagrams/). The
 presentation contains responsive DiagramSpec previews paired with the formal
 Mermaid/source artifacts; they are not screenshots of an editor canvas.
 
-This branch is pushed as PR #5 and has a Vercel preview, but it is not merged
-to `main` or production-approved. After the required human corpus review and
-preview browser checks, merge the PR and verify the production deployment. See
+PR #5 is merged to `main`, and `/presentation` and `/evidence` are production
+routes following the completed Vercel deployment. The post-change human corpus
+re-review is still pending: the current `.state.json` does not contain a newer
+genuine human review for the corrected age boundary. Production browser checks
+remain a separate manual evidence step. See
 [`docs/human-review-remediation.md`](docs/human-review-remediation.md) and
 [`docs/deploy.md`](docs/deploy.md).
 

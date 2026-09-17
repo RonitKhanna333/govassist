@@ -66,4 +66,5 @@ Gate 4 or the corrected Gate 5 has human approval. After a named human has
 completed both interactive passes and the validation/build checks pass, the
 repository may claim those gates were reviewed by that person, with the name
 and timestamp recorded by the tool. Gate 6 still needs the required second
-human diff review before merge.
+human diff review; the PR merge and Vercel deployment do not constitute human
+corpus approval.

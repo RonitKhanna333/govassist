@@ -44,8 +44,8 @@ export default function EvidencePage() {
             <p className="muted-copy">Add only exact commit, PR, issue, documentation or test links supplied by the team. No shared-work claim is inferred.</p>
           </EvidenceCard>
           <EvidenceCard title="Deployment handoff">
-            <p>Preview deployed by Vercel; this PR is not merged to <code>main</code> and is not production-approved.</p>
-            <ol><li>Configure the web Preview environment's <code>NEXT_PUBLIC_API_BASE</code> to the matching PR API preview URL.</li><li>Run human PMFME Gate 4/5 re-review for the corrected age boundary.</li><li>Open the matching preview signed out and repeat desktop/mobile, scheme picker, microphone, TTS, eligible/ineligible, age-18, language, link and console checks.</li><li>Merge PR #5 only after those checks; then verify the production deployment separately.</li></ol>
+            <p>PR #5 is merged to <code>main</code>. CI passed on <code>main</code> after the merge, and both Vercel production deployments completed. <code>/presentation</code> and <code>/evidence</code> are now production routes.</p>
+            <ol><li>Open the production web route signed out and repeat desktop/mobile, scheme picker, microphone, TTS, eligible/ineligible, age-18, language, link and console checks.</li><li>Run the post-change human PMFME Gate 4/5 re-review for the corrected boundary, implemented as <code>profile.age &gt; 18</code>; the current <code>.state.json</code> does not record a newer genuine human review.</li><li>Do not edit <code>.state.json</code> or claim human approval unless a named reviewer completes the interactive passes.</li></ol>
           </EvidenceCard>
         </div>
         <footer className="presentation-footer"><a href="/presentation">← Back to presentation</a><span>Evidence over theatre.</span></footer>
