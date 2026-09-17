@@ -1,0 +1,20 @@
+%% Corpus gates and generated build: human decisions are never automated
+sequenceDiagram
+  actor Maintainer
+  actor Reviewer
+  participant Ingest as ingest.py / segment.py
+  participant State as .state.json
+  participant Scheme as scheme.md
+  participant CI as validate.py / build.py --check
+  Maintainer->>Ingest: Ingest committed official PDF
+  Ingest->>State: Ask Gates 0–3 interactively
+  Reviewer->>Ingest: Inspect source, extraction and segments
+  Ingest-->>Maintainer: Chunks for drafting
+  Maintainer->>Scheme: Draft quotes, clauses and expressions
+  Reviewer->>Ingest: Run review.py (Gate 4)
+  Ingest->>State: Save named clause decisions
+  Reviewer->>Ingest: Run review.py --conditions (Gate 5)
+  Ingest->>State: Save named boundary decisions
+  CI->>Scheme: Validate quotes and grammar
+  CI->>Scheme: Check generated projections are fresh
+  CI-->>Maintainer: Pass or reviewable failure

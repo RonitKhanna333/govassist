@@ -22,6 +22,7 @@ import { useSpeech } from "@/lib/useSpeech";
 import { AnswerControls } from "./AnswerControls";
 import { Citations } from "./Citations";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { SiteNav } from "./SiteNav";
 
 const DEFAULT_SCHEME = "pmfme";
 const STORAGE_KEY = "govassist.language";
@@ -214,7 +215,11 @@ export function Chat() {
         }
       } catch (err) {
         setError(
-          err instanceof ApiError && err.offline ? t("error.offline") : t("error.generic"),
+          err instanceof ApiError && err.offline
+            ? t("error.offline")
+            : err instanceof ApiError && err.status === 429
+              ? t("error.rateLimited")
+              : t("error.generic"),
         );
       } finally {
         setBusy(false);
@@ -314,6 +319,14 @@ export function Chat() {
 
   return (
     <div className="shell">
+      <SiteNav
+        labels={{
+          presentation: t("nav.presentation"),
+          live: t("nav.live"),
+          evidence: t("nav.evidence"),
+        }}
+        active="live"
+      />
       <header className="masthead">
         <div>
           <h1 lang={uiLocale}>{t("app.title")}</h1>

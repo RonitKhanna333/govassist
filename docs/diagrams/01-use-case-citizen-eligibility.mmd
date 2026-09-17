@@ -1,0 +1,16 @@
+%% GovAssist implementation: web/components/Chat.tsx -> POST /chat -> api/rules/engine.py
+usecaseDiagram
+  actor Citizen
+  rectangle GovAssist {
+    (Start PMFME assessment) as start
+    (Answer deterministic questions) as answer
+    (View eligibility verdict) as verdict
+    (Open cited evidence) as evidence
+  }
+  Citizen --> start
+  Citizen --> answer
+  Citizen --> verdict
+  Citizen --> evidence
+  answer ..> start : <<includes>>
+  verdict ..> answer : <<follows>>
+  evidence ..> verdict : <<supports>>

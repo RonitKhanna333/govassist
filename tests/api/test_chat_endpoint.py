@@ -99,6 +99,26 @@ def test_not_eligible_still_cites_the_deciding_clause():
     assert "individual-age-and-education" in {c["clause_id"] for c in body["citations"]}
 
 
+def test_age_18_is_not_eligible_through_the_complete_chat_endpoint():
+    llm = FakeLLM([
+        "You do not qualify because the age requirement is not met.",
+        '[{"claim": "age requirement is not met", "status": "SUPPORTED"}]',
+    ])
+    client = _client(llm)
+    response = client.post("/chat", json={
+        "scheme": "pmfme",
+        "profile": {**FULLY_QUALIFYING_PROFILE, "age": 18},
+    })
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["verdict"] == "NOT_ELIGIBLE"
+    assert "individual-age-and-education" in {
+        c["clause_id"] for c in body["citations"]
+    }
+    assert any("above 18 years" in c["quote"] for c in body["citations"])
+
+
 def test_unverified_answer_falls_back_honestly_rather_than_shipping_a_guess():
     llm = FakeLLM([
         "a draft with something invented",

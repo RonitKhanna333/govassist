@@ -276,9 +276,11 @@ Five components, each with one job. **Status as of the `/chat` endpoint
    treated as **not verified**, never as "verified, and it's fine" — an
    unchecked answer must never ship silently just because the check itself
    broke.
-5. **Round-trip translation check** — not built. Still `LanguageService`
-   from the original multilingual design; `/chat` today is English-only text,
-   no ASR/NMT/TTS layer wired in yet.
+5. **Round-trip translation check** (`api/language/service.py`) — ✅ built as
+   the provider round-trip guard. `/chat` supports four text locales with
+   static questions and provider-dependent answer translation; `/transcribe`
+   accepts English and Hindi voice input through the configured provider. The
+   browser speech fallback remains device-dependent, and Bhashini is optional.
 
 The LLM sits in exactly two places that can affect what a user is told
 (composer, verifier) and never in the place that decides eligibility. That
@@ -305,7 +307,7 @@ FastAPI endpoint, verified three ways against the actual committed `pmfme`
 corpus:
 
 ```bash
-python -m pytest tests/ -q                       # 242 passed, no network, no key
+python -m pytest tests/ -q                       # current count: run it; no network or key
 uvicorn api.main:app --reload                     # then POST /chat for real
 ```
 
@@ -316,13 +318,11 @@ uvicorn api.main:app --reload                     # then POST /chat for real
   the actual PMFME guidelines PDF.
 - The same profile with `age: 16` → `NOT_ELIGIBLE`, citing the actual
   age-and-education clause.
-- Run live with no `GROQ_API_KEY` set at all: the verdict and citations are
-  still correct (the rule engine needs no key), and the `answer` field
-  degrades to the honest "I don't have grounded facts to explain this with"
-  fallback rather than crashing or hanging — demonstrated against the real
-  running server, not mocked.
+- With no `GROQ_API_KEY`, the deterministic verdict and citations remain
+  available; explanation and translation degrade to their visible honest
+  fallbacks rather than deciding from model output.
 
-What `/chat` does **not** do yet: voice, translation, any domain but scheme,
-or routing to the four graph retrieval patterns beyond eligibility. Each of
-those is a bounded next slice on top of a foundation that's now genuinely
-exercised, not just designed.
+What `/chat` does **not** do yet: any domain but scheme, or routing to the four
+graph retrieval patterns beyond eligibility. The graph store and optional
+account/database routes exist, but they are not required by the demonstrated
+PMFME flow and are not claimed as enabled in production.

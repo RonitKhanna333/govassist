@@ -2,8 +2,36 @@
 
 import type { LocaleCode } from "./registry";
 
-const BASE =
-  process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:8000";
+export const LOCAL_API_BASE = "http://127.0.0.1:8000";
+/** The only frontend-to-backend configuration input. Vercel supplies this
+ * per environment; local development falls back to the local API. */
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? LOCAL_API_BASE;
+
+export type ApiTargetKind = "local" | "production" | "preview" | "custom" | "invalid";
+
+const PRODUCTION_API_HOST = "govassist-api-ronit-khannas-projects.vercel.app";
+const PREVIEW_API_HOST = /^govassist-api-git-[a-z0-9-]+-ronit-khannas-projects\.vercel\.app$/i;
+
+export function classifyApiTarget(base = API_BASE): ApiTargetKind {
+  try {
+    const url = new URL(base);
+    if (url.hostname === "localhost" || url.hostname === "127.0.0.1") return "local";
+    if (url.hostname === PRODUCTION_API_HOST) return "production";
+    if (PREVIEW_API_HOST.test(url.hostname)) return "preview";
+    return "custom";
+  } catch {
+    return "invalid";
+  }
+}
+
+export const API_TARGET_KIND = classifyApiTarget();
+export const API_TARGET_ORIGIN = (() => {
+  try {
+    return new URL(API_BASE).origin;
+  } catch {
+    return API_BASE;
+  }
+})();
 
 export interface Citation {
   clause_id: string;
@@ -78,7 +106,11 @@ export interface ChatResponse {
 }
 
 export class ApiError extends Error {
-  constructor(message: string, readonly offline = false) {
+  constructor(
+    message: string,
+    readonly offline = false,
+    readonly status: number | null = null,
+  ) {
     super(message);
   }
 }
@@ -86,7 +118,7 @@ export class ApiError extends Error {
 async function post<T>(path: string, body: unknown): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(`${BASE}${path}`, {
+    response = await fetch(`${API_BASE}${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -95,7 +127,13 @@ async function post<T>(path: string, body: unknown): Promise<T> {
     throw new ApiError("offline", true);
   }
   if (!response.ok) {
-    throw new ApiError(`${response.status}`);
+    let detail = `${response.status}`;
+    try {
+      detail = ((await response.json()) as { detail?: string }).detail ?? detail;
+    } catch {
+      /* keep the status code */
+    }
+    throw new ApiError(detail, false, response.status);
   }
   return response.json() as Promise<T>;
 }
@@ -126,7 +164,7 @@ export async function sendChat(input: {
 
 export async function detectLocale(): Promise<string | null> {
   try {
-    const response = await fetch(`${BASE}/detect-locale`);
+    const response = await fetch(`${API_BASE}/detect-locale`);
     if (!response.ok) return null;
     const body = (await response.json()) as { locale: string };
     return body.locale;
@@ -145,7 +183,7 @@ export class TranscribeError extends Error {}
 export async function transcribe(audio: Blob, locale: LocaleCode): Promise<string> {
   let response: Response;
   try {
-    response = await fetch(`${BASE}/transcribe?locale=${encodeURIComponent(locale)}`, {
+    response = await fetch(`${API_BASE}/transcribe?locale=${encodeURIComponent(locale)}`, {
       method: "POST",
       headers: { "Content-Type": audio.type || "audio/webm" },
       body: audio,
@@ -170,7 +208,7 @@ export const VOICE_OUTPUT_LOCALES: LocaleCode[] = ["hi", "en"];
 
 /** Server-side speech: MP3 audio for `text`. */
 export async function speakAudio(text: string, locale: LocaleCode): Promise<Blob> {
-  const response = await fetch(`${BASE}/speak`, {
+  const response = await fetch(`${API_BASE}/speak`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text, locale }),
@@ -190,7 +228,7 @@ export interface SchemeInfo {
 
 export async function listSchemes(locale: LocaleCode): Promise<SchemeInfo[]> {
   try {
-    const response = await fetch(`${BASE}/schemes?locale=${encodeURIComponent(locale)}`);
+    const response = await fetch(`${API_BASE}/schemes?locale=${encodeURIComponent(locale)}`);
     if (!response.ok) return [];
     return ((await response.json()) as { schemes: SchemeInfo[] }).schemes;
   } catch {

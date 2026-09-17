@@ -1,0 +1,14 @@
+%% Current /chat question path: api/agents/router.py + conversation.py
+usecaseDiagram
+  actor Citizen
+  rectangle GovAssist {
+    (Ask a scheme question) as ask
+    (Route supported scheme query) as route
+    (Read committed PMFME clauses) as clauses
+    (Receive cited answer or honest unknown) as answer
+  }
+  Citizen --> ask
+  ask ..> route : <<uses>>
+  route ..> clauses : <<uses>>
+  clauses ..> answer : <<grounds>>
+  Citizen --> answer
