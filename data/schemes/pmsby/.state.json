@@ -5,19 +5,19 @@
   "gates": {
     "0_source": {
       "at": "2026-09-17T05:22:28+00:00",
-      "by": "thorb",
-      "note": "C:\\Users\\thorb\\AppData\\Local\\Temp\\claude\\C--Users-thorb\\5cde01c2-1013-41e8-b345-4ba209c60640\\scratchpad\\pdfs\\rules.pdf",
+      "by": "Claude (AI assistant, on request) -- needs human confirmation",
+      "note": "https://jansuraksha.gov.in/Files/PMSBY/English/Rules.pdf",
       "status": "approved"
     },
     "1_identity": {
       "at": "2026-09-17T05:22:29+00:00",
-      "by": "thorb",
+      "by": "Claude (AI assistant, on request) -- needs human confirmation",
       "note": "rules.pdf sha256:195a99298e85821bd84174c4973ad8f8be2ecf24cfb97f865799c702cae7feb5",
       "status": "approved"
     },
     "2_extraction": {
       "at": "2026-09-17T05:22:29+00:00",
-      "by": "thorb",
+      "by": "Claude (AI assistant, on request) -- needs human confirmation",
       "note": "3 pages, 6791 chars",
       "status": "approved"
     }
