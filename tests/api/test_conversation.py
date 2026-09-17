@@ -321,3 +321,22 @@ def test_whisper_drops_segments_that_are_not_speech():
     with patch.dict("os.environ", {"GROQ_API_KEY": "k"}), \
          patch("api.language.providers.groq.requests.post", return_value=ok):
         assert GroqLanguageProvider().transcribe(b"x", "hi") == "हाँ"
+
+
+def test_google_tts_chunks_stay_under_the_limit_and_keep_words_whole():
+    from api.language.tts import split_for_google
+    text = ("क्या आप अपने खुद के काम के लिए आवेदन कर रहे हैं? " * 12).strip()
+    pieces = split_for_google(text, limit=60)
+    assert all(len(p) <= 60 for p in pieces)
+    assert " ".join(pieces).split() == text.split()
+
+
+def test_tts_falls_back_to_the_next_engine():
+    import asyncio
+    from api.language import tts
+    async def broken(text, locale):
+        raise tts.LanguageError("no audio")
+    with patch.dict("os.environ", {"TTS_ENGINES": "edge,google"}), \
+         patch("api.language.tts._edge", side_effect=broken), \
+         patch("api.language.tts._google", return_value=b"mp3"):
+        assert asyncio.run(tts.synthesize("नमस्ते", "hi")) == b"mp3"
