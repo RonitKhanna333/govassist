@@ -116,6 +116,9 @@ export function Chat() {
     }
 
     if (stored?.ui) {
+      // localStorage only exists after hydration; reading it during render
+      // would make the server and client markup disagree.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUiLocale(resolveLocale(stored.ui));
       setContentLocale(resolveLocale(stored.content ?? stored.ui));
       setContentFollows(stored.follows ?? true);
@@ -253,8 +256,9 @@ export function Chat() {
     await exchange("", undefined, { answers: values });
   };
 
-  const finishRecording = async () => {
-    const audio = await recorder.stop();
+  /** Every recording ends here exactly once -- whether the person tapped
+   *  Stop, paused after speaking, or hit the 30-second cap. */
+  const handleRecording = async (audio: Blob | null) => {
     if (!audio || audio.size === 0) {
       setMicNote(t("mic.empty"));
       return;
@@ -274,24 +278,27 @@ export function Chat() {
       setTranscribing(false);
     }
   };
-  // The silence detector fires from a timer set up at start; a ref keeps it
+  // The recording can end from a timer set up at start; a ref keeps that
   // calling the current closure rather than the one from that moment.
-  const finishRef = useRef(finishRecording);
-  finishRef.current = finishRecording;
+  const recordingDone = useRef(handleRecording);
+  useEffect(() => {
+    recordingDone.current = handleRecording;
+  });
 
   const toggleMic = async () => {
     setMicNote(null);
     if (recorder.state === "recording") {
-      await finishRecording();
+      recorder.stop(); // the audio arrives at handleRecording
       return;
     }
     stop();
-    const failure = await recorder.start(() => void finishRef.current());
+    const failure = await recorder.start((audio) => void recordingDone.current(audio));
     if (failure) setMicNote(t(`mic.error.${failure}`));
   };
 
   const restart = () => {
     stop();
+    recorder.cancel();
     setReplyCitations([]);
     setStarted(false);
     setTurns([]);
@@ -314,6 +321,9 @@ export function Chat() {
         ? t("verdict.not_eligible")
         : t("verdict.insufficient");
 
+  // Unknown (scheme list not loaded) is treated like unreviewed: the warning
+  // is only ever hidden by the server positively saying "reviewed".
+  const selectedReviewed = schemes.find((item) => item.id === scheme)?.reviewed;
   const speechAvailable = serverVoice || canSpeak(latest?.speech ?? null);
   const lastBotText = latest?.bot_messages?.join(" ") ?? latest?.answer ?? latest?.next_question ?? "";
 
@@ -365,8 +375,8 @@ export function Chat() {
                 ))}
               </fieldset>
             )}
-            {schemes.find((item) => item.id === scheme)?.reviewed === false && (
-              <p className="note">{t("scheme.unreviewed_note")}</p>
+            {selectedReviewed !== true && (
+              <p className="note" role="note">{t("scheme.unreviewed_note")}</p>
             )}
             <button type="button" className="btn" onClick={start} disabled={busy}>
               {t("chat.start")}
@@ -379,6 +389,13 @@ export function Chat() {
             </p>
             {latest?.verdict && (
               <div className={`verdict ${verdictClass}`}>{verdictLabel}</div>
+            )}
+            {/* The result carries the same warning as the scheme list: a
+                verdict from rules no person has checked is a first guide. */}
+            {selectedReviewed !== true && (
+              <p className="note" role="note" lang={uiLocale}>
+                {t("scheme.unreviewed_note")}
+              </p>
             )}
 
             <div className="thread" aria-live="polite">

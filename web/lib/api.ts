@@ -66,6 +66,12 @@ export interface AnswerField {
   help: string | null;
   unit: string | null;
   warn_if_yes: boolean;
+  /** Input domain of a number (data/attributes.json `value`): what a
+   *  well-formed answer looks like, never an eligibility threshold. The
+   *  server checks it again; this only spares a round trip. */
+  integer?: boolean;
+  minimum?: number | null;
+  maximum?: number | null;
 }
 
 /** The question being asked, plus what would actually answer it. Derived

@@ -25,11 +25,14 @@ Three things this endpoint will not do, by design:
 
 from __future__ import annotations
 
+import hmac
 import json
 import os
 import re
+from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from pydantic import BaseModel, Field, StrictBool, StrictStr
 from starlette.concurrency import run_in_threadpool
 
 import api._corpus_bridge  # noqa: F401 -- must run before importing parse_scheme
@@ -37,16 +40,27 @@ from api.agents import composer, conversation, nlu, orchestrate
 from api.agents.llm import LLMProvider
 from api.agents.phrases import phrase
 from api.agents.router import route
+from api.body_limit import AUDIO_BODY_LIMIT
 from api.deps import get_language, get_llm
 from api.language import tts
 from api.language.providers.base import LanguageError
 from api.language.registry import CANONICAL_LOCALE, LOCALES, get as get_locale, negotiate
 from api.language.service import LanguageService
-from api.rate_limit import chat_rate_limiter
+from api.rate_limit import (
+    chat_rate_limiter,
+    client_key,
+    enforce,
+    probe_rate_limiter,
+    speak_rate_limiter,
+    too_many,
+    transcribe_rate_limiter,
+)
 from api.rules.engine import Citation, decide, known_attributes, load_clauses, load_rules
 from api.rules.forms import OTHER, answer_yes_no, summarize_profile, unresolved_fields
-from api.rules.spoken import interpret
+from api.rules.spoken import AMBIGUOUS, NONE, QUESTION, VALUE, Reading, read_answer
+from api.rules.values import check_value, check_values, specs_for
 from parse_scheme import repo_root  # noqa: E402
+from review_binding import Assessment, assess  # noqa: E402
 
 router = APIRouter()
 
@@ -55,7 +69,11 @@ router = APIRouter()
 # mic that half-works in a language nobody has checked is worse than an honest
 # "voice input isn't available in this language yet".
 VOICE_INPUT_LOCALES = {"en", "hi"}
-MAX_AUDIO_BYTES = 4 * 1024 * 1024  # under Vercel's 4.5 MB request ceiling
+MAX_AUDIO_BYTES = AUDIO_BODY_LIMIT  # under Vercel's 4.5 MB request ceiling
+# A transcript of the 30-second recording cap is a few hundred characters.
+MAX_MESSAGE_CHARS = 1000
+MAX_SPEAK_CHARS = 2000
+MAX_PROFILE_KEYS = 64
 
 _AUDIO_EXT = {
     "audio/webm": "webm", "audio/ogg": "ogg", "audio/mp4": "m4a",
@@ -63,8 +81,17 @@ _AUDIO_EXT = {
 }
 
 
+def _probe_allowed(request: Request) -> bool:
+    """`?probe=llm` spends provider quota, so it is for operators only:
+    the caller must present GOVASSIST_DIAGNOSTIC_TOKEN. With no token
+    configured the probe is simply off."""
+    expected = os.environ.get("GOVASSIST_DIAGNOSTIC_TOKEN", "")
+    given = request.headers.get("x-diagnostic-token", "")
+    return len(expected) >= 16 and hmac.compare_digest(given, expected)
+
+
 @router.get("/health")
-def health(probe: str | None = None) -> dict:
+def health(request: Request, probe: str | None = None) -> dict:
     """Liveness, plus which capabilities are actually configured.
 
     This exists because of a real failure that took far too long to
@@ -72,9 +99,10 @@ def health(probe: str | None = None) -> dict:
     honest fallback sentence, so "no API key", "wrong API key", "model
     retired" and "rate limited" all look identical from outside.
 
-    Reporting configuration is safe and free. `?probe=llm` goes further and
-    actually calls Groq once, returning the provider's real error text --
-    never the key itself, only whether it works and what it said.
+    Reporting configuration is safe and free, and stays open and unlimited.
+    `?probe=llm` goes further and actually calls Groq once, returning the
+    provider's real error text -- never the key itself. Because that costs
+    quota, it needs the X-Diagnostic-Token header and is rate limited.
     """
     report = {
         "status": "ok",
@@ -92,6 +120,12 @@ def health(probe: str | None = None) -> dict:
     }
 
     if probe == "llm":
+        if not _probe_allowed(request):
+            raise HTTPException(403, "The provider probe is for operators. "
+                                     "Send X-Diagnostic-Token.")
+        decision = probe_rate_limiter.check(client_key(request))
+        if not decision.allowed:
+            raise too_many(decision.retry_after)
         from api.agents.llm import GroqLLM, LLMError, Tier
         try:
             reply = GroqLLM().complete("Reply with the single word: ok.", "ping", Tier.FAST)
@@ -154,21 +188,36 @@ _SCHEME_NAMES = {
 }
 
 
-def _reviewed(slug: str) -> bool:
-    """Both human rule-review gates approved. Never inferred or assumed."""
+def review_assessment(slug: str) -> Assessment:
+    """Whether a person's Gate 4 and Gate 5 approvals cover exactly the rules
+    and clauses being served. Never inferred or assumed: a status string of
+    "approved" is not enough -- see data/scripts/review_binding.py. Anything
+    unreadable is pending, never reviewed."""
     path = repo_root() / "data" / "schemes" / slug / ".state.json"
     try:
-        gates = json.loads(path.read_text(encoding="utf-8")).get("gates", {})
+        state = json.loads(path.read_text(encoding="utf-8"))
+        rules = load_rules(slug, repo_root())
+        rows = load_clauses(slug, repo_root()).values()
     except (OSError, ValueError):
-        return False
-    return all((gates.get(g) or {}).get("status") == "approved"
-               for g in ("4_clauses", "5_conditions"))
+        return Assessment(reviewed=False, reasons=["no readable review record"])
+    clauses = [{"id": r["id"], "type": r.get("type"), "source": r.get("source_id"),
+                "quote": r.get("quote"), "plain": r.get("plain"),
+                "tests": r.get("tests") or []} for r in rows]
+    conditions = [{"id": c["id"], "expr": c["expr"], "clause": c.get("clause")}
+                  for c in rules.get("conditions", [])]
+    return assess(state if isinstance(state, dict) else {}, clauses, conditions,
+                  rules.get("decision", ""))
+
+
+def _reviewed(slug: str) -> bool:
+    return review_assessment(slug).reviewed
 
 
 @router.get("/schemes")
 def schemes(locale: str | None = None) -> dict:
     """Every scheme with built rules. `reviewed` is false until a person has
-    approved the clause and rule-logic gates -- the UI says so."""
+    approved the clause and rule-logic gates for the content served now --
+    the UI says so, both when choosing a scheme and next to its result."""
     code = get_locale(locale).code
     root = repo_root() / "data" / "schemes"
     out = []
@@ -188,12 +237,12 @@ def schemes(locale: str | None = None) -> dict:
             "authority": rules.get("authority"),
             "reviewed": _reviewed(slug),
         })
-    # The original, fully reviewed scheme first.
+    # Reviewed schemes first, then PMFME (the demonstrated flow).
     out.sort(key=lambda s: (not s["reviewed"], s["id"] != "pmfme", s["id"]))
     return {"schemes": out}
 
 
-@router.post("/transcribe")
+@router.post("/transcribe", dependencies=[Depends(enforce(transcribe_rate_limiter))])
 async def transcribe(request: Request, locale: str = "hi",
                      language: LanguageService = Depends(get_language)) -> dict:
     """Speech to text, server side.
@@ -225,11 +274,16 @@ async def transcribe(request: Request, locale: str = "hi",
     return {"text": text, "locale": code}
 
 
-@router.post("/speak")
-async def speak(body: dict) -> Response:
+class SpeakRequest(BaseModel):
+    text: str = Field(default="", max_length=MAX_SPEAK_CHARS)
+    locale: str | None = Field(default=None, max_length=16)
+
+
+@router.post("/speak", dependencies=[Depends(enforce(speak_rate_limiter))])
+async def speak(body: SpeakRequest) -> Response:
     """Text to speech for Hindi and English, returned as MP3."""
-    code = get_locale(str(body.get("locale") or "hi")).code
-    text = str(body.get("text") or "")
+    code = get_locale(body.locale or "hi").code
+    text = body.text
     if code not in tts.VOICES:
         raise HTTPException(422, f"Server speech isn't available in {code} yet.")
     if not text.strip():
@@ -250,11 +304,34 @@ def _localize(language: LanguageService, text: str | None, target: str):
     return result.text, (result.note if result.locale != target else None)
 
 
-def _record(profile: dict, field: dict, value: object) -> dict:
-    """Store an interpreted value against the field that was on screen."""
+def _checked(specs: dict, field: dict, value: object) -> object | None:
+    """`value` for the field on screen, normalized -- or None if it is not a
+    well-formed answer (api/rules/values.py, the one validation path)."""
     if field.get("kind") == "choice" and isinstance(value, bool):
         value = field.get("satisfied_by") if value else OTHER
-    return {**profile, field["attribute"]: value}
+    spec = specs.get(field["attribute"])
+    if spec is None:
+        return None
+    normalized, reason = check_value(spec, value)
+    return None if reason else normalized
+
+
+def _invalid(errors) -> HTTPException:
+    """An actionable 422: which attribute, and what a valid value looks like."""
+    return HTTPException(422, "Invalid answer -- " + "; ".join(str(e) for e in errors))
+
+
+
+class ChatRequest(BaseModel):
+    """The /chat body. Wrong types are a 422 here, not a 500 later."""
+    scheme: StrictStr = Field(max_length=64)
+    profile: dict[str, Any] | None = Field(default=None, max_length=MAX_PROFILE_KEYS)
+    message: StrictStr | None = Field(default=None, max_length=MAX_MESSAGE_CHARS)
+    start: StrictBool = False
+    answer: Literal["yes", "no"] | None = None
+    answers: dict[str, Any] | None = Field(default=None, max_length=MAX_PROFILE_KEYS)
+    locale: StrictStr | None = Field(default=None, max_length=16)
+    message_locale: StrictStr | None = Field(default=None, max_length=16)
 
 
 def _speech(language: LanguageService, messages: list[str], locale: str) -> dict:
@@ -271,34 +348,23 @@ def _all_clauses(scheme: str) -> list[Citation]:
     ]
 
 
-@router.post("/chat")
-def chat(body: dict,
-         request: Request,
+@router.post("/chat", dependencies=[Depends(enforce(chat_rate_limiter))])
+def chat(body: ChatRequest,
          llm: LLMProvider = Depends(get_llm),
          language: LanguageService = Depends(get_language)) -> dict:
     """One conversational turn. `bot_messages` is what the helper says this
     turn, in order -- a reply to their question and the next question arrive
     as two natural messages instead of one repeated prompt."""
-    client_key = request.client.host if request.client else "unknown"
-    limit = chat_rate_limiter.check(client_key)
-    if not limit.allowed:
-        raise HTTPException(
-            429,
-            "This demo is receiving a lot of requests. Please wait and try again.",
-            headers={"Retry-After": str(limit.retry_after or 1)},
-        )
+    scheme = body.scheme
+    message = (body.message or "").strip()
+    starting = body.start
 
-    scheme = body.get("scheme")
-    profile = dict(body.get("profile") or {})
-    message = (body.get("message") or "").strip()
-    starting = bool(body.get("start"))
-
-    content_locale = get_locale(body.get("locale")).code
-    message_locale = get_locale(body.get("message_locale") or content_locale).code
+    content_locale = get_locale(body.locale).code
+    message_locale = get_locale(body.message_locale or content_locale).code
 
     if not scheme:
         raise HTTPException(422, "scheme is required")
-    if not _SLUG.fullmatch(str(scheme)):
+    if not _SLUG.fullmatch(scheme):
         raise HTTPException(404, f"unknown scheme '{scheme}'")
 
     try:
@@ -306,13 +372,23 @@ def chat(body: dict,
     except FileNotFoundError as exc:
         raise HTTPException(404, str(exc)) from exc
     allowed = set(known_attributes(rules))
+    specs = specs_for(rules)
 
-    # Buttons and number inputs: exact values, no interpretation needed.
-    answers = body.get("answers")
-    if isinstance(answers, dict) and answers:
-        profile = {**profile, **{k: v for k, v in answers.items() if k in allowed}}
+    # The profile the client carries, and button/number answers: exact
+    # values, but still checked -- a malformed value must never reach a
+    # verdict. Both go through the same validation as every other source.
+    checked = check_values(specs, body.profile or {})
+    if checked.errors:
+        raise _invalid(checked.errors)
+    profile = checked.values
 
-    yes_no = body.get("answer")
+    if body.answers:
+        checked = check_values(specs, body.answers)
+        if checked.errors:
+            raise _invalid(checked.errors)
+        profile = {**profile, **checked.values}
+
+    yes_no = body.answer
     if yes_no in ("yes", "no"):
         current = decide(scheme, profile)
         if current.pending:
@@ -334,8 +410,33 @@ def chat(body: dict,
             english = language.translate(message, target=CANONICAL_LOCALE,
                                          source=message_locale).text
 
-        routed = route(english)
-        if not routed.supported:
+        before = decide(scheme, profile)
+        # Only a question that is actually on screen can be answered. After a
+        # verdict the engine still reports its next unknown condition, but
+        # nobody was asked it -- a "haan" typed then must not be recorded as
+        # "yes, my family already took this help".
+        pending_fields = (
+            unresolved_fields(before.pending.expr, profile)
+            if before.pending and before.verdict.value == "INSUFFICIENT_INFO" else []
+        )
+        field = pending_fields[0].to_dict() if pending_fields else None
+
+        # 1. Deterministic: "haan", "ਨਹੀਂ", "25", "२५" need no model at all.
+        #    Only a message that can mean one thing is recorded; a question,
+        #    a hedge or a contradiction is never turned into a value.
+        reading = read_answer(message, field) if field else Reading(NONE)
+        if reading.status == NONE and field and english != message:
+            reading = read_answer(english, field)
+
+        value = _checked(specs, field, reading.value) if reading.status == VALUE else None
+        if reading.status == VALUE and value is None:
+            # Well-understood but not a possible answer ("-25 years").
+            reading = Reading(AMBIGUOUS)
+
+        # Only now is the message routed. An answer to the question on screen
+        # is never a request for tax-filing help, whatever words it uses.
+        routed = route(english, scheme) if reading.status != VALUE else None
+        if routed is not None and not routed.supported:
             text, note = _localize(language, routed.message, content_locale)
             return {
                 "domain": routed.domain.value, "supported": False,
@@ -347,30 +448,27 @@ def chat(body: dict,
                 "language_note": note, "speech": None,
             }
 
-        before = decide(scheme, profile)
-        pending_fields = (
-            unresolved_fields(before.pending.expr, profile)
-            if before.pending else []
-        )
-        field = pending_fields[0].to_dict() if pending_fields else None
-
-        # 1. Deterministic: "haan", "ਨਹੀਂ", "25", "२५" need no model at all.
-        value = interpret(message, field) if field else None
-        if value is None and field and english != message:
-            value = interpret(english, field)
-
         if value is not None:
-            profile = _record(profile, field, value)
+            profile = {**profile, field["attribute"]: value}
             acknowledged = True
+        elif reading.status == AMBIGUOUS:
+            # Two numbers, "not 25", "I don't know": the person settles it.
+            bot_messages.append(phrase("clarify", content_locale))
         else:
             # 2. One classification call: answer, question, or chat?
             intent = conversation.classify(
                 llm, field.get("ask") if field else None,
                 field.get("kind") if field else None, english,
             )
-            if intent.value is not None and field:
-                profile = _record(profile, field, intent.value)
-                acknowledged = True
+            if reading.status == QUESTION:
+                intent = conversation.Intent("question")
+            # A model's value is used only for an answer of the right type
+            # and domain -- the same check a typed answer gets.
+            if intent.kind == "answer" and intent.value is not None and field:
+                value = _checked(specs, field, intent.value)
+                if value is not None:
+                    profile = {**profile, field["attribute"]: value}
+                    acknowledged = True
 
             if intent.kind == "question":
                 asked_question = True
@@ -391,7 +489,13 @@ def chat(body: dict,
                 # It looked like an answer but no value could be placed. Try
                 # the free-text extraction for anything else they stated, and
                 # say so if it still went nowhere -- never re-ask silently.
-                extracted = nlu.extract_attributes(llm, english, sorted(allowed))
+                # Extraction only fills what is still unanswered: a model's
+                # reading of free text never overwrites an answer the person
+                # gave, and every value passes the same domain checks.
+                extracted = check_values(
+                    specs, nlu.extract_attributes(llm, english, sorted(allowed)),
+                ).values
+                extracted = {k: v for k, v in extracted.items() if k not in profile}
                 if extracted:
                     profile = {**profile, **extracted}
                     acknowledged = True

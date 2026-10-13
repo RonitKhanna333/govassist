@@ -38,6 +38,18 @@ PHRASES: dict[str, dict[str, str]] = {
         "pa": "ਮਾਫ਼ ਕਰਨਾ, ਮੈਂ ਸਮਝ ਨਹੀਂ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਫਿਰ ਦੱਸੋ, ਜਾਂ ਹੇਠਾਂ ਦਿੱਤੇ ਬਟਨ ਦਬਾਓ।",
         "ta": "மன்னிக்கவும், எனக்குப் புரியவில்லை. மீண்டும் சொல்லுங்கள், அல்லது கீழே உள்ள பொத்தான்களை அழுத்துங்கள்.",
     },
+    # Said instead of guessing when an answer is a hedge, a correction, or
+    # holds more than one number ("I am not 25, I am 17").
+    "clarify": {
+        "en": "I want to get this exactly right. Please answer with just one "
+              "clear answer, or use the buttons below.",
+        "hi": "मैं इसे बिल्कुल सही दर्ज करना चाहता हूँ। कृपया सिर्फ़ एक साफ़ जवाब "
+              "दीजिए, या नीचे दिए बटन दबाइए।",
+        "pa": "ਮੈਂ ਇਸਨੂੰ ਬਿਲਕੁਲ ਸਹੀ ਦਰਜ ਕਰਨਾ ਚਾਹੁੰਦਾ ਹਾਂ। ਕਿਰਪਾ ਕਰਕੇ ਸਿਰਫ਼ ਇੱਕ ਸਾਫ਼ "
+              "ਜਵਾਬ ਦਿਓ, ਜਾਂ ਹੇਠਾਂ ਦਿੱਤੇ ਬਟਨ ਦਬਾਓ।",
+        "ta": "இதைச் சரியாகப் பதிவு செய்ய விரும்புகிறேன். ஒரே ஒரு தெளிவான பதிலைச் "
+              "சொல்லுங்கள், அல்லது கீழே உள்ள பொத்தான்களை அழுத்துங்கள்.",
+    },
     "busy": {
         "en": "I'm getting a lot of questions right now. Please wait a moment and "
               "ask again -- your answers so far are saved.",

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { DiagramPreview, type DiagramSpec, type ClassSpec } from "@/components/DiagramPreview";
 import { BackendTargetNotice } from "@/components/BackendTargetNotice";
 import { SiteNav } from "@/components/SiteNav";
@@ -167,7 +168,7 @@ export default function PresentationPage() {
             <h1>GovAssist</h1>
             <p className="hero-deck">Government-scheme guidance that shows its work: deterministic eligibility logic, verbatim official evidence, and a conversation a citizen can actually use.</p>
             <div className="hero-actions">
-              <a className="presentation-button primary" href="/">Launch the live PMFME demo <span aria-hidden="true">→</span></a>
+              <Link className="presentation-button primary" href="/">Launch the live PMFME demo <span aria-hidden="true">→</span></Link>
               <ExternalLink href={REPOSITORY}>Open repository</ExternalLink>
             </div>
           </div>
@@ -199,7 +200,7 @@ export default function PresentationPage() {
         </section>
 
         <section className="presentation-section journey" id="live-prototype">
-          <div className="section-heading-row"><div><p className="kicker">03 · IMPLEMENTED USER JOURNEY</p><h2>From “Start” to a defensible answer.</h2></div><a className="text-link" href="/">Open prototype ↗</a></div>
+          <div className="section-heading-row"><div><p className="kicker">03 · IMPLEMENTED USER JOURNEY</p><h2>From “Start” to a defensible answer.</h2></div><Link className="text-link" href="/">Open prototype ↗</Link></div>
           <ol><li><strong>Start</strong><span>Chat requests an empty PMFME assessment.</span></li><li><strong>Answer</strong><span>Buttons, choice fields, numbers and plain text fill only known profile attributes.</span></li><li><strong>Evaluate</strong><span>Missing information stays unknown; a failed rule becomes not eligible.</span></li><li><strong>Explain</strong><span>Groq may compose a grounded explanation from the deciding citations; the verifier may withhold it.</span></li><li><strong>Inspect</strong><span>The final panel keeps the original-language quotation and official page link visible.</span></li></ol>
           <div className="launch-card"><div><Status kind="deployed">Production deployment</Status><h3>Run the PMFME demonstration</h3><p>Use the production root for the signed-out PMFME flow. PR #5 is merged to <code>main</code>, and the completed Vercel deployment serves <code>/presentation</code> and <code>/evidence</code> as production routes.</p></div><ExternalLink href={LIVE_SITE}>Open production site <span aria-hidden="true">↗</span></ExternalLink></div>
         </section>

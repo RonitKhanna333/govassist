@@ -50,9 +50,36 @@ from parse_scheme import (
     scheme_path,
     draft_path,
 )
+from review_binding import (
+    VALID,
+    binding,
+    clause_fingerprint,
+    clause_set_fingerprint,
+    condition_fingerprint,
+    condition_set_fingerprint,
+    is_attributable,
+    judge,
+    scheme_content,
+)
 from state import APPROVED, PENDING, REJECTED, load_state, summarize
 
 CONTEXT = 260
+
+
+def _clause_dict(clause: Clause) -> dict:
+    return {"id": clause.id, "type": clause.type, "source": clause.source,
+            "quote": clause.quote, "plain": clause.plain, "tests": list(clause.tests)}
+
+
+def needs_review(state, clause: Clause) -> bool:
+    """Undecided, or approved in a way that no longer counts: by an agent,
+    without a content binding, or for content that has since changed.
+    A rejection stays a rejection until someone reopens it with --only all."""
+    status = state.clause_status(clause.id)
+    if status == PENDING:
+        return True
+    return status == APPROVED and judge(
+        state.clause(clause.id), clause_fingerprint(_clause_dict(clause))) != VALID
 
 
 def editor_command() -> list[str]:
@@ -210,7 +237,7 @@ def review_clauses(scheme: Scheme, directory: Path, state, only: str | None,
                    reviewer: str) -> bool:
     pending = [
         clause for clause in scheme.clauses
-        if state.clause_status(clause.id) == PENDING
+        if needs_review(state, clause)
         or (only == "all")
         or (only == "uncertain" and clause.uncertain)
     ]
@@ -241,7 +268,10 @@ def review_clauses(scheme: Scheme, directory: Path, state, only: str | None,
                 console.fail("refusing to accept a clause whose quote is not in the source")
                 console.info("edit the quote, or reject the clause")
                 continue
-            state.set_clause(clause.id, APPROVED, by=reviewer)
+            # Bound to exactly what was on screen: any later change to the
+            # quote, gloss, type or tests makes this approval stale.
+            state.set_clause(clause.id, APPROVED, by=reviewer,
+                             extra=binding(clause_fingerprint(_clause_dict(clause))))
             console.ok(f"accepted {clause.id}")
             index += 1
         elif choice == "r":
@@ -281,6 +311,7 @@ def review_conditions(scheme: Scheme, state, reviewer: str) -> bool:
         "the sentence it cites, not against your memory of it."
     ))
 
+    clauses_by_id = {c["id"]: c for c in scheme_content(scheme)[0]}
     total = len(scheme.conditions)
     for position, condition in enumerate(scheme.conditions, start=1):
         console.heading(f"[{position}/{total}]  {condition.id}")
@@ -321,7 +352,11 @@ def review_conditions(scheme: Scheme, state, reviewer: str) -> bool:
         print()
         choice = console.key("[a]ccept  [r]eject  [s]kip  [q]uit+save", "arsq")
         if choice == "a":
-            state.set_condition(condition.id, APPROVED, by=reviewer)
+            fingerprint = condition_fingerprint(
+                {"id": condition.id, "expr": condition.expr, "clause": condition.clause},
+                clauses_by_id)
+            state.set_condition(condition.id, APPROVED, by=reviewer,
+                                extra=binding(fingerprint))
             console.ok(f"accepted {condition.id}")
         elif choice == "r":
             note = console.ask("what is wrong? (optional)")
@@ -406,13 +441,26 @@ def main(argv: list[str] | None = None) -> int:
     if not reviewer:
         console.fail("a reviewer name is required -- approvals must be attributable")
         return 1
+    if not is_attributable(reviewer):
+        console.fail(f"{reviewer!r} is not a person's name -- approvals must be "
+                     "attributable to the human who actually read the content")
+        return 1
+    if not sys.stdin.isatty():
+        # AGENTS.md: answers are never piped in. A gate decision read from a
+        # pipe is a script's decision, whatever name it carries.
+        console.fail("review needs an interactive terminal -- do not pipe answers in")
+        return 1
 
     if args.conditions:
         finished = review_conditions(scheme, state, reviewer)
         if finished:
             print()
             if console.confirm("Is every rule expression correct?", gate="5"):
-                state.set_gate("5_conditions", APPROVED, by=reviewer)
+                clauses, conditions, decision = scheme_content(scheme)
+                fingerprint = condition_set_fingerprint(
+                    conditions, decision, {c["id"]: c for c in clauses})
+                state.set_gate("5_conditions", APPROVED, by=reviewer,
+                               extra=binding(fingerprint))
                 console.ok("gate 5 approved")
                 print()
                 print("  Next:")
@@ -425,7 +473,7 @@ def main(argv: list[str] | None = None) -> int:
     if not finished:
         return 0
 
-    undecided = [c.id for c in scheme.clauses if state.clause_status(c.id) == PENDING]
+    undecided = [c.id for c in scheme.clauses if needs_review(state, c)]
     if undecided:
         console.warn(f"{len(undecided)} clause(s) still undecided -- re-run to finish")
         return 0
@@ -446,7 +494,11 @@ def main(argv: list[str] | None = None) -> int:
         console.info("nothing promoted; re-run when the gaps are filled")
         return 0
 
-    state.set_gate("4_clauses", APPROVED, by=reviewer)
+    # Gate 4 covers the clause set that is about to be promoted to scheme.md.
+    accepted = set(state.accepted_clauses())
+    kept = [_clause_dict(c) for c in scheme.clauses if c.id in accepted]
+    state.set_gate("4_clauses", APPROVED, by=reviewer,
+                   extra=binding(clause_set_fingerprint(kept)))
     target = promote(scheme, state, root)
     console.ok(f"wrote {target}")
     print()

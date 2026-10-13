@@ -29,20 +29,54 @@ the corrected expression and must be repeated. Gates 0–3 are recorded as
 `thorb`; the team should retain those claims only if that named person can
 confirm the original source, identity, extraction and segmentation checks.
 
+## How the code now treats these records
+
+`data/scripts/review_binding.py` decides whether a recorded approval counts.
+It counts only when it is approved, attributed to a name that is not an
+agent/automation label (`Codex`, `Claude ... needs human confirmation`, a
+bot, a placeholder), and carries a `content_sha256` binding that equals the
+fingerprint of the content committed now (clause quote, gloss, type, source
+and tests; condition expression, cited clause and its quote; the decision).
+The existing records are preserved exactly as they are; they are simply
+classified:
+
+| Record | Classification | Effect |
+|---|---|---|
+| Gate 4 and 24 clauses by `Codex` | unattributed | pending human review |
+| Gate 5, all 8 conditions, and 4 clauses by `thorb` | unbound (no binding; Gate 5 predates `age > 18`) | pending human review |
+
+So `/schemes` reports PMFME as `reviewed: false`, the UI shows the "not yet
+reviewed" note both when choosing the scheme and next to its result, and
+`validate.py` prints the reasons as warnings. The release gate
+`validate.py --scheme pmfme --require-review` turns them into errors and
+currently fails; it passes only after the steps below. The deterministic
+verdict, citations and tests are unaffected.
+
+The same classification applies to APY, PMJJBY, PMSBY and PM-KMY, whose
+gates are recorded as an AI assistant "needs human confirmation" and were
+never presented as reviewed.
+
 ## Supported remediation
 
 Run these commands from the repository root in a real interactive terminal.
-Do not pipe answers into the scripts and do not use an automatic default.
-Replace the placeholder with the actual human reviewer’s name.
+Do not pipe answers into the scripts and do not use an automatic default --
+`review.py` now refuses a non-interactive stdin and refuses agent names as
+the reviewer. Replace the placeholder with the actual human reviewer’s name.
+Each decision the tool records now includes the content binding, so a later
+edit to a reviewed clause or expression automatically returns it to pending.
 
 ```powershell
 $env:GOVASSIST_REVIEWER = "Actual Human Reviewer Name"
-python data/scripts/review.py --scheme pmfme --only all
-python data/scripts/review.py --scheme pmfme --conditions
-python data/scripts/validate.py --scheme pmfme
+python data/scripts/review.py --scheme pmfme --only all --reviewer "$env:GOVASSIST_REVIEWER"
+python data/scripts/review.py --scheme pmfme --conditions --reviewer "$env:GOVASSIST_REVIEWER"
+python data/scripts/validate.py --scheme pmfme --require-review
 python data/scripts/build.py --scheme pmfme
 python data/scripts/build.py --all --check
 ```
+
+Gate 4 is approved at the end of the clause pass and binds to the accepted
+clause set it promotes; Gate 5 is approved at the end of the conditions pass.
+Both must be run (in that order) for `--require-review` to pass.
 
 `--only all` is the review tool’s supported way to re-open every clause. The
 human must read each quote, source context and gloss, and then answer the

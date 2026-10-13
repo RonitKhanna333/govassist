@@ -303,9 +303,14 @@ python -m pytest tests/test_normalize.py   # the provenance spine
 python -m pytest tests/test_validate.py -k Fabricated   # the meta-test
 python data/scripts/validate.py --all
 python data/scripts/build.py --all --check
-cd web && npm ci && npm test && npm run build
+cd web && npm ci && npm run lint && npm test && npm run build
+python data/scripts/validate.py --scheme pmfme --require-review   # release gate
 ```
 
 GitHub Actions runs the backend checks, generated-build freshness check,
-frontend tests/build and dependency audits on pull requests and pushes to
-`main`.
+frontend lint/tests/build, and blocking dependency audits (Python runtime
+requirements and production npm packages) on pull requests and pushes to
+`main`. `--require-review` is the scheme release gate: it fails until Gates 4
+and 5 hold attributable human approvals bound to the committed content (see
+docs/human-review-remediation.md). It is not part of CI, because an
+unreviewed scheme may still be served with its "not yet reviewed" label.
