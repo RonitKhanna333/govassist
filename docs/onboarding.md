@@ -62,6 +62,9 @@ redacted. For a non-JSON denial it reports the response content type and HTML
 title, without logging the HTML page. Hindi uses `language: hi` and English uses `en-IN`;
 both are documented Bland language codes. Each locale provisions separate
 tools, so working English tools do not prove Hindi tool creation succeeds.
+Bland request bodies use UTF-8 JSON bytes so Indic interview text does not
+expand into repeated Unicode escape sequences on the wire. This preserves
+all questions and instructions while reducing the Hindi request size.
 An operator must check the production `BLAND_API_KEY` against the Bland account
 and its access to that operation. A configured key alone does not prove access.
 The secret-gated `/voice/check` can check account access without placing a call;

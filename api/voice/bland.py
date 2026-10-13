@@ -21,6 +21,7 @@ from __future__ import annotations
 import os
 import re
 import logging
+import json as json_codec
 
 import requests
 
@@ -105,7 +106,10 @@ def _request(method: str, path: str, *, json: dict | None = None,
             method, f"{BASE_URL}{path}",
             # Bland takes the raw key, not "Bearer <key>".
             headers={"Authorization": _key(), "Content-Type": "application/json"},
-            json=json, timeout=timeout,
+            # Send Hindi as UTF-8 JSON, not thousands of literal \u escapes.
+            # Bytes also let requests compute Content-Length correctly.
+            data=(json_codec.dumps(json, ensure_ascii=False, allow_nan=False).encode("utf-8")
+                  if json is not None else None), timeout=timeout,
         )
     except requests.RequestException as exc:
         raise VoiceError(f"could not reach Bland: {exc}") from exc

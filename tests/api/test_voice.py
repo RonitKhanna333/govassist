@@ -8,6 +8,7 @@ posting the payload a provider would post.
 from __future__ import annotations
 
 from unittest.mock import patch
+import json as json_codec
 
 import pytest
 from fastapi.testclient import TestClient
@@ -357,7 +358,9 @@ class FakeBland:
         self.requests = []
         self.tools = list(tools or [])
 
-    def __call__(self, method, url, headers=None, json=None, timeout=None):
+    def __call__(self, method, url, headers=None, json=None, timeout=None, data=None):
+        if data is not None:
+            json = json_codec.loads(data)
         self.requests.append((method, url, json, headers))
         path = url.split("/v1", 1)[1]
         body = {"status": "success"}
@@ -433,6 +436,37 @@ def test_denial_message_is_bounded_and_cannot_inject_log_lines():
     reason = bland._safe_denial_reason(Response(), {"message": "Denied\nInjected line " + "x" * 1000})
     assert len(reason) == 500
     assert "\n" not in reason
+
+
+@pytest.mark.parametrize("locale", ["hi", "en"])
+def test_interview_wire_encoding_preserves_text_and_uses_utf8_bytes(locale):
+    payload = {"task": script.build_interview_task(locale, ""), "language": bland.LANGUAGE[locale]}
+    class Response:
+        status_code = 200
+        def json(self):
+            return {"call_id": "test-call"}
+    with patch.dict("os.environ", {"BLAND_API_KEY": "test-key"}), \
+         patch("api.voice.bland.requests.request", return_value=Response()) as request:
+        bland._request("POST", "/calls", json=payload)
+    wire = request.call_args.kwargs["data"]
+    assert isinstance(wire, bytes)
+    assert json_codec.loads(wire) == payload
+    assert request.call_args.kwargs["headers"]["Content-Type"] == "application/json"
+    if locale == "hi":
+        assert "नमस्ते".encode("utf-8") in wire
+        assert b"\\u0928" not in wire
+        assert len(wire) < len(json_codec.dumps(payload).encode("utf-8")) * 0.6
+
+
+def test_provider_get_requests_do_not_send_a_json_body():
+    class Response:
+        status_code = 200
+        def json(self):
+            return {"status": "active"}
+    with patch.dict("os.environ", {"BLAND_API_KEY": "test-key"}), \
+         patch("api.voice.bland.requests.request", return_value=Response()) as request:
+        bland._request("GET", "/me")
+    assert request.call_args.kwargs["data"] is None
 
 
 def _place(client, fake, env=CALL_ENV):
@@ -512,7 +546,7 @@ def test_a_refused_number_never_creates_a_tool_or_a_call(client):
 
 
 def test_bland_errors_are_reported(client):
-    def refuse(method, url, headers=None, json=None, timeout=None):
+    def refuse(method, url, headers=None, json=None, timeout=None, data=None):
         class R:
             status_code = 400
 
@@ -627,7 +661,7 @@ def test_call_detail_shows_transcript_and_extraction(client):
             "price": 0.03, "transcripts": TRANSCRIPTS,
             "metadata": {"scheme": "pmsby", "locale": "hi"}}
 
-    def fake(method, url, headers=None, json=None, timeout=None):
+    def fake(method, url, headers=None, json=None, timeout=None, data=None):
         class R:
             status_code = 200
 
