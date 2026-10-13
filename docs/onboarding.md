@@ -36,6 +36,11 @@ eligibility rules.
 For local accounts set `JWT_SECRET`; SQLite is used by default. Hosted accounts
 need a persistent `DATABASE_URL`. The frontend uses `NEXT_PUBLIC_API_BASE` for
 the backend URL, which must allow the frontend origin through CORS.
+Vercel builds default to `https://govassist-api-ronit-khannas-projects.vercel.app`
+when that setting is absent or blank; local builds default to port 8000 on
+`127.0.0.1`. Set an explicit preview API URL to isolate preview accounts from
+production. A Vercel build rejects a localhost override. Public API settings
+are embedded in the browser bundle, so changing them requires a new deployment.
 
 Callbacks additionally require:
 
