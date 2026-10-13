@@ -318,3 +318,85 @@ def test_skip_notes_never_point_at_questions_not_in_the_short_script(monkeypatch
     for numbers in re.findall(r"skip questions ([\d, -]+)\.", task):
         for n in re.findall(r"\d+", numbers):
             assert int(n) <= len(interview.screening_order())
+
+
+# -- no webhook: finished calls are fetched instead -------------------------
+# Bland's Cloudflare blocks a long script plus ANY webhook URL in one request
+# from our host (measured live with /voice/firewall-probe).
+
+
+def test_callbacks_go_out_without_a_webhook(setup, monkeypatch):
+    client, headers, _ = setup
+    sent = []
+    monkeypatch.setattr(bland, "start_call", lambda **kwargs: sent.append(kwargs) or "c-1")
+    assert client.post("/account/callback", headers=headers,
+                       json={"consent": True, "call_language": "hi"}).status_code == 200
+    assert sent[0]["webhook"] is None
+    # The tools still point back at us: those requests pass the firewall.
+    assert sent[0]["extra_tools"][0]["url"].startswith("https://api.example/voice/eligibility")
+
+
+def _finished_call(call_id, record_id):
+    return {"call_id": call_id, "completed": True, "status": "completed",
+            "answered_by": "human",
+            "metadata": {"kind": "interview", "locale": "hi", "record_id": record_id},
+            "transcripts": [
+                {"user": "assistant", "text": "आपकी उम्र कितनी है?"},
+                {"user": "user", "text": "पैंतीस साल"},
+                {"user": "assistant", "text": "क्या आप सड़क पर सामान बेचते हैं?"},
+                {"user": "user", "text": "हां जी"},
+            ]}
+
+
+class PointingLLM:
+    def complete(self, *args):
+        return json.dumps({"age": 1, "is_street_vendor": 2})
+
+
+def test_the_dashboard_fetches_a_finished_call_and_saves_its_answers(setup, monkeypatch):
+    client, headers, _ = setup
+    monkeypatch.setattr(bland, "start_call", lambda **kwargs: "c-done")
+    record_id = client.post("/account/callback", headers=headers,
+                            json={"consent": True, "call_language": "hi"}).json()["id"]
+    monkeypatch.setattr(bland, "get_call", lambda call_id: _finished_call(call_id, record_id))
+    app.dependency_overrides[get_llm] = lambda: PointingLLM()
+    data = client.get("/account/dashboard", headers=headers).json()
+    assert data["profile"] == {"age": 35, "is_street_vendor": True}
+    assert data["calls"][0]["status"] == "completed"
+    assert data["calls"][0]["heard"]["is_street_vendor"] == "हां जी"
+    # Fetched once: a second visit doesn't reprocess it.
+    monkeypatch.setattr(bland, "get_call", lambda call_id: (_ for _ in ()).throw(AssertionError))
+    assert client.get("/account/dashboard", headers=headers).status_code == 200
+
+
+def test_a_call_still_in_progress_is_left_alone(setup, monkeypatch):
+    client, headers, _ = setup
+    monkeypatch.setattr(bland, "start_call", lambda **kwargs: "c-live")
+    client.post("/account/callback", headers=headers, json={"consent": True})
+    monkeypatch.setattr(bland, "get_call", lambda call_id: {"status": "in-progress",
+                                                            "completed": False})
+    data = client.get("/account/dashboard", headers=headers).json()
+    assert data["calls"][0]["status"] == "requested"
+    assert data["profile"] == {}
+
+
+def test_a_provider_error_does_not_break_the_dashboard(setup, monkeypatch):
+    client, headers, _ = setup
+    monkeypatch.setattr(bland, "start_call", lambda **kwargs: "c-err")
+    client.post("/account/callback", headers=headers, json={"consent": True})
+    def boom(call_id):
+        raise bland.VoiceError("Bland unreachable")
+    monkeypatch.setattr(bland, "get_call", boom)
+    assert client.get("/account/dashboard", headers=headers).status_code == 200
+
+
+def test_a_finished_call_never_blocks_the_next_callback(setup, monkeypatch):
+    client, headers, _ = setup
+    monkeypatch.setattr(bland, "start_call", lambda **kwargs: "c-first")
+    record_id = client.post("/account/callback", headers=headers,
+                            json={"consent": True, "call_language": "hi"}).json()["id"]
+    monkeypatch.setattr(bland, "get_call", lambda call_id: _finished_call(call_id, record_id))
+    app.dependency_overrides[get_llm] = lambda: PointingLLM()
+    monkeypatch.setattr(bland, "start_call", lambda **kwargs: "c-second")
+    assert client.post("/account/callback", headers=headers,
+                       json={"consent": True, "call_language": "hi"}).status_code == 200

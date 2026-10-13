@@ -12,7 +12,9 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 
 from api.auth.models import User
+from api.agents.llm import LLMProvider
 from api.auth.router import current_user, get_sessions
+from api.deps import get_llm
 from api.onboarding import interview, service
 from api.onboarding.models import CallRecord
 from api.rate_limit import auth_rate_limiter, enforce
@@ -79,11 +81,13 @@ def answer_interview(body: InterviewBody, user: User = Depends(current_user),
 
 @router.post("/callback", dependencies=[Depends(enforce(auth_rate_limiter))])
 def callback(body: CallbackBody, user: User = Depends(current_user),
-             sessions=Depends(get_sessions)) -> dict:
+             sessions=Depends(get_sessions), llm: LLMProvider = Depends(get_llm)) -> dict:
     if body.consent is not True:
         raise HTTPException(422, "Please agree to receive the callback first.")
     if not user.phone:
         raise HTTPException(422, "A phone account is needed for a callback.")
+    # A call that already ended must not block the next one as "in progress".
+    sync_calls(user.id, sessions, llm)
     call_language = body.call_language or body.locale
     profile_locale = "en" if call_language == "hi-Latn" else call_language
     webhook, ask_url = _callback_urls()
@@ -121,7 +125,7 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
     try:
         call_id = bland.start_call(
             phone=user.phone, task=_task_for(call_language, user.display_name or ""),
-            webhook=webhook, locale=call_language, scheme="all", ask_url=ask_url,
+            webhook=webhook if SEND_WEBHOOK else None, locale=call_language, scheme="all", ask_url=ask_url,
             metadata={"kind": "interview", "record_id": record_id, "locale": profile_locale,
                       "call_language": call_language},
             extra_tools=[bland.eligibility_tool_definition(eligibility_url, call_language, questions)],
@@ -150,7 +154,10 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
 
 @router.get("/dashboard")
 def dashboard(locale: str = "en", user: User = Depends(current_user),
-              sessions=Depends(get_sessions)) -> dict:
+              sessions=Depends(get_sessions), llm: LLMProvider = Depends(get_llm)) -> dict:
+    if sync_calls(user.id, sessions, llm):
+        with sessions() as session:
+            user = session.get(User, user.id)
     profile = json.loads(user.profile_json or "{}")
     schemes = []
     for slug, result in service.evaluate(profile).items():
@@ -186,3 +193,44 @@ def _task_for(call_language: str, name: str) -> str:
                 "in Romanized Hindi only so it can be sent; say it in Hindi.\n\n"
                 + build_task(name))
     return script.build_interview_task(call_language, name)
+
+
+# Bland's Cloudflare blocks POST /v1/calls from our host whenever a long
+# script and ANY webhook URL are in the same body (measured with
+# /voice/firewall-probe: every script passes alone, every webhook shape is
+# blocked with one). So calls go out without a webhook and finished calls
+# are fetched instead -- a GET the firewall allows. BLAND_SEND_WEBHOOK=1
+# restores the webhook if that ever changes.
+SEND_WEBHOOK = os.environ.get("BLAND_SEND_WEBHOOK") == "1"
+_FINISHED = {"completed", "failed", "busy", "no-answer", "canceled"}
+
+
+def sync_calls(user_id: int, sessions, llm: LLMProvider) -> int:
+    """Fetch and process this person's calls that have ended since they
+    were placed. Returns how many were processed. Never raises: a provider
+    hiccup must not take the dashboard down with it."""
+    from api.routers.voice import _interview_webhook
+
+    with sessions() as session:
+        pending = [(r.id, r.call_id) for r in session.scalars(
+            select(CallRecord).where(CallRecord.user_id == user_id,
+                                     CallRecord.status == "requested",
+                                     CallRecord.call_id.is_not(None)))]
+    done = 0
+    for record_id, call_id in pending:
+        try:
+            call = bland.get_call(call_id)
+        except bland.VoiceError as exc:
+            log.warning("sync: could not fetch call %s: %s", call_id, exc)
+            continue
+        status = str(call.get("status") or "")
+        if not (call.get("completed") is True or status in _FINISHED):
+            continue  # still ringing or talking
+        metadata = {**(call.get("metadata") or {}), "kind": "interview",
+                    "record_id": record_id}
+        try:
+            _interview_webhook({**call, "call_id": call_id}, metadata, llm)
+            done += 1
+        except Exception as exc:  # noqa: BLE001 -- keep the dashboard up
+            log.warning("sync: could not process call %s: %s", call_id, type(exc).__name__)
+    return done
