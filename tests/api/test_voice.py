@@ -394,14 +394,16 @@ CALL_ENV = {"BLAND_API_KEY": "k", "VOICE_ALLOWED_NUMBERS": MY_NUMBER,
 
 @pytest.mark.parametrize("status", [401, 403])
 @pytest.mark.parametrize("html", [False, True])
-def test_provider_access_denial_keeps_status_and_operation_without_body(status, html, caplog):
+def test_provider_access_denial_keeps_reason_but_redacts_secrets(status, html, caplog):
     class Response:
         status_code = status
+        headers = {"Content-Type": "text/html" if html else "application/json"}
+        text = "<title>403 Forbidden</title><body>sensitive provider body</body>"
         def json(self):
             if html:
                 raise ValueError("HTML error with sensitive contents")
-            return {"message": "sensitive provider message"}
-    with patch.dict("os.environ", {"BLAND_API_KEY": " secret-key "}), \
+            return {"message": "Account flagged; key=secret-key; webhook=https://api.example?token=webhook-secret; phone=+919000000000; email=user@example.com"}
+    with patch.dict("os.environ", {"BLAND_API_KEY": " secret-key ", "VOICE_WEBHOOK_SECRET": "webhook-secret"}), \
          patch("api.voice.bland.requests.request", return_value=Response()) as request:
         with pytest.raises(bland.VoiceError) as caught:
             bland._request("GET", "/tools")
@@ -411,7 +413,26 @@ def test_provider_access_denial_keeps_status_and_operation_without_body(status, 
     assert request.call_args.kwargs["headers"]["Authorization"] == "secret-key"
     assert f"GET /tools (HTTP {status})" in caplog.text
     assert "secret-key" not in caplog.text
+    assert "webhook-secret" not in caplog.text + str(caught.value)
+    assert "+919000000000" not in caplog.text + str(caught.value)
+    assert "user@example.com" not in caplog.text + str(caught.value)
     assert "sensitive" not in caplog.text + str(caught.value)
+    assert ("title: 403 Forbidden" if html else "Account flagged") in str(caught.value)
+
+
+def test_denial_extracts_auth_failure_from_json_errors():
+    class Response:
+        headers = {"Content-Type": "application/json"}
+    reason = bland._safe_denial_reason(Response(), {"errors": [{"error": "AUTH_FAILURE", "message": "Unauthorized"}]})
+    assert reason == "Unauthorized"
+
+
+def test_denial_message_is_bounded_and_cannot_inject_log_lines():
+    class Response:
+        headers = {}
+    reason = bland._safe_denial_reason(Response(), {"message": "Denied\nInjected line " + "x" * 1000})
+    assert len(reason) == 500
+    assert "\n" not in reason
 
 
 def _place(client, fake, env=CALL_ENV):
