@@ -188,8 +188,9 @@ def test_hinglish_webhook_preserves_transcript_and_only_saves_verified_values(se
                 json={"consent": True, "call_language": "hi-Latn"})
     class QuotingHinglishLLM:
         def complete(self, *args):
-            return json.dumps({"age": "tees", "is_street_vendor": "haan ji",
-                               "has_bank_or_post_office_account": "pata nahi", "worker_count": "99"})
+            # Caller lines: [C1] tees, [C2] haan ji, [C3] pata nahi.
+            return json.dumps({"age": 1, "is_street_vendor": 2,
+                               "has_bank_or_post_office_account": 3, "worker_count": 99})
     app.dependency_overrides[get_llm] = lambda: QuotingHinglishLLM()
     result = client.post("/voice/webhook?token=test-secret", json={
         "call_id": "call-hinglish-saved", "metadata": sent[0]["metadata"],
@@ -211,8 +212,9 @@ def test_hinglish_webhook_preserves_transcript_and_only_saves_verified_values(se
 
 class QuotingLLM:
     def complete(self, *args):
-        return json.dumps({"age": "30", "has_bank_or_post_office_account": "not sure",
-                           "worker_count": "99", "is_street_vendor": "yes"})
+        # Caller lines: [C1] 30, [C2] not sure, [C3] yes. Line 99 doesn't exist.
+        return json.dumps({"age": 1, "has_bank_or_post_office_account": 2,
+                           "worker_count": 99, "is_street_vendor": 3})
 
 
 def test_webhook_keeps_transcript_rejects_invented_answers_and_is_idempotent(setup, monkeypatch):

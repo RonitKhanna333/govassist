@@ -631,8 +631,8 @@ TRANSCRIPTS = [
 
 def test_answers_are_found_and_parsed_from_the_transcript(client):
     from api.deps import get_llm
-    llm = FakeLLM(['{"has_bank_or_post_office_account": "हाँ जी, खाता है", '
-                   '"age": "पैंतीस साल, 35", "consents_to_auto_debit": "पता नहीं जी"}'])
+    llm = FakeLLM(['{"has_bank_or_post_office_account": 1, "age": 2, '
+                   '"consents_to_auto_debit": 3}'])
     app.dependency_overrides[get_llm] = lambda: llm
     payload = {"call_id": "c", "to": MY_NUMBER, "status": "completed",
                "answered_by": "human", "transcripts": TRANSCRIPTS,
@@ -644,20 +644,37 @@ def test_answers_are_found_and_parsed_from_the_transcript(client):
     assert body["verdict"] == "INSUFFICIENT_INFO"
 
 
-def test_a_quote_the_caller_never_said_is_discarded():
-    """The model can't put words in the caller's mouth."""
+def test_the_model_cannot_put_words_in_the_callers_mouth():
+    """It only points at a caller line; the words are the transcript's. Words
+    instead of a number, or a line that doesn't exist, record nothing."""
     llm = FakeLLM(['{"has_bank_or_post_office_account": "हाँ", '
-                   '"age": "40", "consents_to_auto_debit": "हाँ बिल्कुल"}'])
+                   '"age": 40, "consents_to_auto_debit": "C2"}'])
     found = extract.find_answers(llm, {"has_bank_or_post_office_account": "q",
                                        "age": "q", "consents_to_auto_debit": "q"},
                                  TRANSCRIPTS, None)
-    assert "age" not in found                       # "40" was never said
-    assert "consents_to_auto_debit" not in found    # nor "हाँ बिल्कुल"
+    assert "has_bank_or_post_office_account" not in found   # words, not a line
+    assert "age" not in found                                # no line 40
+    assert found["consents_to_auto_debit"] == "पैंतीस साल, 35"   # [C2], verbatim
 
 
-def test_the_agents_words_are_not_the_callers():
-    llm = FakeLLM(['{"age": "आपकी उम्र कितनी है"}'])
-    assert extract.find_answers(llm, {"age": "q"}, TRANSCRIPTS, None) == {}
+def test_only_caller_lines_can_be_chosen():
+    """Agent lines carry no number, so the agent's words can't become an answer."""
+    rendered, turns = extract._render(TRANSCRIPTS, None)
+    assert "AGENT: नमस्ते! क्या आपका अपना बैंक खाता है?" in rendered
+    assert "[C1] CALLER: हाँ जी, खाता है" in rendered
+    assert len(turns) == 3
+
+
+def test_a_spelling_difference_no_longer_loses_the_answer():
+    """The bug found on a real call: Bland transcribed हां (anusvara) and the
+    model, asked to copy the caller's words, wrote हाँ (chandrabindu). The
+    exact-match check then discarded every answer the call collected."""
+    transcript = [{"user": "assistant", "text": "क्या आपका बैंक खाता है?"},
+                  {"user": "user", "text": "हां जी है."}]
+    llm = FakeLLM(['{"has_bank_or_post_office_account": 1}'])
+    found = extract.find_answers(llm, {"has_bank_or_post_office_account": "q"},
+                                 transcript, None)
+    assert found == {"has_bank_or_post_office_account": "हां जी है."}
 
 
 def test_an_unanswered_call_texts_nobody(client):
@@ -676,7 +693,7 @@ def test_flat_transcript_fallback():
 
 def test_call_detail_shows_transcript_and_extraction(client):
     from api.deps import get_llm
-    llm = FakeLLM(['{"age": "पैंतीस साल, 35"}'])
+    llm = FakeLLM(['{"age": 2}'])
     app.dependency_overrides[get_llm] = lambda: llm
     call = {"status": "completed", "answered_by": "human", "call_length": 1.2,
             "price": 0.03, "transcripts": TRANSCRIPTS,
