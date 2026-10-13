@@ -187,14 +187,16 @@ def tool_definition(url: str, scheme: str, locale: str) -> dict:
             "such questions from your own knowledge. Say the returned answer "
             "to the caller naturally, without adding anything."
         ),
-        "speech": "एक सेकंड जी, देख रहा हूँ।" if locale == "hi" else
-                  "Ek second ji, dekh raha hoon." if locale == "hi-Latn" else "One second, let me check.",
+        # Romanized even for Hindi calls: Bland's firewall rejects
+        # Devanagari request bodies sent from our host (see ascii_safe).
+        "speech": "Ek second ji, dekh raha hoon." if locale in ("hi", "hi-Latn")
+                  else "One second, let me check.",
         "url": url,
         "method": "POST",
         "headers": {"Content-Type": "application/json"},
         "body": {"question": "{{input.question}}", "scheme": scheme, "locale": locale},
         "input_schema": {
-            "example": {"question": "मुझे कितने पैसे मिलेंगे?" if locale == "hi"
+            "example": {"question": "Mujhe kitne paise milenge?" if locale in ("hi", "hi-Latn")
                         else "How much money will I get?"},
             "type": "object",
             "properties": {"question": {"type": "string"}},
@@ -259,8 +261,7 @@ def eligibility_tool_definition(url: str, locale: str, questions: dict[str, str]
             "their own words; leave out questions they didn't answer. Then "
             "say the returned result to the caller, without changing it."
         ),
-        "speech": "एक सेकंड जी, आपका नतीजा देख रहा हूँ।" if locale == "hi"
-                  else "Ek second ji, aapka nateeja dekh raha hoon." if locale == "hi-Latn"
+        "speech": "Ek second ji, aapka nateeja dekh raha hoon." if locale in ("hi", "hi-Latn")
                   else "One moment, let me check your result.",
         "url": url,
         "method": "POST",
@@ -287,7 +288,7 @@ def call_payload(phone: str, task: str, webhook: str | None, locale: str,
         "language": LANGUAGE.get(locale, "hi"),
         "max_duration": MAX_MINUTES,
         "record": False,
-        # People answer a call with "हैलो?" -- talking over them first
+        # People answer a call with "hello?" -- talking over them first
         # sounds like a robocall.
         "wait_for_greeting": True,
         "metadata": metadata,

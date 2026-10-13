@@ -92,7 +92,13 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
     parts = urlsplit(webhook)
     eligibility_url = urlunsplit(parts._replace(path=parts.path.rsplit("/", 1)[0] + "/eligibility"))
     questions = {a: f.ask or a for a, f in service.fields(profile_locale).items()}
-    if call_language == "hi-Latn":
+    if call_language in ("hi", "hi-Latn"):
+        # Hindi calls go out romanized too. Bland's Cloudflare rejects
+        # Devanagari request bodies sent from Vercel ("Attention Required",
+        # HTTP 403) while the same text passes from elsewhere, so every
+        # Hindi call failed. The call language stays "hi": the agent still
+        # speaks Hindi and Bland still transcribes it in Devanagari, which
+        # is what our parser reads.
         from api.voice.hinglish import QUESTIONS
         questions = {a: QUESTIONS.get(a, ask) for a, ask in questions.items()}
     try:
@@ -114,7 +120,7 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
         record_id = record.id
     try:
         call_id = bland.start_call(
-            phone=user.phone, task=script.build_interview_task(call_language, user.display_name or ""),
+            phone=user.phone, task=_task_for(call_language, user.display_name or ""),
             webhook=webhook, locale=call_language, scheme="all", ask_url=ask_url,
             metadata={"kind": "interview", "record_id": record_id, "locale": profile_locale,
                       "call_language": call_language},
@@ -168,3 +174,15 @@ def dashboard(locale: str = "en", user: User = Depends(current_user),
     return {"name": user.display_name, "phone": user.phone, "profile": profile,
             "profile_questions": [f.to_dict() for f in service.fields(locale).values()],
             "schemes": schemes, "calls": calls}
+
+
+def _task_for(call_language: str, name: str) -> str:
+    """The call script. Hindi is sent romanized (see callback()), with an
+    instruction to speak pure Hindi rather than Hinglish."""
+    if call_language == "hi":
+        from api.voice.hinglish import build_task
+        return ("Speak only simple, pure spoken Hindi -- not Hinglish, and no English "
+                "words unless the person uses them first. Everything below is written "
+                "in Romanized Hindi only so it can be sent; say it in Hindi.\n\n"
+                + build_task(name))
+    return script.build_interview_task(call_language, name)
