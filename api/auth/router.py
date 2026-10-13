@@ -16,7 +16,7 @@ import re
 from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError, OperationalError
+from sqlalchemy.exc import IntegrityError
 
 from api.auth.models import User
 from api.auth.security import (
@@ -71,10 +71,11 @@ def get_sessions():
         return get_session_factory()
     except DatabaseConfigError as exc:
         raise HTTPException(503, str(exc)) from exc
-    except OperationalError as exc:
-        # A wrong password or host otherwise surfaces as a bare 500 with
-        # nothing to go on. Log the real error; tell the caller the cause.
-        log.warning("database connection failed: %s", exc)
+    except Exception as exc:  # noqa: BLE001 -- any failure here is "no database"
+        # A wrong password, host or malformed URL otherwise surfaces as a
+        # bare 500 with nothing to go on. Log the type (not the text, which
+        # can carry the URL); tell the caller the cause.
+        log.warning("database unavailable: %s", type(exc).__name__)
         raise HTTPException(503, describe_connection_error(exc)) from exc
 
 

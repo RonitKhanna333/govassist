@@ -74,6 +74,16 @@ _CONNECTION_CAUSES = (
 
 
 def describe_connection_error(exc: BaseException) -> str:
+    from sqlalchemy.exc import ArgumentError, NoSuchModuleError
+
+    if isinstance(exc, (ArgumentError, ValueError)) and not isinstance(exc, NoSuchModuleError):
+        return ("Can't reach the database: DATABASE_URL couldn't be read as a "
+                "connection string. Usually the password contains @ : / # ? or %, "
+                "or the value has quotes or spaces around it. Reset the password "
+                "to letters and numbers only and paste the URL again.")
+    if isinstance(exc, (ImportError, NoSuchModuleError)):
+        return ("Can't reach the database: the Postgres driver isn't available "
+                "on this deployment, or the URL scheme isn't postgresql://.")
     text = str(exc).lower()
     for needle, cause in _CONNECTION_CAUSES:
         if needle in text:

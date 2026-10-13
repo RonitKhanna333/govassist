@@ -59,3 +59,25 @@ def test_a_broken_database_is_a_503_with_a_reason_not_a_bare_500(monkeypatch):
     response = TestClient(app).get("/auth/me", headers={"Authorization": "Bearer x"})
     assert response.status_code == 503
     assert "password was rejected" in response.json()["detail"]
+
+
+def test_an_unparseable_url_says_so(monkeypatch):
+    """A password with '@' or '#' breaks the URL before any connection is
+    attempted -- the error the live deployment hit."""
+    from sqlalchemy.exc import ArgumentError
+
+    def broken():
+        raise ArgumentError("Could not parse SQLAlchemy URL from string")
+    monkeypatch.setattr("api.auth.router.init_db", broken)
+    response = TestClient(app).get("/auth/me", headers={"Authorization": "Bearer x"})
+    assert response.status_code == 503
+    assert "couldn't be read as a connection string" in response.json()["detail"]
+
+
+def test_a_bad_port_in_the_url_says_so(monkeypatch):
+    def broken():
+        raise ValueError("invalid literal for int() with base 10: 'pa#ss'")
+    monkeypatch.setattr("api.auth.router.init_db", broken)
+    response = TestClient(app).get("/auth/me", headers={"Authorization": "Bearer x"})
+    assert response.status_code == 503
+    assert "pa#ss" not in response.text
