@@ -250,6 +250,9 @@ def _shared_style(code: str) -> str:
 
 
 def build_interview_task(locale: str = "hi", name: str = "") -> str:
+    if locale == "hi-Latn":
+        from api.voice.hinglish import build_task
+        return build_task(name)
     from api.onboarding import interview
 
     code = get_locale(locale).code

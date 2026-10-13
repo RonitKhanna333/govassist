@@ -35,7 +35,18 @@ it("requires explicit callback consent and exposes provider failure", async () =
   fireEvent.click(screen.getByRole("checkbox")); fireEvent.click(button);
   await screen.findByRole("alert");
   expect(screen.getByText("Calling is not configured")).toBeTruthy();
-  expect(mocks.callback).toHaveBeenCalledWith(true, "en");
+  expect(mocks.callback).toHaveBeenCalledWith(true, "en", undefined);
+});
+
+it("selects Hinglish for the call without changing the website language", async () => {
+  setToken("signed-in"); mocks.callback.mockResolvedValue({ id: 1, status: "requested" });
+  render(<AccountHome />);
+  fireEvent.change(screen.getByLabelText("Call language"), { target: { value: "hi-Latn" } });
+  fireEvent.click(screen.getByRole("checkbox"));
+  fireEvent.click(screen.getByRole("button", { name: "Call me back" }));
+  await screen.findByText(/Your callback was requested/);
+  expect(mocks.callback).toHaveBeenCalledWith(true, "en", "hi-Latn");
+  expect((screen.getByRole("combobox", { name: "Language / भाषा" }) as HTMLSelectElement).value).toBe("en");
 });
 
 it("removes the previous success notice when a later callback fails", async () => {
@@ -58,7 +69,7 @@ it("keeps callback success translated when the language changes", async () => {
   fireEvent.click(screen.getByRole("checkbox"));
   fireEvent.click(screen.getByRole("button", { name: "Call me back" }));
   await screen.findByText(/Your callback was requested/);
-  fireEvent.change(screen.getByRole("combobox"), { target: { value: "hi" } });
+  fireEvent.change(screen.getByRole("combobox", { name: "Language / भाषा" }), { target: { value: "hi" } });
   expect(screen.getByText(/कॉल का अनुरोध भेज दिया गया है/)).toBeTruthy();
   expect(screen.queryByText(/Your callback was requested/)).toBeNull();
 });
@@ -66,7 +77,7 @@ it("keeps callback success translated when the language changes", async () => {
 it("explains calling access failure in Hindi without a success notice", async () => {
   setToken("signed-in"); mocks.callback.mockRejectedValue(new AccountError("Denied", 503, "CALLBACK_PROVIDER_ACCESS_DENIED"));
   render(<AccountHome />);
-  fireEvent.change(screen.getByRole("combobox"), { target: { value: "hi" } });
+  fireEvent.change(screen.getByRole("combobox", { name: "Language / भाषा" }), { target: { value: "hi" } });
   fireEvent.click(screen.getByRole("checkbox"));
   fireEvent.click(screen.getByRole("button", { name: "मुझे कॉल करें" }));
   await screen.findByText(/कॉल की पुष्टि नहीं हुई है/);

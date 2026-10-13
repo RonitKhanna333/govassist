@@ -33,6 +33,17 @@ eligibility rules.
 
 ## Callback setup
 
+The callback card has a separate **Call language** selector: the website's
+language, English, Hindi, or Hinglish (Romanized Hindi). `POST /account/callback`
+accepts optional `call_language` (`en`, `hi`, `hi-Latn`); omission preserves the
+existing behavior. Hinglish uses Bland's `hi-Latn`, Romanized versions of the
+existing questions, and the same ordering, skip rules and server eligibility
+tools. The result is fixed server text in Hinglish with English scheme names.
+Scheme-information tool answers are read as supplied and may use English.
+The transcript stays verbatim and only quote-checked, parsed answers are saved.
+Call history records `hi-Latn` without changing the account's website language.
+This option needs a live provider test; it is not a verified Cloudflare fix.
+
 For local accounts set `JWT_SECRET`; SQLite is used by default. Hosted accounts
 need a persistent `DATABASE_URL`. The frontend uses `NEXT_PUBLIC_API_BASE` for
 the backend URL, which must allow the frontend origin through CORS.
