@@ -1,5 +1,6 @@
 """POST /voice/call and POST /voice/webhook -- the same conversation, by phone.
 
+    /voice/check     -> free: key, balance, tools, Hindi voices -- no call
     /voice/call      -> places a call that asks the scheme's questions
     /voice/ask       -> called BY the agent mid-call: the person asked
                         something, and this returns the grounded answer it
@@ -43,7 +44,7 @@ from api.routers.chat import SCHEME_NAMES  # noqa: F401 -- re-exported for scrip
 from api.rules.engine import SCHEME_SLUG, Citation, decide, load_clauses, load_rules
 from api.rules.forms import OTHER, derive_fields
 from api.rules.spoken import parse_number, parse_yes_no
-from api.voice import bland, script
+from api.voice import bland, extract, script
 from api.voice.sms import send_sms
 from parse_scheme import repo_root
 
@@ -63,6 +64,70 @@ def voice_health() -> dict:
     }
 
 
+@router.get("/check")
+def check(request: Request) -> dict:
+    """Everything that can be checked without placing a call (no credit used).
+
+    Secret-gated: it reports the account balance and creates tools.
+    """
+    _check_webhook_token(request)
+    report: dict = {"calling": bland.configured()}
+    problems: list[str] = []
+    if not bland.configured():
+        problems.append("BLAND_API_KEY is not set")
+    if not bland.allowed_numbers():
+        problems.append("VOICE_ALLOWED_NUMBERS is empty -- nobody can be called")
+    webhook, ask_url = _callback_urls()
+    if not webhook:
+        problems.append("VOICE_WEBHOOK_URL is not set -- answers won't come back")
+    elif not webhook.startswith("https://"):
+        problems.append("VOICE_WEBHOOK_URL must start with https://")
+    report["allowed_numbers"] = len(bland.allowed_numbers())
+
+    if bland.configured():
+        try:
+            report["account"] = bland.account()
+            balance = report["account"].get("balance")
+            if isinstance(balance, (int, float)) and balance < 0.5:
+                problems.append(f"low credit: {balance}")
+        except bland.VoiceError as exc:
+            problems.append(f"API key check failed: {exc}")
+        try:
+            report["hindi_voices"] = bland.hindi_voices()[:10]
+        except bland.VoiceError as exc:
+            report["hindi_voices"] = f"could not list voices: {exc}"
+        if ask_url:
+            tools = {}
+            for scheme in ("pmsby",):
+                try:
+                    tools[scheme] = bland.ensure_tool(ask_url, scheme, "hi")
+                except bland.VoiceError as exc:
+                    problems.append(f"tool creation failed: {exc}")
+            report["tools"] = tools
+
+    # The agent's question tool posts here; prove it answers before a call
+    # depends on it. Same process, so no network hop and no model call.
+    report["ask_reachable"] = bool(ask_url)
+    report["ready"] = not problems
+    report["problems"] = problems
+    return report
+
+
+def _callback_urls() -> tuple[str | None, str | None]:
+    """Webhook and ask URLs, each carrying the secret, or None."""
+    webhook = os.environ.get("VOICE_WEBHOOK_URL")
+    secret = os.environ.get("VOICE_WEBHOOK_SECRET")
+    ask_url = os.environ.get("VOICE_ASK_URL")
+    if not ask_url and webhook:
+        ask_url = webhook.rsplit("/", 1)[0] + "/ask"
+    if not secret:
+        # An unauthenticated tool URL is a public LLM endpoint, and an
+        # unauthenticated webhook lets anyone text a verdict to a stranger.
+        return webhook, None
+    return ((f"{webhook}?token={secret}" if webhook else None),
+            (f"{ask_url}?token={secret}" if ask_url else None))
+
+
 @router.get("/script")
 def call_script(scheme: str = "pmfme", locale: str = "hi") -> dict:
     """The script and answer schema, for review before any call is placed."""
@@ -72,7 +137,7 @@ def call_script(scheme: str = "pmfme", locale: str = "hi") -> dict:
             "scheme": scheme,
             "locale": get_locale(locale).code,
             "task": script.build_task(scheme, locale),
-            "answer_schema": script.answer_schema(scheme, locale),
+            "questions": script.questions(scheme, locale),
         }
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
@@ -94,26 +159,14 @@ def place_call(body: dict) -> dict:
     if locale not in script.CALL_LOCALES:
         raise HTTPException(422, f"calls aren't available in {locale} yet")
 
-    webhook = os.environ.get("VOICE_WEBHOOK_URL")
-    secret = os.environ.get("VOICE_WEBHOOK_SECRET")
     # The agent asks /voice/ask for anything the person wants to know, so
     # the call can answer questions without a model inventing facts.
-    ask_url = os.environ.get("VOICE_ASK_URL")
-    if not ask_url and webhook:
-        ask_url = webhook.rsplit("/", 1)[0] + "/ask"
-    if secret:
-        if webhook:
-            webhook = f"{webhook}?token={secret}"
-        if ask_url:
-            ask_url = f"{ask_url}?token={secret}"
-    else:
-        ask_url = None  # an unauthenticated tool URL is a public LLM endpoint
+    webhook, ask_url = _callback_urls()
 
     try:
         call_id = bland.start_call(
             phone=phone,
             task=script.build_task(scheme, locale),
-            schema=script.answer_schema(scheme, locale),
             webhook=webhook,
             locale=locale,
             metadata={"scheme": scheme, "locale": locale},
@@ -194,6 +247,7 @@ def _check_webhook_token(request: Request) -> None:
 
 @router.post("/webhook")
 async def webhook(request: Request,
+                  llm: LLMProvider = Depends(get_llm),
                   language: LanguageService = Depends(get_language)) -> dict:
     """The provider posts the finished call. We parse, decide, and text back."""
     _check_webhook_token(request)
@@ -207,9 +261,24 @@ async def webhook(request: Request,
     locale = get_locale(metadata.get("locale") or "hi").code
     _check_scheme(scheme)
 
-    heard = body.get("analysis") or body.get("answers") or {}
+    phone = str(body.get("to") or body.get("phone_number") or "")
+
+    # Unanswered, voicemail, failed: there are no answers, and texting a
+    # "we couldn't work it out" to a voicemail box helps nobody.
+    answered_by = body.get("answered_by")
+    status = body.get("status")
+    if answered_by in ("voicemail", "no-answer") or status in ("failed", "busy", "no-answer", "canceled"):
+        log.info("voice call %s not answered (%s/%s)", body.get("call_id"), status, answered_by)
+        return {"scheme": scheme, "locale": locale, "verdict": None,
+                "answered": False, "sms": "skipped"}
+
+    # `answers` (attribute -> spoken words) when a caller supplies them, as
+    # the tests do; otherwise found in the transcript, quote-checked.
+    heard = body.get("answers")
     if not isinstance(heard, dict):
-        heard = {}
+        questions = {q["attribute"]: q["ask"] for q in script.questions(scheme, locale)}
+        heard = extract.find_answers(llm, questions, body.get("transcripts"),
+                                     body.get("concatenated_transcript"))
 
     profile, unparsed = read_answers(scheme, heard)
     result = decide(scheme, profile)
@@ -218,7 +287,6 @@ async def webhook(request: Request,
     message = result_message(scheme, locale, verdict, result.citations,
                              result.failed_citations, language)
 
-    phone = str(body.get("to") or body.get("phone_number") or "")
     delivery = send_sms(phone, message) if phone else "no_number"
 
     # The transcript is the only record of what was actually said, and the
@@ -228,8 +296,8 @@ async def webhook(request: Request,
              body.get("call_id"), scheme, verdict, unparsed)
 
     return {
-        "scheme": scheme, "locale": locale, "verdict": verdict,
-        "profile": profile, "unparsed": unparsed,
+        "scheme": scheme, "locale": locale, "verdict": verdict, "answered": True,
+        "heard": heard, "profile": profile, "unparsed": unparsed,
         "message": message, "sms": delivery,
         "missing_attributes": result.missing_attributes,
     }

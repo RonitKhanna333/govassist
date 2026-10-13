@@ -35,7 +35,7 @@ def _post_call(client, **over):
 
 
 def _webhook(client, heard, scheme="pmsby", locale="hi", phone=MY_NUMBER):
-    payload = {"call_id": "c1", "to": phone, "analysis": heard,
+    payload = {"call_id": "c1", "to": phone, "answers": heard,
                "metadata": {"scheme": scheme, "locale": locale}}
     with patch.dict("os.environ", {"VOICE_WEBHOOK_SECRET": SECRET}):
         return client.post(f"/voice/webhook?token={SECRET}", json=payload)
@@ -69,13 +69,13 @@ def test_a_new_scheme_needs_no_new_prompt():
     """Four schemes were added without touching this module."""
     for scheme in ("pmfme", "pmsby", "pmjjby", "apy", "pm-kmy"):
         assert script.build_task(scheme, "hi")
-        assert script.answer_schema(scheme, "hi")["properties"]
+        assert script.questions(scheme, "hi")
 
 
 def test_numbers_are_asked_for_as_numbers():
-    properties = script.answer_schema("pm-kmy", "hi")["properties"]
-    assert properties["land_hectares"]["type"] == ["number", "null"]
-    assert properties["owns_cultivable_land"]["type"] == ["string", "null"]
+    kinds = {q["attribute"]: q["kind"] for q in script.questions("pm-kmy", "hi")}
+    assert kinds["land_hectares"] == "number"
+    assert kinds["owns_cultivable_land"] == "boolean"
 
 
 def test_calls_are_refused_in_untested_languages(client):
@@ -133,37 +133,6 @@ def test_calling_without_a_key_says_so(client):
         response = _post_call(client)
     assert response.status_code == 503
     assert "BLAND_API_KEY" in response.json()["detail"]
-
-
-def test_a_placed_call_sends_the_script_and_schema(client):
-    captured = {}
-
-    def fake_post(url, headers=None, json=None, timeout=None):
-        captured.update({"url": url, "payload": json, "headers": headers})
-
-        class R:
-            status_code = 200
-
-            @staticmethod
-            def json():
-                return {"call_id": "call_123"}
-        return R()
-
-    env = {"BLAND_API_KEY": "k", "VOICE_ALLOWED_NUMBERS": MY_NUMBER,
-           "VOICE_WEBHOOK_URL": "https://api.example/voice/webhook",
-           "VOICE_WEBHOOK_SECRET": SECRET}
-    with patch.dict("os.environ", env), \
-         patch("api.voice.bland.requests.post", side_effect=fake_post):
-        body = _post_call(client).json()
-
-    assert body["call_id"] == "call_123"
-    assert captured["payload"]["phone_number"] == MY_NUMBER
-    assert captured["payload"]["language"] == "hin"
-    assert "उम्र" in captured["payload"]["task"]
-    assert "age" in captured["payload"]["analysis_schema"]["properties"]
-    assert captured["payload"]["webhook"].endswith(f"token={SECRET}")
-    # The key goes in the header, never in a URL or a log line.
-    assert "k" not in captured["url"]
 
 
 # -- a replayed call --------------------------------------------------------
@@ -250,7 +219,7 @@ def test_the_sms_never_claims_a_decision(client):
 
 
 def test_the_webhook_refuses_an_unknown_scheme(client):
-    payload = {"to": MY_NUMBER, "analysis": {}, "metadata": {"scheme": "../etc"}}
+    payload = {"to": MY_NUMBER, "answers": {}, "metadata": {"scheme": "../etc"}}
     with patch.dict("os.environ", {"VOICE_WEBHOOK_SECRET": SECRET}):
         assert client.post(f"/voice/webhook?token={SECRET}",
                            json=payload).status_code == 404
@@ -318,7 +287,7 @@ def test_the_agent_admits_it_is_automated_if_asked():
 
 def test_scheme_questions_go_to_the_grounded_tool():
     for locale in ("hi", "en"):
-        assert "scheme_info" in script.build_task("pmsby", locale)
+        assert "GovAssist scheme info" in script.build_task("pmsby", locale)
 
 
 # -- /voice/ask: questions during the call ----------------------------------
@@ -376,33 +345,232 @@ def test_the_ask_tool_needs_the_secret(client):
     assert response.status_code == 401
 
 
-def test_the_call_carries_the_ask_tool_only_when_it_is_authenticated(client):
-    captured = {}
 
-    def fake_post(url, headers=None, json=None, timeout=None):
-        captured.update(json)
+
+# -- the Bland API as documented (docs.bland.ai, Oct 2026) -------------------
+
+
+class FakeBland:
+    """Records every request; answers like Bland's documented endpoints."""
+
+    def __init__(self, tools=None):
+        self.requests = []
+        self.tools = list(tools or [])
+
+    def __call__(self, method, url, headers=None, json=None, timeout=None):
+        self.requests.append((method, url, json, headers))
+        path = url.split("/v1", 1)[1]
+        body = {"status": "success"}
+        if method == "GET" and path == "/tools":
+            body["tools"] = self.tools
+        elif method == "POST" and path == "/tools":
+            body["tool_id"] = "TL-new"
+            self.tools.append({"tool_id": "TL-new", "tool": json})
+        elif method == "POST" and path == "/calls":
+            body.update({"call_id": "call_123", "message": "Call successfully queued."})
+        elif method == "GET" and path == "/me":
+            body.update({"status": "active", "billing": {"current_balance": 1.97},
+                         "total_calls": 0})
+        elif method == "GET" and path == "/voices":
+            body["voices"] = [{"id": "v-hi", "name": "Priya", "tags": ["Hindi"]},
+                              {"id": "v-en", "name": "Karen", "tags": ["English"]}]
 
         class R:
             status_code = 200
 
             @staticmethod
             def json():
-                return {"call_id": "c"}
+                return body
         return R()
 
-    env = {"BLAND_API_KEY": "k", "VOICE_ALLOWED_NUMBERS": MY_NUMBER,
-           "VOICE_WEBHOOK_URL": "https://api.example/voice/webhook"}
+    def calls(self):
+        return [r for r in self.requests if r[0] == "POST" and r[1].endswith("/calls")]
+
+
+CALL_ENV = {"BLAND_API_KEY": "k", "VOICE_ALLOWED_NUMBERS": MY_NUMBER,
+            "VOICE_WEBHOOK_URL": "https://api.example/voice/webhook",
+            "VOICE_WEBHOOK_SECRET": SECRET}
+
+
+def _place(client, fake, env=CALL_ENV):
+    bland._tool_ids.clear()
+    with patch.dict("os.environ", env), \
+         patch("api.voice.bland.requests.request", side_effect=fake):
+        return _post_call(client)
+
+
+def test_a_call_uses_only_documented_fields(client):
+    fake = FakeBland()
+    body = _place(client, fake).json()
+    assert body["call_id"] == "call_123"
+    _, url, payload, headers = fake.calls()[0]
+    assert url == "https://api.bland.ai/v1/calls"
+    assert payload["language"] == "hi"           # not "hin"
+    assert "analysis_schema" not in payload      # not a Bland field
+    assert payload["max_duration"] <= 4          # credit is scarce
+    assert payload["wait_for_greeting"] is True
+    assert payload["phone_number"] == MY_NUMBER
+    assert "उम्र" in payload["task"]
+    assert payload["webhook"].endswith(f"token={SECRET}")
+    assert headers["Authorization"] == "k"       # raw key, no "Bearer"
+
+
+def test_the_question_tool_is_created_once_and_passed_by_id(client):
+    fake = FakeBland()
+    _place(client, fake)
+    created = [r for r in fake.requests if r[0] == "POST" and r[1].endswith("/tools")]
+    assert len(created) == 1
+    tool = created[0][2]
+    assert tool["url"] == f"https://api.example/voice/ask?token={SECRET}"
+    assert tool["method"] == "POST"
+    assert tool["body"] == {"question": "{{input.question}}", "scheme": "pmsby", "locale": "hi"}
+    assert tool["response"] == {"answer": "$.answer"}
+    assert tool["timeout"] >= 15000              # /voice/ask takes ~9 s
+    assert fake.calls()[0][2]["tools"] == ["TL-new"]
+
+    # a second call reuses it rather than creating another
+    _place(client, fake)
+    assert len([r for r in fake.requests if r[0] == "POST" and r[1].endswith("/tools")]) == 1
+
+
+def test_an_existing_tool_is_found_after_a_cold_start(client):
+    url = f"https://api.example/voice/ask?token={SECRET}"
+    fake = FakeBland(tools=[{"tool_id": "TL-old",
+                             "tool": {"name": "GovAssist scheme info pmsby hi", "url": url}}])
+    _place(client, fake)
+    assert not [r for r in fake.requests if r[0] == "POST" and r[1].endswith("/tools")]
+    assert fake.calls()[0][2]["tools"] == ["TL-old"]
+
+
+def test_a_tool_pointing_at_an_old_url_is_not_reused(client):
+    fake = FakeBland(tools=[{"tool_id": "TL-stale",
+                             "tool": {"name": "GovAssist scheme info pmsby hi",
+                                      "url": "https://old/voice/ask?token=x"}}])
+    _place(client, fake)
+    assert fake.calls()[0][2]["tools"] == ["TL-new"]
+
+
+def test_without_a_secret_the_call_carries_no_tool(client):
     import os
     os.environ.pop("VOICE_WEBHOOK_SECRET", None)
-    with patch.dict("os.environ", env),          patch("api.voice.bland.requests.post", side_effect=fake_post):
-        body = _post_call(client).json()
+    env = {k: v for k, v in CALL_ENV.items() if k != "VOICE_WEBHOOK_SECRET"}
+    fake = FakeBland()
+    body = _place(client, fake, env).json()
     assert body["answers_questions"] is False
-    assert "tools" not in captured
+    assert "tools" not in fake.calls()[0][2]
+    assert not [r for r in fake.requests if r[1].endswith("/tools")]
 
-    with patch.dict("os.environ", {**env, "VOICE_WEBHOOK_SECRET": SECRET}),          patch("api.voice.bland.requests.post", side_effect=fake_post):
-        body = _post_call(client).json()
-    assert body["answers_questions"] is True
-    tool = captured["tools"][0]
-    assert tool["name"] == "scheme_info"
-    assert tool["url"] == f"https://api.example/voice/ask?token={SECRET}"
-    assert tool["body"]["scheme"] == "pmsby"
+
+def test_a_refused_number_never_creates_a_tool_or_a_call(client):
+    fake = FakeBland()
+    env = {**CALL_ENV, "VOICE_ALLOWED_NUMBERS": "+919111111111"}
+    assert _place(client, fake, env).status_code == 503
+    assert fake.requests == []
+
+
+def test_bland_errors_are_reported(client):
+    def refuse(method, url, headers=None, json=None, timeout=None):
+        class R:
+            status_code = 400
+
+            @staticmethod
+            def json():
+                return {"status": "error", "message": "Insufficient balance"}
+        return R()
+    bland._tool_ids.clear()
+    with patch.dict("os.environ", CALL_ENV), \
+         patch("api.voice.bland.requests.request", side_effect=refuse):
+        response = _post_call(client)
+    assert response.status_code == 503
+    assert "Insufficient balance" in response.json()["detail"]
+
+
+# -- /voice/check: everything short of a call, free -----------------------
+
+
+def test_check_reports_balance_tools_and_hindi_voices_without_calling(client):
+    fake = FakeBland()
+    bland._tool_ids.clear()
+    with patch.dict("os.environ", CALL_ENV), \
+         patch("api.voice.bland.requests.request", side_effect=fake):
+        body = client.get(f"/voice/check?token={SECRET}").json()
+    assert body["ready"] is True, body["problems"]
+    assert body["account"]["balance"] == 1.97
+    assert body["hindi_voices"] == [{"id": "v-hi", "name": "Priya", "tags": ["Hindi"]}]
+    assert body["tools"]["pmsby"] == "TL-new"
+    assert fake.calls() == []                     # no call placed
+
+
+def test_check_names_what_is_missing(client):
+    import os
+    for key in ("BLAND_API_KEY", "VOICE_ALLOWED_NUMBERS", "VOICE_WEBHOOK_URL"):
+        os.environ.pop(key, None)
+    with patch.dict("os.environ", {"VOICE_WEBHOOK_SECRET": SECRET}):
+        body = client.get(f"/voice/check?token={SECRET}").json()
+    assert body["ready"] is False
+    joined = " ".join(body["problems"])
+    assert "BLAND_API_KEY" in joined and "VOICE_ALLOWED_NUMBERS" in joined
+
+
+def test_check_needs_the_secret(client):
+    with patch.dict("os.environ", {"VOICE_WEBHOOK_SECRET": SECRET}):
+        assert client.get("/voice/check?token=no").status_code == 401
+
+
+# -- answers found in the transcript ---------------------------------------
+
+from api.voice import extract  # noqa: E402
+
+TRANSCRIPTS = [
+    {"user": "assistant", "text": "नमस्ते! क्या आपका अपना बैंक खाता है?"},
+    {"user": "user", "text": "हाँ जी, खाता है"},
+    {"user": "assistant", "text": "अच्छा, आपकी उम्र कितनी है?"},
+    {"user": "user", "text": "पैंतीस साल, 35"},
+    {"user": "assistant", "text": "क्या आप बैंक को हर साल पैसा काटने देंगे?"},
+    {"user": "user", "text": "पता नहीं जी"},
+]
+
+
+def test_answers_are_found_and_parsed_from_the_transcript(client):
+    from api.deps import get_llm
+    llm = FakeLLM(['{"has_bank_or_post_office_account": "हाँ जी, खाता है", '
+                   '"age": "पैंतीस साल, 35", "consents_to_auto_debit": "पता नहीं जी"}'])
+    app.dependency_overrides[get_llm] = lambda: llm
+    payload = {"call_id": "c", "to": MY_NUMBER, "status": "completed",
+               "answered_by": "human", "transcripts": TRANSCRIPTS,
+               "metadata": {"scheme": "pmsby", "locale": "hi"}}
+    with patch.dict("os.environ", {"VOICE_WEBHOOK_SECRET": SECRET}):
+        body = client.post(f"/voice/webhook?token={SECRET}", json=payload).json()
+    assert body["profile"] == {"has_bank_or_post_office_account": True, "age": 35}
+    assert body["unparsed"] == ["consents_to_auto_debit"]   # "पता नहीं" -> unknown
+    assert body["verdict"] == "INSUFFICIENT_INFO"
+
+
+def test_a_quote_the_caller_never_said_is_discarded():
+    """The model can't put words in the caller's mouth."""
+    llm = FakeLLM(['{"has_bank_or_post_office_account": "हाँ", '
+                   '"age": "40", "consents_to_auto_debit": "हाँ बिल्कुल"}'])
+    found = extract.find_answers(llm, {"has_bank_or_post_office_account": "q",
+                                       "age": "q", "consents_to_auto_debit": "q"},
+                                 TRANSCRIPTS, None)
+    assert "age" not in found                       # "40" was never said
+    assert "consents_to_auto_debit" not in found    # nor "हाँ बिल्कुल"
+
+
+def test_the_agents_words_are_not_the_callers():
+    llm = FakeLLM(['{"age": "आपकी उम्र कितनी है"}'])
+    assert extract.find_answers(llm, {"age": "q"}, TRANSCRIPTS, None) == {}
+
+
+def test_an_unanswered_call_texts_nobody(client):
+    payload = {"call_id": "c", "to": MY_NUMBER, "status": "no-answer",
+               "answered_by": "no-answer", "metadata": {"scheme": "pmsby"}}
+    with patch.dict("os.environ", {"VOICE_WEBHOOK_SECRET": SECRET}):
+        body = client.post(f"/voice/webhook?token={SECRET}", json=payload).json()
+    assert body == {"scheme": "pmsby", "locale": "hi", "verdict": None,
+                    "answered": False, "sms": "skipped"}
+
+
+def test_flat_transcript_fallback():
+    flat = "assistant: आपकी उम्र?\nuser: तीस साल\n"
+    assert extract.caller_turns(None, flat) == ["तीस साल"]

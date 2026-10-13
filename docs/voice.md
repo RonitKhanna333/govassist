@@ -5,6 +5,7 @@ from `scheme.md`, the answers are parsed by `api/rules/spoken.py`, and the
 verdict comes from `decide()` — the call only collects answers.
 
 ```
+GET  /voice/check     free: key, credit balance, tools, Hindi voices -- no call
 POST /voice/call      place a call that asks one scheme's questions
 POST /voice/ask       called BY the agent mid-call when the person asks
                       something: a grounded, verified answer to speak
@@ -136,3 +137,27 @@ curl -s -X POST http://localhost:8000/voice/call \
 
 Hindi and English only: those are the languages the voice path has been
 tested in. Punjabi and Tamil are refused with 422 rather than half-working.
+
+## Checked against Bland's API (October 2026)
+
+An earlier version guessed at three fields and got them wrong; all three are
+fixed and pinned by tests that mock Bland's documented responses:
+
+* `language` is `"hi"` (or `"en-IN"`), not `"hin"`.
+* There is no `analysis_schema` on `POST /v1/calls`. Answers are found in the
+  transcript afterwards (`api/voice/extract.py`): a model may only *quote* the
+  caller, every quote must appear verbatim in one of the caller's own turns,
+  and then it goes through the same parser as a typed answer.
+* `tools` takes tool IDs. The question tool is created once per scheme and
+  language with `POST /v1/tools`, found again by name after a cold start, and
+  re-created if its URL changed.
+
+Calls are capped at `BLAND_MAX_MINUTES` (default 4) and wait for the person to
+say hello first. Unanswered calls and voicemail send no SMS.
+
+### Before spending credit
+
+Open `/voice/check?token=<VOICE_WEBHOOK_SECRET>` on the API. It places no
+call, and reports whether the key works, the credit balance, the question
+tool's id (creating it if needed), Hindi-tagged voices, and anything missing.
+`"ready": true` means a call can be placed.

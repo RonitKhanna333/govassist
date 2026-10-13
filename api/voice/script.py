@@ -57,7 +57,7 @@ _INSTRUCTIONS = {
 
 योजना के बारे में सवाल:
 - अगर व्यक्ति कुछ पूछे (कितने पैसे मिलेंगे, कौन ले सकता है, कौन से काग़ज़ चाहिए), \
-तो scheme_info टूल चलाएँ और उसका जवाब अपने शब्दों में न बदलते हुए, सहज ढंग से बोलें।
+तो "GovAssist scheme info" टूल चलाएँ और उसका जवाब अपने शब्दों में न बदलते हुए, सहज ढंग से बोलें।
 - टूल के जवाब के अलावा अपनी कोई जानकारी कभी न जोड़ें, चाहे आपको लगे आप जानते हैं।
 - टूल को समय लगे तो बोलें: "एक सेकंड जी, देख रहा हूँ।"
 - जवाब के बाद वहीं से बात आगे बढ़ाएँ जहाँ रुके थे: "अच्छा जी, तो मैं पूछ रहा था..."
@@ -107,7 +107,7 @@ Personal information -- handle with care:
 
 Questions about the scheme:
 - If they ask anything (how much money, who can apply, which documents), call
-  the scheme_info tool and say its answer naturally, without changing it.
+  the "GovAssist scheme info" tool and say its answer naturally, without changing it.
 - Never add facts of your own, even if you think you know.
 - If the tool takes a moment, say "One second, let me check."
 - Afterwards, pick up where you left off: "Alright, I was asking..."
@@ -124,7 +124,7 @@ Close: thank them and say the result will come by message.""",
 }
 
 
-def _questions(scheme: str, locale: str) -> list[dict]:
+def questions(scheme: str, locale: str) -> list[dict]:
     """One entry per attribute the rules test, in the order they're asked."""
     rules = load_rules(scheme, repo_root())
     seen: set[str] = set()
@@ -158,7 +158,7 @@ def build_task(scheme: str, locale: str = "hi") -> str:
         raise ValueError(f"calls aren't available in {code} yet")
 
     lines = []
-    for index, question in enumerate(_questions(scheme, code), start=1):
+    for index, question in enumerate(questions(scheme, code), start=1):
         line = f"{index}. {question['ask']}"
         if question["kind"] == "number" and question["unit"]:
             line += f"  [{question['unit']}]"
@@ -175,29 +175,6 @@ def build_task(scheme: str, locale: str = "hi") -> str:
     )
 
 
-def answer_schema(scheme: str, locale: str = "hi") -> dict:
-    """What the platform must return after the call, as a JSON schema.
-
-    Asking for structured values beats mining the transcript with regular
-    expressions: a verdict here turns on exact numbers, and "I think he said
-    forty" is not something a pattern can report. Every value still goes
-    through our own parser before it is recorded -- see routers/voice.py.
-    """
-    code = get_locale(locale).code
-    properties: dict[str, dict] = {}
-    for question in _questions(scheme, code):
-        if question["kind"] == "number":
-            spec = {"type": ["number", "null"],
-                    "description": f"{question['ask']} ({question['unit'] or 'number'})"}
-        else:
-            # Spoken, not boolean: "haan ji", "nahi liya", "mujhe nahi pata".
-            spec = {"type": ["string", "null"],
-                    "description": f"{question['ask']} -- the person's answer, "
-                                   f"in their own words"}
-        properties[question["attribute"]] = spec
-    return {"type": "object", "properties": properties}
-
-
 def attribute_kinds(scheme: str) -> dict[str, str]:
     """attribute -> "number" | "boolean" | "choice", for parsing replies."""
-    return {q["attribute"]: q["kind"] for q in _questions(scheme, "en")}
+    return {q["attribute"]: q["kind"] for q in questions(scheme, "en")}
