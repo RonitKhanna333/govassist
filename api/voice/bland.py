@@ -64,8 +64,52 @@ def check_number(phone: str) -> str:
     return phone
 
 
+def scheme_info_tool(url: str, scheme: str, locale: str) -> dict:
+    """The mid-call tool that answers questions about the scheme.
+
+    Without it the agent would answer from the model's own memory, which is
+    exactly the failure this project exists to prevent -- an invented
+    subsidy amount delivered in a government helpline voice. The tool posts
+    the question to /voice/ask, which answers from clauses and verifies, and
+    the script tells the agent to speak the result verbatim.
+
+    Provider tool schemas differ in detail (Bland, Vapi and Retell each
+    spell this slightly differently); the endpoint itself is
+    provider-agnostic, so only this dict changes.
+    """
+    return {
+        "name": "scheme_info",
+        "description": (
+            "Answer a question the person asked about this government "
+            "scheme. Always use this instead of your own knowledge. Speak "
+            "the returned 'answer' exactly as given."
+        ),
+        "url": url,
+        "method": "POST",
+        "headers": {"Content-Type": "application/json"},
+        "body": {
+            "question": "{{input.question}}",
+            "scheme": scheme,
+            "locale": locale,
+        },
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "question": {
+                    "type": "string",
+                    "description": "What the person asked, in their own words",
+                },
+            },
+            "required": ["question"],
+        },
+        "response": {"answer": "$.answer"},
+        "timeout": 20000,
+    }
+
+
 def start_call(phone: str, task: str, schema: dict, webhook: str | None,
                locale: str = "hi", metadata: dict | None = None,
+               ask_url: str | None = None, scheme: str = "pmfme",
                timeout: float = 30.0) -> str:
     """Place the call. Returns the provider's call id."""
     key = os.environ.get("BLAND_API_KEY")
@@ -87,6 +131,8 @@ def start_call(phone: str, task: str, schema: dict, webhook: str | None,
     }
     if webhook:
         payload["webhook"] = webhook
+    if ask_url:
+        payload["tools"] = [scheme_info_tool(ask_url, scheme, locale)]
 
     try:
         response = requests.post(

@@ -6,6 +6,8 @@ verdict comes from `decide()` — the call only collects answers.
 
 ```
 POST /voice/call      place a call that asks one scheme's questions
+POST /voice/ask       called BY the agent mid-call when the person asks
+                      something: a grounded, verified answer to speak
 POST /voice/webhook   the provider posts what it heard -> verdict -> SMS
 GET  /voice/script    the script and answer schema, to read before calling
 GET  /voice/health    what is configured (never the keys)
@@ -26,6 +28,30 @@ long-running host instead; that is the main reason a platform is used here.
   could not be worked out. 8 kHz phone audio mishears numbers, and a guessed
   number flips a verdict.
 * Every number is read back to the person for confirmation during the call.
+* If it can't hear, it says so the way a person would -- "माफ़ कीजिए जी, लाइन
+  में आवाज़ थोड़ी कट गई" -- blaming the line, never the caller. After three
+  tries it skips the question and leaves the answer blank.
+* If the caller starts reading out an OTP, Aadhaar or account number, the
+  agent stops them, tells them not to share it with anyone on the phone, and
+  does not repeat it.
+* If asked, it says honestly that it is an automated assistant.
+
+## Answering questions on the call
+
+The person can ask things mid-call ("मुझे कितने पैसे मिलेंगे?"). The agent
+is given one tool, `scheme_info`, which posts the question to `/voice/ask`.
+That endpoint answers exactly like the web chat: from the scheme's clauses
+only, through the verifier, with "I don't have that information" when the
+clauses don't cover it. The agent is told to say the answer as returned and
+never answer from its own knowledge.
+
+The tool is only attached when `VOICE_WEBHOOK_SECRET` is set -- otherwise
+`/voice/ask` would be a free public LLM endpoint. Its URL defaults to the
+webhook URL's sibling (`.../voice/ask`); set `VOICE_ASK_URL` to override.
+
+Tool schemas differ slightly between Bland, Vapi and Retell, and the exact
+field names in `api/voice/bland.py::scheme_info_tool` should be checked
+against the provider's current docs before the first real call.
 
 ## Environment
 
@@ -34,7 +60,8 @@ long-running host instead; that is the main reason a platform is used here.
 | `BLAND_API_KEY` | Bland AI key. Without it, `/voice/call` returns 503. |
 | `VOICE_ALLOWED_NUMBERS` | Comma-separated E.164 numbers that may be called. **Empty means nobody**, by design. |
 | `VOICE_WEBHOOK_URL` | Public URL of `/voice/webhook`. Without it the call still happens, but no SMS is sent. |
-| `VOICE_WEBHOOK_SECRET` | Shared token appended to the webhook URL. Without it the webhook returns 503. |
+| `VOICE_WEBHOOK_SECRET` | Shared token appended to the webhook and ask URLs. Without it the webhook returns 503 and the call can't answer questions. |
+| `VOICE_ASK_URL` | Public URL of `/voice/ask`, if not next to the webhook. |
 | `BLAND_VOICE_HI` | Override the Hindi voice if the default name changes. |
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER` | SMS delivery. Without them the verdict is returned and logged but not texted. |
 

@@ -55,9 +55,10 @@ def test_the_script_forbids_stating_eligibility():
     leaves the prompt, an AI's guess reaches someone as a government answer."""
     hindi = script.build_task("pm-kmy", "hi")
     assert "पात्र है या नहीं" in hindi
-    assert "नतीजा आपको मैसेज पर मिलेगा" in hindi
+    assert "नतीजा आपको मैसेज पर" in hindi
     english = script.build_task("pm-kmy", "en")
-    assert "do NOT tell the person whether they qualify" in english
+    never = english.split("Never:")[1]
+    assert "whether they qualify" in never
 
 
 def test_the_script_forbids_asking_for_otp_or_money():
@@ -281,3 +282,127 @@ def test_read_answers_accepts_booleans_from_the_platform():
     assert profile == {"has_bank_or_post_office_account": True, "age": 19.0,
                        "consents_to_auto_debit": False}
     assert unparsed == []
+
+
+# -- sounding human, and recovering from a bad line -------------------------
+
+
+def test_mishearing_is_recovered_politely_and_never_guessed():
+    """The line is often poor. The agent blames the line, asks again, and
+    after three tries leaves the answer blank rather than guessing."""
+    hindi = script.build_task("pmsby", "hi")
+    assert "अंदाज़ा कभी न लगाएँ" in hindi
+    assert "लाइन में आवाज़ थोड़ी कट गई" in hindi
+    assert "मैं ठीक से सुन नहीं पाया" in hindi
+    assert "ख़ाली छोड़ दें" in hindi
+
+
+def test_numbers_are_read_back_for_confirmation():
+    assert "सही सुना मैंने?" in script.build_task("pm-kmy", "hi")
+    assert "did I get that" in script.build_task("pm-kmy", "en")
+
+
+def test_the_agent_stops_someone_reading_out_a_secret_number():
+    """People do volunteer OTPs and Aadhaar numbers to anyone official-
+    sounding. The agent must stop them, not just avoid asking."""
+    hindi = script.build_task("apy", "hi")
+    assert "यह नंबर मुझे मत बताइए" in hindi
+    english = script.build_task("apy", "en")
+    assert "Please don't" in english and "Do not repeat or record it" in english
+
+
+def test_the_agent_admits_it_is_automated_if_asked():
+    assert "स्वचालित सहायक" in script.build_task("pmsby", "hi")
+    assert "automated assistant" in script.build_task("pmsby", "en")
+
+
+def test_scheme_questions_go_to_the_grounded_tool():
+    for locale in ("hi", "en"):
+        assert "scheme_info" in script.build_task("pmsby", locale)
+
+
+# -- /voice/ask: questions during the call ----------------------------------
+
+
+class FakeLLM:
+    def __init__(self, replies):
+        self.replies = list(replies)
+        self.calls = []
+
+    def complete(self, system, user, tier):
+        self.calls.append(user)
+        return self.replies.pop(0)
+
+
+def _ask(client, question, llm, locale="en", token=SECRET):
+    from api.deps import get_llm
+    app.dependency_overrides[get_llm] = lambda: llm
+    with patch.dict("os.environ", {"VOICE_WEBHOOK_SECRET": SECRET}):
+        return client.post(f"/voice/ask?token={token}",
+                           json={"question": question, "scheme": "pmsby",
+                                 "locale": locale})
+
+
+def test_a_question_mid_call_gets_a_grounded_answer(client):
+    llm = FakeLLM([
+        '{"known": true, "answer": "The premium is Rs. 20 a year.", "used": ["pmsby-premium"]}',
+        '{"claims_checked": 1, "unsupported": []}',
+    ])
+    body = _ask(client, "how much do I pay?", llm).json()
+    assert body == {"answer": "The premium is Rs. 20 a year.", "grounded": True,
+                    "clauses": ["pmsby-premium"]}
+    # The model was given the scheme's own clauses to answer from.
+    assert "pmsby-premium" in llm.calls[0]
+
+
+def test_a_question_the_clauses_cannot_answer_is_admitted_not_invented(client):
+    llm = FakeLLM(['{"known": false, "answer": "", "used": []}'])
+    body = _ask(client, "will I get a free tractor?", llm, locale="hi").json()
+    assert body["grounded"] is False
+    assert "जानकारी मेरे पास नहीं है" in body["answer"]
+
+
+def test_an_unsupported_claim_never_reaches_the_caller(client):
+    llm = FakeLLM([
+        '{"known": true, "answer": "Lots of money.", "used": []}',
+    ])
+    body = _ask(client, "how much?", llm).json()
+    assert body["grounded"] is False
+
+
+def test_the_ask_tool_needs_the_secret(client):
+    """Otherwise it is a free, public LLM endpoint."""
+    response = _ask(client, "hi", FakeLLM([]), token="guess")
+    assert response.status_code == 401
+
+
+def test_the_call_carries_the_ask_tool_only_when_it_is_authenticated(client):
+    captured = {}
+
+    def fake_post(url, headers=None, json=None, timeout=None):
+        captured.update(json)
+
+        class R:
+            status_code = 200
+
+            @staticmethod
+            def json():
+                return {"call_id": "c"}
+        return R()
+
+    env = {"BLAND_API_KEY": "k", "VOICE_ALLOWED_NUMBERS": MY_NUMBER,
+           "VOICE_WEBHOOK_URL": "https://api.example/voice/webhook"}
+    import os
+    os.environ.pop("VOICE_WEBHOOK_SECRET", None)
+    with patch.dict("os.environ", env),          patch("api.voice.bland.requests.post", side_effect=fake_post):
+        body = _post_call(client).json()
+    assert body["answers_questions"] is False
+    assert "tools" not in captured
+
+    with patch.dict("os.environ", {**env, "VOICE_WEBHOOK_SECRET": SECRET}),          patch("api.voice.bland.requests.post", side_effect=fake_post):
+        body = _post_call(client).json()
+    assert body["answers_questions"] is True
+    tool = captured["tools"][0]
+    assert tool["name"] == "scheme_info"
+    assert tool["url"] == f"https://api.example/voice/ask?token={SECRET}"
+    assert tool["body"]["scheme"] == "pmsby"

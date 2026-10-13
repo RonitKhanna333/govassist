@@ -1,6 +1,9 @@
 """POST /voice/call and POST /voice/webhook -- the same conversation, by phone.
 
     /voice/call      -> places a call that asks the scheme's questions
+    /voice/ask       -> called BY the agent mid-call: the person asked
+                        something, and this returns the grounded answer it
+                        is allowed to say
     /voice/webhook   -> the provider posts what it heard; we parse, decide,
                         and send the result with its citation by SMS
 
@@ -29,13 +32,15 @@ import os
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
+from api.agents import conversation
+from api.agents.llm import LLMProvider
 from api.agents.phrases import phrase
-from api.deps import get_language
+from api.deps import get_language, get_llm
 from api.language.providers.base import LanguageError
 from api.language.registry import get as get_locale
 from api.language.service import LanguageService
 from api.routers.chat import SCHEME_NAMES  # noqa: F401 -- re-exported for script.py
-from api.rules.engine import SCHEME_SLUG, Citation, decide, load_rules
+from api.rules.engine import SCHEME_SLUG, Citation, decide, load_clauses, load_rules
 from api.rules.forms import OTHER, derive_fields
 from api.rules.spoken import parse_number, parse_yes_no
 from api.voice import bland, script
@@ -91,8 +96,18 @@ def place_call(body: dict) -> dict:
 
     webhook = os.environ.get("VOICE_WEBHOOK_URL")
     secret = os.environ.get("VOICE_WEBHOOK_SECRET")
-    if webhook and secret:
-        webhook = f"{webhook}?token={secret}"
+    # The agent asks /voice/ask for anything the person wants to know, so
+    # the call can answer questions without a model inventing facts.
+    ask_url = os.environ.get("VOICE_ASK_URL")
+    if not ask_url and webhook:
+        ask_url = webhook.rsplit("/", 1)[0] + "/ask"
+    if secret:
+        if webhook:
+            webhook = f"{webhook}?token={secret}"
+        if ask_url:
+            ask_url = f"{ask_url}?token={secret}"
+    else:
+        ask_url = None  # an unauthenticated tool URL is a public LLM endpoint
 
     try:
         call_id = bland.start_call(
@@ -102,24 +117,86 @@ def place_call(body: dict) -> dict:
             webhook=webhook,
             locale=locale,
             metadata={"scheme": scheme, "locale": locale},
+            ask_url=ask_url,
+            scheme=scheme,
         )
     except bland.VoiceError as exc:
         raise HTTPException(503, str(exc)) from exc
 
     return {"call_id": call_id, "scheme": scheme, "locale": locale,
-            "result_delivery": "sms" if webhook else "none"}
+            "result_delivery": "sms" if webhook else "none",
+            "answers_questions": bool(ask_url)}
+
+
+@router.post("/ask")
+def ask(body: dict, request: Request,
+        llm: LLMProvider = Depends(get_llm),
+        language: LanguageService = Depends(get_language)) -> dict:
+    """A question asked during the call, answered from the scheme's clauses.
+
+    The voice agent is told to call this for anything the person asks and to
+    say back exactly what it returns. That is the only way a call can answer
+    questions without the model inventing amounts, documents or deadlines --
+    the same grounded path the web chat uses (`conversation.answer_question`,
+    which cites clauses and runs the verifier), with the same honest "I don't
+    have that information" when the clauses don't cover it.
+    """
+    _check_webhook_token(request)
+
+    scheme = str(body.get("scheme") or "pmfme")
+    locale = get_locale(body.get("locale") or "hi").code
+    question = str(body.get("question") or "").strip()
+    _check_scheme(scheme)
+    if not question:
+        raise HTTPException(422, "question is required")
+
+    english = question
+    if locale != "en":
+        try:
+            english = language.translate(question, target="en", source=locale).text
+        except LanguageError:
+            pass  # try the question as spoken; Groq handles Hindi input
+
+    clauses = [
+        Citation(clause_id=row["id"], quote=row["quote"], plain=row["plain"],
+                 source_url=row["source_url"], page=row["page"])
+        for row in load_clauses(scheme, repo_root()).values()
+    ]
+    reply = conversation.answer_question(llm, english, clauses)
+
+    if reply.busy:
+        return {"answer": phrase("busy", locale), "grounded": False}
+    if not reply.text:
+        return {"answer": phrase("unknown", locale), "grounded": False}
+
+    spoken = reply.text
+    if locale != "en":
+        try:
+            spoken = language.translate(reply.text, target=locale).text
+        except LanguageError:
+            pass
+    return {
+        "answer": spoken,
+        "grounded": True,
+        "clauses": [c.clause_id for c in reply.citations],
+    }
+
+
+def _check_webhook_token(request: Request) -> None:
+    expected = os.environ.get("VOICE_WEBHOOK_SECRET")
+    if not expected:
+        raise HTTPException(503, "VOICE_WEBHOOK_SECRET is not set")
+    presented = (request.query_params.get("token")
+                 or request.headers.get("x-webhook-token", ""))
+    if not hmac.compare_digest(presented, expected):
+        raise HTTPException(401, "bad webhook token")
 
 
 @router.post("/webhook")
 async def webhook(request: Request,
                   language: LanguageService = Depends(get_language)) -> dict:
     """The provider posts the finished call. We parse, decide, and text back."""
-    expected = os.environ.get("VOICE_WEBHOOK_SECRET")
-    if not expected:
-        raise HTTPException(503, "VOICE_WEBHOOK_SECRET is not set")
-    presented = request.query_params.get("token") or request.headers.get("x-webhook-token", "")
-    if not hmac.compare_digest(presented, expected):
-        raise HTTPException(401, "bad webhook token")
+    _check_webhook_token(request)
 
     body = await request.json()
     if not isinstance(body, dict):
