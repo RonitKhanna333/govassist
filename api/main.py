@@ -23,6 +23,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.auth.router import router as auth_router
 from api.body_limit import BodySizeLimitMiddleware
+from api.family.router import router as family_router
 from api.routers.chat import router as chat_router
 from api.routers.voice import router as voice_router
 
@@ -75,3 +76,4 @@ app.add_middleware(
 app.include_router(chat_router)
 app.include_router(auth_router)
 app.include_router(voice_router)
+app.include_router(family_router)

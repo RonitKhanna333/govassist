@@ -106,7 +106,9 @@ def init_db(engine=None) -> None:
     """Create tables that don't exist yet. Never drops or migrates -- a real
     migration tool (alembic) takes over the moment this needs a schema
     change against data someone cares about keeping."""
-    from api.graph.models import GraphEdge, GraphNode  # noqa: F401 -- registers tables
+    from api.auth.models import User  # noqa: F401 -- registers tables
+    from api.family import models as family_models  # noqa: F401
+    from api.graph.models import GraphEdge, GraphNode  # noqa: F401
 
     engine = engine or get_engine()
     Base.metadata.create_all(engine)
