@@ -381,3 +381,26 @@ def test_dont_know_is_not_a_no(text):
     """Each of these contains a no-word. Recorded as a definite No, a "don't
     know" can deny someone a scheme they qualify for."""
     assert parse_yes_no(text) is None
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("पच्चीस साल", 25), ("मेरी उम्र पैंतीस है", 35), ("पैंसठ", 65),
+    ("अट्ठारह", 18), ("उनचास साल", 49), ("सत्तर", 70),
+    ("एक सौ बीस", 120), ("सौ", 100),
+    ("डेढ़ हेक्टेयर", 1.5), ("ढाई", 2.5), ("साढ़े तीन", 3.5),
+    ("पैंतीस साल, 35", 35),          # said twice to confirm: one answer
+    ("pachchees", 25), ("chalis saal", 40),
+])
+def test_hindi_number_words(text, expected):
+    """Phone transcription writes spoken Hindi in Devanagari. Before this,
+    "पच्चीस साल" read as no number at all, and the first real call's age
+    answer was lost."""
+    assert parse_number(text) == expected
+
+
+@pytest.mark.parametrize("text", [
+    "पच्चीस या तीस",                 # two different numbers
+    "पच्चीस नहीं, तीस",              # a correction is for the person to settle
+])
+def test_hindi_number_ambiguity_is_not_guessed(text):
+    assert parse_number(text) is None

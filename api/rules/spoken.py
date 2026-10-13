@@ -217,6 +217,87 @@ def _number_word_groups(tokens: list[str]) -> list[int]:
     return groups
 
 
+# Hindi number words. Unlike English, every number from 1 to 99 is its own
+# word ("पच्चीस" is 25, not "twenty five"), so these never add up with their
+# neighbours -- except across "सौ" (hundred): "एक सौ बीस" is 120. Phone
+# transcription writes spoken Hindi in Devanagari, so without this table
+# every spoken age failed ("पच्चीस साल" read as no number at all).
+# Common spelling variants (with and without nasal marks, ड/ड़) included.
+_HI_NUMBERS = {
+    "शून्य": 0, "एक": 1, "दो": 2, "तीन": 3, "चार": 4, "पाँच": 5, "पांच": 5,
+    "छह": 6, "छः": 6, "छे": 6, "सात": 7, "आठ": 8, "नौ": 9, "दस": 10,
+    "ग्यारह": 11, "बारह": 12, "तेरह": 13, "चौदह": 14, "पंद्रह": 15, "पन्द्रह": 15,
+    "सोलह": 16, "सत्रह": 17, "अठारह": 18, "अट्ठारह": 18, "उन्नीस": 19, "बीस": 20,
+    "इक्कीस": 21, "बाईस": 22, "तेईस": 23, "चौबीस": 24, "पच्चीस": 25, "पचीस": 25,
+    "छब्बीस": 26, "सत्ताईस": 27, "अट्ठाईस": 28, "अठाईस": 28, "उनतीस": 29, "तीस": 30,
+    "इकतीस": 31, "इकत्तीस": 31, "बत्तीस": 32, "तैंतीस": 33, "तेंतीस": 33,
+    "चौंतीस": 34, "चौतीस": 34, "पैंतीस": 35, "पैतीस": 35, "छत्तीस": 36,
+    "सैंतीस": 37, "सैतीस": 37, "अड़तीस": 38, "अडतीस": 38, "उनतालीस": 39,
+    "उनचालीस": 39, "चालीस": 40, "इकतालीस": 41, "बयालीस": 42, "बियालीस": 42,
+    "तैंतालीस": 43, "तेंतालीस": 43, "चवालीस": 44, "चौवालीस": 44, "पैंतालीस": 45,
+    "पैंतालिस": 45, "छियालीस": 46, "सैंतालीस": 47, "अड़तालीस": 48, "अडतालीस": 48,
+    "उनचास": 49, "पचास": 50, "इक्यावन": 51, "बावन": 52, "तिरपन": 53, "तिरेपन": 53,
+    "चौवन": 54, "चव्वन": 54, "पचपन": 55, "छप्पन": 56, "सत्तावन": 57, "अट्ठावन": 58,
+    "उनसठ": 59, "साठ": 60, "इकसठ": 61, "बासठ": 62, "तिरसठ": 63, "चौंसठ": 64,
+    "चौसठ": 64, "पैंसठ": 65, "छियासठ": 66, "सड़सठ": 67, "सरसठ": 67, "अड़सठ": 68,
+    "उनहत्तर": 69, "सत्तर": 70, "इकहत्तर": 71, "बहत्तर": 72, "तिहत्तर": 73,
+    "चौहत्तर": 74, "पचहत्तर": 75, "छिहत्तर": 76, "सतहत्तर": 77, "अठहत्तर": 78,
+    "उन्यासी": 79, "उनासी": 79, "अस्सी": 80, "इक्यासी": 81, "बयासी": 82,
+    "तिरासी": 83, "चौरासी": 84, "पचासी": 85, "छियासी": 86, "सत्तासी": 87,
+    "अट्ठासी": 88, "नवासी": 89, "नब्बे": 90, "इक्यानवे": 91, "बानवे": 92,
+    "तिरानवे": 93, "चौरानवे": 94, "पचानवे": 95, "पंचानवे": 95, "छियानवे": 96,
+    "सत्तानवे": 97, "अट्ठानवे": 98, "निन्यानवे": 99,
+    # Common romanized forms (Hinglish typing). "do" and "saath" are left
+    # out: they are also English "do" and Hindi "with".
+    "ek": 1, "teen": 3, "char": 4, "paanch": 5, "panch": 5, "chhe": 6,
+    "saat": 7, "aath": 8, "nau": 9, "das": 10, "bees": 20, "pachchees": 25,
+    "pachees": 25, "tees": 30, "chalees": 40, "chalis": 40, "pachaas": 50,
+    "pachas": 50, "sattar": 70, "assi": 80, "nabbe": 90,
+}
+# Fractions people use for land: डेढ़ बीघा, ढाई एकड़, साढ़े तीन.
+_HI_FRACTIONS = {"डेढ़": 1.5, "डेढ": 1.5, "ढाई": 2.5, "आधा": 0.5, "dedh": 1.5, "dhai": 2.5}
+_HI_HUNDRED = {"सौ", "sau"}
+_HI_AND_A_HALF = {"साढ़े", "साढे", "sadhe"}
+
+
+def _hindi_numbers(tokens: list[str]) -> list[float]:
+    found: list[float] = []
+    hundreds: float | None = None   # "एक सौ" waiting for its "बीस"
+    half = False                    # "साढ़े" waiting for its number
+    previous_was_number = False
+    for token in tokens:
+        if token in _HI_AND_A_HALF:
+            half = True
+            previous_was_number = False
+            continue
+        if token in _HI_HUNDRED:
+            base = found.pop() if previous_was_number and found else 1
+            hundreds = base * 100
+            previous_was_number = False
+            continue
+        value = _HI_NUMBERS.get(token)
+        if value is None:
+            value = _HI_FRACTIONS.get(token)
+        if value is None:
+            if hundreds is not None:
+                found.append(hundreds)
+                hundreds = None
+            half = False
+            previous_was_number = False
+            continue
+        if half:
+            value += 0.5
+            half = False
+        if hundreds is not None:
+            value += hundreds
+            hundreds = None
+        found.append(float(value))
+        previous_was_number = True
+    if hundreds is not None:
+        found.append(hundreds)
+    return found
+
+
 def _numbers(text: str) -> list[float]:
     ascii_text = unicodedata.normalize("NFC", text).translate(_DIGIT_TABLE)
     found: list[float] = []
@@ -227,7 +308,9 @@ def _numbers(text: str) -> list[float]:
     if re.search(r"\bminus\b", remainder.lower()):
         groups = _number_word_groups(_tokens(remainder))
         return found + [-g for g in groups]
-    return found + [float(g) for g in _number_word_groups(_tokens(remainder))]
+    tokens = _tokens(remainder)
+    return (found + [float(g) for g in _number_word_groups(tokens)]
+            + _hindi_numbers(tokens))
 
 
 def _as_number(value: float) -> int | float:
@@ -244,6 +327,10 @@ def read_number(text: str) -> Reading:
     # negation around a number is for the person to settle, not for us.
     if _negated(_tokens(text)):
         return Reading(AMBIGUOUS)
+    # "पैंतीस साल, 35" -- the same number said twice, in words and in
+    # digits, as people do when asked to confirm -- is one answer.
+    if len(set(numbers)) == 1:
+        numbers = numbers[:1]
     if len(numbers) > 1:
         return Reading(AMBIGUOUS)
     if len(numbers) == 1:

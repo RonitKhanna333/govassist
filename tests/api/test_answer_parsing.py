@@ -180,8 +180,11 @@ def test_asking_whether_class_8_is_necessary_records_nothing():
 
 
 def test_a_model_answer_with_an_out_of_domain_value_is_not_recorded():
+    # Needs an answer the deterministic parser can't read, so the model is
+    # consulted. ("pachchees" was used here until Hindi number words were
+    # added to the parser; it now reads, correctly, as 25.)
     llm = FakeLLM(['{"type": "answer", "value": -3}', "{}"])
-    body = _say(llm, WITHOUT_AGE, "pachchees")
+    body = _say(llm, WITHOUT_AGE, "umar kaafi ho gayi hai")
     assert "age" not in body["profile"]
 
 
