@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 from urllib.parse import urlsplit, urlunsplit
 
@@ -23,6 +24,7 @@ from api.voice import bland, script
 from parse_scheme import repo_root
 
 router = APIRouter(prefix="/account", tags=["account"])
+log = logging.getLogger(__name__)
 
 
 class InterviewBody(BaseModel):
@@ -112,10 +114,18 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
             max_minutes=max_minutes,
         )
     except bland.VoiceError as exc:
+        log.warning("Callback failed: locale=%s operation=%s provider_status=%s",
+                    body.locale, exc.operation, exc.status_code)
         with sessions() as session:
             record = session.get(CallRecord, record_id)
             service.complete_record(record, "failed", [], {}, {})
             session.commit()
+        if exc.status_code in (401, 403):
+            raise HTTPException(503, {"code": "CALLBACK_PROVIDER_ACCESS_DENIED",
+                                      "message": str(exc),
+                                      "provider_status": exc.status_code,
+                                      "provider_operation": exc.operation,
+                                      "locale": body.locale}) from exc
         raise HTTPException(503, str(exc)) from exc
     with sessions() as session:
         record = session.get(CallRecord, record_id)

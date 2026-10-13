@@ -117,6 +117,21 @@ def test_provider_failure_is_saved_and_retry_allowed(setup, monkeypatch):
     assert client.post("/account/callback", headers=headers, json={"consent": True}).status_code == 200
 
 
+def test_provider_denial_returns_diagnostic_code_and_saves_failed_call(setup, monkeypatch):
+    client, headers, _ = setup
+    def fail(**kwargs):
+        raise bland.VoiceError("Calling access denied", status_code=403, operation="GET /tools")
+    monkeypatch.setattr(bland, "start_call", fail)
+    response = client.post("/account/callback", headers=headers, json={"consent": True, "locale": "hi"})
+    assert response.status_code == 503
+    assert response.json()["detail"] == {
+        "code": "CALLBACK_PROVIDER_ACCESS_DENIED", "message": "Calling access denied",
+        "provider_status": 403, "provider_operation": "GET /tools", "locale": "hi",
+    }
+    history = client.get("/account/dashboard", headers=headers).json()["calls"]
+    assert history[0]["status"] == "failed"
+
+
 class QuotingLLM:
     def complete(self, *args):
         return json.dumps({"age": "30", "has_bank_or_post_office_account": "not sure",

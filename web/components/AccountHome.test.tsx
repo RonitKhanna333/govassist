@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { AccountHome } from "./AccountHome";
 import { setToken } from "@/lib/family";
+import { AccountError } from "@/lib/account";
 
 const mocks = vi.hoisted(() => ({ register: vi.fn(), login: vi.fn(), interview: vi.fn(), dashboard: vi.fn(), answer: vi.fn(), callback: vi.fn() }));
 vi.mock("@/lib/account", async original => ({ ...(await original<typeof import("@/lib/account")>()), account: mocks }));
@@ -35,6 +36,41 @@ it("requires explicit callback consent and exposes provider failure", async () =
   await screen.findByRole("alert");
   expect(screen.getByText("Calling is not configured")).toBeTruthy();
   expect(mocks.callback).toHaveBeenCalledWith(true, "en");
+});
+
+it("removes the previous success notice when a later callback fails", async () => {
+  setToken("signed-in");
+  mocks.callback.mockResolvedValueOnce({ id: 1, status: "requested" })
+    .mockRejectedValueOnce(new AccountError("Denied", 503, "CALLBACK_PROVIDER_ACCESS_DENIED"));
+  render(<AccountHome />);
+  fireEvent.click(screen.getByRole("checkbox"));
+  fireEvent.click(screen.getByRole("button", { name: "Call me back" }));
+  await screen.findByText(/Your callback was requested/);
+  await waitFor(() => expect((screen.getByRole("button", { name: "Call me back" }) as HTMLButtonElement).disabled).toBe(false));
+  fireEvent.click(screen.getByRole("button", { name: "Call me back" }));
+  await screen.findByText(/No callback was confirmed/);
+  expect(screen.queryByText(/Your callback was requested/)).toBeNull();
+});
+
+it("keeps callback success translated when the language changes", async () => {
+  setToken("signed-in"); mocks.callback.mockResolvedValue({ id: 1, status: "requested" });
+  render(<AccountHome />);
+  fireEvent.click(screen.getByRole("checkbox"));
+  fireEvent.click(screen.getByRole("button", { name: "Call me back" }));
+  await screen.findByText(/Your callback was requested/);
+  fireEvent.change(screen.getByRole("combobox"), { target: { value: "hi" } });
+  expect(screen.getByText(/कॉल का अनुरोध भेज दिया गया है/)).toBeTruthy();
+  expect(screen.queryByText(/Your callback was requested/)).toBeNull();
+});
+
+it("explains calling access failure in Hindi without a success notice", async () => {
+  setToken("signed-in"); mocks.callback.mockRejectedValue(new AccountError("Denied", 503, "CALLBACK_PROVIDER_ACCESS_DENIED"));
+  render(<AccountHome />);
+  fireEvent.change(screen.getByRole("combobox"), { target: { value: "hi" } });
+  fireEvent.click(screen.getByRole("checkbox"));
+  fireEvent.click(screen.getByRole("button", { name: "मुझे कॉल करें" }));
+  await screen.findByText(/कॉल की पुष्टि नहीं हुई है/);
+  expect(screen.queryByText(/कॉल का अनुरोध भेज दिया गया है/)).toBeNull();
 });
 
 it("saves a typed answer and advances using the question returned by the server", async () => {

@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import os
 import re
+import logging
 
 import requests
 
@@ -45,10 +46,17 @@ TOOL_PREFIX = "GovAssist scheme info"
 # Tool ids already resolved by this process, keyed by tool name. A cold
 # start re-resolves by listing, so tools are not duplicated per instance.
 _tool_ids: dict[str, str] = {}
+log = logging.getLogger(__name__)
 
 
 class VoiceError(Exception):
     """Calling could not be attempted, or the provider refused."""
+
+    def __init__(self, message: str, *, status_code: int | None = None,
+                 operation: str | None = None):
+        super().__init__(message)
+        self.status_code = status_code
+        self.operation = operation
 
 
 def configured() -> bool:
@@ -56,7 +64,7 @@ def configured() -> bool:
 
 
 def _key() -> str:
-    key = os.environ.get("BLAND_API_KEY")
+    key = os.environ.get("BLAND_API_KEY", "").strip()
     if not key:
         raise VoiceError("BLAND_API_KEY is not set")
     return key
@@ -73,13 +81,26 @@ def _request(method: str, path: str, *, json: dict | None = None,
         )
     except requests.RequestException as exc:
         raise VoiceError(f"could not reach Bland: {exc}") from exc
+    operation = f"{method} {path}"
     try:
         body = response.json()
     except ValueError:
-        raise VoiceError(f"Bland returned {response.status_code}") from None
+        body = {}
+    if response.status_code in (401, 403):
+        # Never log the request payload, secret tool URLs or provider HTML.
+        log.warning("Bland denied %s (HTTP %s)", operation, response.status_code)
+        raise VoiceError(
+            "The calling service denied this request. The operator needs to check "
+            "the Bland API key and account access. No callback was confirmed.",
+            status_code=response.status_code, operation=operation,
+        )
+    if not isinstance(body, dict) or not body:
+        raise VoiceError(f"Bland returned {response.status_code} with an invalid response",
+                         status_code=response.status_code, operation=operation)
     if response.status_code >= 400 or body.get("status") == "error":
         message = body.get("message") or body.get("errors") or response.status_code
-        raise VoiceError(f"Bland refused: {message}")
+        raise VoiceError(f"Bland refused: {message}", status_code=response.status_code,
+                         operation=operation)
     return body
 
 
