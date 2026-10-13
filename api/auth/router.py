@@ -9,13 +9,14 @@ answers you already gave.
 from __future__ import annotations
 
 import json
+import logging
 import math
 import re
 
 from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, OperationalError
 
 from api.auth.models import User
 from api.auth.security import (
@@ -26,10 +27,16 @@ from api.auth.security import (
     jwt_secret,
     verify_password,
 )
-from api.db import DatabaseConfigError, get_session_factory, init_db
+from api.db import (
+    DatabaseConfigError,
+    describe_connection_error,
+    get_session_factory,
+    init_db,
+)
 from api.rate_limit import auth_rate_limiter, enforce
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+log = logging.getLogger(__name__)
 
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 MIN_PASSWORD_LENGTH = 10
@@ -64,6 +71,11 @@ def get_sessions():
         return get_session_factory()
     except DatabaseConfigError as exc:
         raise HTTPException(503, str(exc)) from exc
+    except OperationalError as exc:
+        # A wrong password or host otherwise surfaces as a bare 500 with
+        # nothing to go on. Log the real error; tell the caller the cause.
+        log.warning("database connection failed: %s", exc)
+        raise HTTPException(503, describe_connection_error(exc)) from exc
 
 
 def _public(user: User) -> dict:

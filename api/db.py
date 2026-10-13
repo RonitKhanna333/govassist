@@ -49,6 +49,39 @@ class DatabaseConfigError(RuntimeError):
     """Raised when the environment can't support the database we'd fall back to."""
 
 
+# Driver error text -> a plain cause. Only the category is ever shown: the
+# raw message can carry the host and user name, and a connection string
+# pasted with its password into the wrong place could surface in it.
+_CONNECTION_CAUSES = (
+    ("password authentication failed", "the database password was rejected -- "
+     "check DATABASE_URL has the right password, with no [ ] brackets left in"),
+    ("tenant or user not found", "the pooler doesn't recognise the user -- for "
+     "Supabase's pooler the user is 'postgres.<project-ref>', exactly as the "
+     "dashboard shows it"),
+    ("could not translate host name", "the database host name doesn't resolve -- "
+     "check the host part of DATABASE_URL"),
+    ("name or service not known", "the database host name doesn't resolve -- "
+     "check the host part of DATABASE_URL"),
+    ("network is unreachable", "the database host is unreachable from here -- "
+     "Supabase's direct host is IPv6-only; use the pooler URL (port 6543)"),
+    ("timeout", "the database didn't answer in time -- check the host and port "
+     "(Supabase's transaction pooler is port 6543)"),
+    ("timed out", "the database didn't answer in time -- check the host and port "
+     "(Supabase's transaction pooler is port 6543)"),
+    ("connection refused", "the database refused the connection -- check the port"),
+    ("ssl", "the database connection failed during SSL setup"),
+)
+
+
+def describe_connection_error(exc: BaseException) -> str:
+    text = str(exc).lower()
+    for needle, cause in _CONNECTION_CAUSES:
+        if needle in text:
+            return f"Can't reach the database: {cause}."
+    return ("Can't reach the database. DATABASE_URL is set but the connection "
+            "failed; check it against the provider's connection string.")
+
+
 def resolve_url(url: str | None = None) -> str:
     configured = url or os.environ.get("DATABASE_URL")
     if configured:
