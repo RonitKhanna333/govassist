@@ -64,6 +64,56 @@ def voice_health() -> dict:
     }
 
 
+@router.get("/firewall-probe")
+def firewall_probe(request: Request, rounds: int = 2) -> dict:
+    """Which call bodies Bland's Cloudflare blocks *from this server*.
+
+    Sends candidate POST /v1/calls bodies with a deliberately invalid API
+    key: a body the firewall lets through gets Bland's ordinary 401, a
+    blocked one gets Cloudflare's HTML. No call can be placed and no credit
+    is used. Secret-gated.
+    """
+    import json as json_codec
+
+    import requests as http
+
+    _check_webhook_token(request)
+    from api.onboarding.router import _task_for
+
+    webhook, _ = _callback_urls()
+    variants = {
+        "tiny_ascii": "Say hello.",
+        "tiny_devanagari": "नमस्ते कहिए।",
+        "hindi_short_romanized": _task_for("hi", "Test"),
+        "hinglish_short": script.build_interview_task("hi-Latn", "Test"),
+        "hindi_devanagari_short": script.build_interview_task("hi", "Test", short=True),
+        "scheme_hindi_devanagari": script.build_task("pmsby", "hi"),
+    }
+    report: dict = {}
+    for name, task in variants.items():
+        outcomes = []
+        for with_webhook in (False, True):
+            for _ in range(max(1, min(rounds, 4))):
+                body = {"phone_number": "+910000000000", "task": task, "language": "hi",
+                        "max_duration": 3, "wait_for_greeting": True,
+                        "metadata": {"kind": "interview", "locale": "hi"}}
+                if with_webhook and webhook:
+                    body["webhook"] = webhook
+                try:
+                    r = http.post(f"{bland.BASE_URL}/calls",
+                                  data=json_codec.dumps(body, ensure_ascii=False).encode("utf-8"),
+                                  headers={"Content-Type": "application/json",
+                                           "Authorization": "probe-invalid-key"},
+                                  timeout=20)
+                    blocked = r.status_code == 403 and "cloudflare" in r.text[:3000].lower()
+                    outcomes.append(("webhook " if with_webhook else "") +
+                                    ("BLOCKED" if blocked else f"pass({r.status_code})"))
+                except http.RequestException as exc:
+                    outcomes.append(f"error({type(exc).__name__})")
+        report[name] = {"chars": len(task), "ascii": task.isascii(), "results": outcomes}
+    return report
+
+
 @router.get("/check")
 def check(request: Request) -> dict:
     """Everything that can be checked without placing a call (no credit used).
