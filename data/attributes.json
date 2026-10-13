@@ -129,7 +129,10 @@
     "ask": "How many people work in your business?",
     "help": "Count everyone who works there, including yourself and any family members who help.",
     "unit": "people",
-    "value": {"integer": true, "min": 0},
+    "value": {
+      "integer": true,
+      "min": 0
+    },
     "label": "People working",
     "i18n": {
       "hi": {
@@ -177,7 +180,10 @@
   "age": {
     "ask": "How old are you?",
     "unit": "years",
-    "value": {"integer": true, "min": 0},
+    "value": {
+      "integer": true,
+      "min": 0
+    },
     "label": "Your age",
     "i18n": {
       "hi": {
@@ -268,7 +274,10 @@
     "ask": "What share of the total cost can you pay yourself?",
     "help": "You need to put in at least 10 out of every 100 rupees of the project cost. A bank loan can cover most of the rest.",
     "unit": "percent",
-    "value": {"min": 0, "max": 100},
+    "value": {
+      "min": 0,
+      "max": 100
+    },
     "label": "Share you can pay",
     "i18n": {
       "hi": {
@@ -469,7 +478,9 @@
     "ask": "How much farmland do you own, in hectares?",
     "help": "1 hectare is about 2.5 acres. So 2 hectares is about 5 acres.",
     "unit": "hectares",
-    "value": {"min": 0},
+    "value": {
+      "min": 0
+    },
     "label": "Land owned",
     "i18n": {
       "hi": {
@@ -596,6 +607,139 @@
       "ta": {
         "ask": "நீங்கள் பதிவுசெய்த மருத்துவர், பொறியாளர், வழக்கறிஞர், பட்டயக் கணக்காளர் அல்லது கட்டடக் கலைஞராகப் பணிபுரிகிறீர்களா?",
         "label": "மருத்துவர்/வழக்கறிஞர் போன்ற தொழில்"
+      }
+    }
+  },
+  "is_street_vendor": {
+    "ask": "Do you sell things or services on the street, footpath or market for a living?",
+    "help": "For example: a vegetable or fruit cart, tea or food stall, cobbler, barber, or selling while moving from place to place.",
+    "label": "Street vendor",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप सड़क, फ़ुटपाथ या बाज़ार में सामान या सेवा बेचकर कमाते हैं?",
+        "help": "जैसे: सब्ज़ी या फल का ठेला, चाय या खाने की दुकान, मोची, नाई, या घूम-घूमकर बेचना।",
+        "label": "रेहड़ी-पटरी वाले"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਸੜਕ, ਫੁੱਟਪਾਥ ਜਾਂ ਬਾਜ਼ਾਰ ਵਿੱਚ ਸਮਾਨ ਜਾਂ ਸੇਵਾ ਵੇਚ ਕੇ ਕਮਾਉਂਦੇ ਹੋ?",
+        "help": "ਜਿਵੇਂ: ਸਬਜ਼ੀ ਜਾਂ ਫਲ ਦੀ ਰੇਹੜੀ, ਚਾਹ ਜਾਂ ਖਾਣੇ ਦੀ ਦੁਕਾਨ, ਮੋਚੀ, ਨਾਈ, ਜਾਂ ਘੁੰਮ-ਫਿਰ ਕੇ ਵੇਚਣਾ।",
+        "label": "ਰੇਹੜੀ-ਫੜ੍ਹੀ ਵਾਲੇ"
+      },
+      "ta": {
+        "ask": "தெரு, நடைபாதை அல்லது சந்தையில் பொருட்கள் அல்லது சேவைகளை விற்று வாழ்கிறீர்களா?",
+        "help": "உதாரணம்: காய்கறி அல்லது பழ வண்டி, டீ அல்லது உணவுக் கடை, செருப்புத் தைப்பவர், முடி திருத்துபவர், அல்லது சுற்றி விற்பது.",
+        "label": "தெருவோர வியாபாரி"
+      }
+    }
+  },
+  "vends_in_town_or_peri_urban": {
+    "ask": "Do you sell in a town or city, or in an area next to one?",
+    "help": "This scheme is for towns and the areas around them, not for villages far from a town.",
+    "label": "Sells in a town or near one",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप किसी शहर या कस्बे में, या उसके पास के इलाक़े में बेचते हैं?",
+        "help": "यह योजना शहरों-कस्बों और उनके आसपास के इलाक़ों के लिए है, दूर के गाँवों के लिए नहीं।",
+        "label": "शहर या पास में बेचते हैं"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਕਿਸੇ ਸ਼ਹਿਰ ਜਾਂ ਕਸਬੇ ਵਿੱਚ, ਜਾਂ ਉਸਦੇ ਨੇੜਲੇ ਇਲਾਕੇ ਵਿੱਚ ਵੇਚਦੇ ਹੋ?",
+        "help": "ਇਹ ਯੋਜਨਾ ਸ਼ਹਿਰਾਂ-ਕਸਬਿਆਂ ਅਤੇ ਉਨ੍ਹਾਂ ਦੇ ਆਲੇ-ਦੁਆਲੇ ਲਈ ਹੈ, ਦੂਰ ਦੇ ਪਿੰਡਾਂ ਲਈ ਨਹੀਂ।",
+        "label": "ਸ਼ਹਿਰ ਜਾਂ ਨੇੜੇ ਵੇਚਦੇ ਹਨ"
+      },
+      "ta": {
+        "ask": "நகரம் அல்லது சிறு நகரத்தில், அல்லது அதன் அருகில் விற்கிறீர்களா?",
+        "help": "இந்தத் திட்டம் நகரங்களுக்கும் அவற்றின் சுற்றுப்புறங்களுக்கும் உரியது, தொலைதூர கிராமங்களுக்கு அல்ல.",
+        "label": "நகரத்தில் அல்லது அருகில் விற்பவர்"
+      }
+    }
+  },
+  "household_is_bpl": {
+    "ask": "Is your household poor, below the poverty line (BPL)?",
+    "help": "Even if your name is not on the BPL list, you should not be left out. The panchayat can check your case.",
+    "label": "Poor (BPL) household",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आपका परिवार ग़रीब है, यानी गरीबी रेखा से नीचे (BPL)?",
+        "help": "अगर आपका नाम BPL सूची में नहीं है, तब भी आपको छोड़ा नहीं जाना चाहिए। पंचायत आपका मामला जाँच सकती है।",
+        "label": "ग़रीब (BPL) परिवार"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਹਾਡਾ ਪਰਿਵਾਰ ਗ਼ਰੀਬ ਹੈ, ਯਾਨੀ ਗ਼ਰੀਬੀ ਰੇਖਾ ਤੋਂ ਹੇਠਾਂ (BPL)?",
+        "help": "ਜੇ ਤੁਹਾਡਾ ਨਾਂ BPL ਸੂਚੀ ਵਿੱਚ ਨਹੀਂ ਹੈ, ਤਾਂ ਵੀ ਤੁਹਾਨੂੰ ਛੱਡਿਆ ਨਹੀਂ ਜਾਣਾ ਚਾਹੀਦਾ। ਪੰਚਾਇਤ ਤੁਹਾਡਾ ਮਾਮਲਾ ਜਾਂਚ ਸਕਦੀ ਹੈ।",
+        "label": "ਗ਼ਰੀਬ (BPL) ਪਰਿਵਾਰ"
+      },
+      "ta": {
+        "ask": "உங்கள் குடும்பம் வறுமைக் கோட்டுக்குக் கீழே (BPL) உள்ளதா?",
+        "help": "உங்கள் பெயர் BPL பட்டியலில் இல்லாவிட்டாலும் நீங்கள் விடுபடக்கூடாது. ஊராட்சி உங்கள் நிலையைச் சரிபார்க்கலாம்.",
+        "label": "வறுமைக் கோட்டுக்குக் கீழ் குடும்பம்"
+      }
+    }
+  },
+  "is_woman": {
+    "ask": "Is the person applying a woman?",
+    "help": "Some schemes, like the free gas connection, are given only in a woman's name.",
+    "label": "Woman",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आवेदन करने वाली एक महिला हैं?",
+        "help": "कुछ योजनाएँ, जैसे मुफ़्त गैस कनेक्शन, सिर्फ़ महिला के नाम पर मिलती हैं।",
+        "label": "महिला"
+      },
+      "pa": {
+        "ask": "ਕੀ ਅਰਜ਼ੀ ਦੇਣ ਵਾਲੀ ਇੱਕ ਔਰਤ ਹੈ?",
+        "help": "ਕੁਝ ਯੋਜਨਾਵਾਂ, ਜਿਵੇਂ ਮੁਫ਼ਤ ਗੈਸ ਕੁਨੈਕਸ਼ਨ, ਸਿਰਫ਼ ਔਰਤ ਦੇ ਨਾਂ 'ਤੇ ਮਿਲਦੀਆਂ ਹਨ।",
+        "label": "ਔਰਤ"
+      },
+      "ta": {
+        "ask": "விண்ணப்பிப்பவர் ஒரு பெண்ணா?",
+        "help": "இலவச எரிவாயு இணைப்பு போன்ற சில திட்டங்கள் பெண்ணின் பெயரில் மட்டுமே வழங்கப்படும்.",
+        "label": "பெண்"
+      }
+    }
+  },
+  "household_has_lpg_or_png": {
+    "ask": "Does anyone in your home already have a gas cylinder connection or piped gas?",
+    "help": "Home here means everyone who lives together and cooks in one kitchen. A connection you had before also counts.",
+    "warn_if_yes": true,
+    "label": "Home already has gas",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आपके घर में किसी के पास पहले से गैस सिलेंडर कनेक्शन या पाइप वाली गैस है?",
+        "help": "घर यानी वे सब लोग जो साथ रहते हैं और एक ही रसोई में खाना बनाते हैं। पहले रहा कनेक्शन भी गिना जाता है।",
+        "label": "घर में पहले से गैस है"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਹਾਡੇ ਘਰ ਵਿੱਚ ਕਿਸੇ ਕੋਲ ਪਹਿਲਾਂ ਹੀ ਗੈਸ ਸਿਲੰਡਰ ਕੁਨੈਕਸ਼ਨ ਜਾਂ ਪਾਈਪ ਵਾਲੀ ਗੈਸ ਹੈ?",
+        "help": "ਘਰ ਯਾਨੀ ਉਹ ਸਾਰੇ ਜੋ ਇਕੱਠੇ ਰਹਿੰਦੇ ਹਨ ਅਤੇ ਇੱਕੋ ਰਸੋਈ ਵਿੱਚ ਖਾਣਾ ਬਣਾਉਂਦੇ ਹਨ। ਪਹਿਲਾਂ ਵਾਲਾ ਕੁਨੈਕਸ਼ਨ ਵੀ ਗਿਣਿਆ ਜਾਂਦਾ ਹੈ।",
+        "label": "ਘਰ ਵਿੱਚ ਪਹਿਲਾਂ ਹੀ ਗੈਸ ਹੈ"
+      },
+      "ta": {
+        "ask": "உங்கள் வீட்டில் யாரிடமாவது ஏற்கனவே எரிவாயு சிலிண்டர் இணைப்பு அல்லது குழாய் எரிவாயு உள்ளதா?",
+        "help": "வீடு என்றால் ஒன்றாக வாழ்ந்து ஒரே சமையலறையில் சமைக்கும் அனைவரும். முன்பு இருந்த இணைப்பும் கணக்கில் வரும்.",
+        "label": "வீட்டில் ஏற்கனவே எரிவாயு உள்ளது"
+      }
+    }
+  },
+  "will_give_deprivation_declaration": {
+    "ask": "Will you fill in a form saying your household is poor, and let officials check it?",
+    "help": "This is called the Deprivation Declaration. Officials may visit your home to check it.",
+    "label": "Will give the poverty declaration",
+    "i18n": {
+      "hi": {
+        "ask": "क्या आप अपने परिवार के ग़रीब होने का फ़ॉर्म भरेंगी, और अधिकारियों को उसकी जाँच करने देंगी?",
+        "help": "इसे वंचना घोषणा (Deprivation Declaration) कहते हैं। अधिकारी जाँच के लिए घर आ सकते हैं।",
+        "label": "ग़रीबी घोषणा देंगी"
+      },
+      "pa": {
+        "ask": "ਕੀ ਤੁਸੀਂ ਆਪਣੇ ਪਰਿਵਾਰ ਦੇ ਗ਼ਰੀਬ ਹੋਣ ਦਾ ਫ਼ਾਰਮ ਭਰੋਗੇ, ਅਤੇ ਅਧਿਕਾਰੀਆਂ ਨੂੰ ਉਸਦੀ ਜਾਂਚ ਕਰਨ ਦਿਓਗੇ?",
+        "help": "ਇਸਨੂੰ ਡਿਪ੍ਰਾਈਵੇਸ਼ਨ ਡੈਕਲਰੇਸ਼ਨ ਕਹਿੰਦੇ ਹਨ। ਅਧਿਕਾਰੀ ਜਾਂਚ ਲਈ ਘਰ ਆ ਸਕਦੇ ਹਨ।",
+        "label": "ਗ਼ਰੀਬੀ ਘੋਸ਼ਣਾ ਦੇਣਗੇ"
+      },
+      "ta": {
+        "ask": "உங்கள் குடும்பம் வறுமையில் உள்ளது என்ற படிவத்தை நிரப்பி, அதிகாரிகள் சரிபார்க்க அனுமதிப்பீர்களா?",
+        "help": "இது வறுமை அறிவிப்பு (Deprivation Declaration) எனப்படும். அதிகாரிகள் சரிபார்க்க வீட்டுக்கு வரலாம்.",
+        "label": "வறுமை அறிவிப்பு தருவார்"
       }
     }
   }

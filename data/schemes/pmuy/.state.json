@@ -1,0 +1,26 @@
+{
+  "clauses": {},
+  "conditions": {},
+  "created_at": "2026-10-13T18:10:44+00:00",
+  "gates": {
+    "0_source": {
+      "at": "2026-10-13T18:10:44+00:00",
+      "by": "RonitKhanna333 (answered in chat; relayed by Claude)",
+      "note": "https://www.pmuy.gov.in/documents/Ujjwala-KYC_englishnew.pdf",
+      "status": "approved"
+    },
+    "1_identity": {
+      "at": "2026-10-13T18:10:47+00:00",
+      "by": "RonitKhanna333 (answered in chat; relayed by Claude)",
+      "note": "kyc-form.pdf sha256:e2ecac3614bacb5febbf6fe3ef190c41b4bbe0835c33dec61b7a8de95cd780ad",
+      "status": "approved"
+    },
+    "2_extraction": {
+      "at": "2026-10-13T18:10:48+00:00",
+      "by": "RonitKhanna333 (answered in chat; relayed by Claude)",
+      "note": "2 pages, 9017 chars",
+      "status": "approved"
+    }
+  },
+  "scheme": "pmuy"
+}

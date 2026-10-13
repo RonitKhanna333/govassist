@@ -1,0 +1,41 @@
+{
+  "authority": "Ministry of Housing and Urban Affairs",
+  "conditions": [
+    {
+      "asks": "Is the applicant a 'Street Vendor' as defined in the Street Vendors Act, 2014?",
+      "clause": "svanidhi-street-vendor-definition",
+      "expr": "profile.is_street_vendor == true",
+      "id": "is_street_vendor",
+      "reads": [
+        "is_street_vendor"
+      ]
+    },
+    {
+      "asks": "Is the vendor vending in a city-region (statutory town, census town or peri-urban area)?",
+      "clause": "svanidhi-target-beneficiaries",
+      "expr": "profile.vends_in_town_or_peri_urban == true",
+      "id": "vends_in_covered_area",
+      "reads": [
+        "vends_in_town_or_peri_urban"
+      ]
+    }
+  ],
+  "decision": "ALL(conditions)",
+  "effective_from": null,
+  "effective_to": null,
+  "name_en": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+  "scheme": "pm-svanidhi",
+  "sources": [
+    {
+      "checksum": "sha256:c3e73b7107ee281e8c875478604722d0fdb8234ed0f4ebd8644a79d7722c43be",
+      "extractor": "pdfminer.six",
+      "id": "scheme-guidelines",
+      "pdf": "source/scheme-guidelines.pdf",
+      "retrieved_at": "2026-10-13",
+      "txt": "source/scheme-guidelines.txt",
+      "url": "https://www.mohua.gov.in/static/uploads/2026/01/bde957bc3a87fb001c05ddd09484edda.pdf"
+    }
+  ],
+  "tier": 1,
+  "version": 1
+}

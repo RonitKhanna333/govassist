@@ -1,0 +1,278 @@
+{
+  "edges": [
+    {
+      "from": "clause:svanidhi-certificate-or-recommendation",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:svanidhi-coverage",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:svanidhi-credit-card",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:svanidhi-interest-subsidy",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:svanidhi-loan-tranches",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:svanidhi-next-tranche",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:svanidhi-seasonal-or-mobile",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:svanidhi-street-vendor-definition",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_street_vendor"
+    },
+    {
+      "from": "clause:svanidhi-street-vendor-definition",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "clause:svanidhi-target-beneficiaries",
+      "predicate": "BEARS_ON",
+      "to": "attribute:vends_in_town_or_peri_urban"
+    },
+    {
+      "from": "clause:svanidhi-target-beneficiaries",
+      "predicate": "FROM",
+      "to": "source:scheme-guidelines"
+    },
+    {
+      "from": "condition:is_street_vendor",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:svanidhi-street-vendor-definition"
+    },
+    {
+      "from": "condition:is_street_vendor",
+      "predicate": "TESTS",
+      "to": "attribute:is_street_vendor"
+    },
+    {
+      "from": "condition:vends_in_covered_area",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:svanidhi-target-beneficiaries"
+    },
+    {
+      "from": "condition:vends_in_covered_area",
+      "predicate": "TESTS",
+      "to": "attribute:vends_in_town_or_peri_urban"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:svanidhi-certificate-or-recommendation"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:svanidhi-coverage"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:svanidhi-credit-card"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:svanidhi-interest-subsidy"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:svanidhi-loan-tranches"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:svanidhi-next-tranche"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:svanidhi-seasonal-or-mobile"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:svanidhi-street-vendor-definition"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:svanidhi-target-beneficiaries"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "PROVIDES",
+      "to": "clause:svanidhi-credit-card"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "PROVIDES",
+      "to": "clause:svanidhi-interest-subsidy"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "PROVIDES",
+      "to": "clause:svanidhi-loan-tranches"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "PROVIDES",
+      "to": "clause:svanidhi-next-tranche"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "REQUIRES",
+      "to": "condition:is_street_vendor"
+    },
+    {
+      "from": "scheme:pm-svanidhi",
+      "predicate": "REQUIRES",
+      "to": "condition:vends_in_covered_area"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "attribute:is_street_vendor",
+      "name": "is_street_vendor",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:vends_in_town_or_peri_urban",
+      "name": "vends_in_town_or_peri_urban",
+      "type": "Attribute"
+    },
+    {
+      "clause_type": "procedure",
+      "id": "clause:svanidhi-certificate-or-recommendation",
+      "page": 3,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "definition",
+      "id": "clause:svanidhi-coverage",
+      "page": 3,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:svanidhi-credit-card",
+      "page": 5,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:svanidhi-interest-subsidy",
+      "page": 4,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:svanidhi-loan-tranches",
+      "page": 4,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:svanidhi-next-tranche",
+      "page": 4,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:svanidhi-seasonal-or-mobile",
+      "page": 11,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "definition",
+      "id": "clause:svanidhi-street-vendor-definition",
+      "page": 11,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:svanidhi-target-beneficiaries",
+      "page": 3,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "asks": "Is the applicant a 'Street Vendor' as defined in the Street Vendors Act, 2014?",
+      "expr": "profile.is_street_vendor == true",
+      "id": "condition:is_street_vendor",
+      "type": "Condition"
+    },
+    {
+      "asks": "Is the vendor vending in a city-region (statutory town, census town or peri-urban area)?",
+      "expr": "profile.vends_in_town_or_peri_urban == true",
+      "id": "condition:vends_in_covered_area",
+      "type": "Condition"
+    },
+    {
+      "authority": "Ministry of Housing and Urban Affairs",
+      "effective_from": null,
+      "effective_to": null,
+      "id": "scheme:pm-svanidhi",
+      "name": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+      "tier": 1,
+      "type": "Scheme",
+      "version": 1
+    },
+    {
+      "checksum": "sha256:c3e73b7107ee281e8c875478604722d0fdb8234ed0f4ebd8644a79d7722c43be",
+      "id": "source:scheme-guidelines",
+      "retrieved_at": "2026-10-13",
+      "type": "SourceDocument",
+      "url": "https://www.mohua.gov.in/static/uploads/2026/01/bde957bc3a87fb001c05ddd09484edda.pdf"
+    }
+  ],
+  "scheme": "pm-svanidhi",
+  "version": 1
+}

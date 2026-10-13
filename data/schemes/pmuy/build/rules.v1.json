@@ -1,0 +1,60 @@
+{
+  "authority": "Ministry of Petroleum and Natural Gas",
+  "conditions": [
+    {
+      "asks": "Is the applicant an adult woman (18 years and above)?",
+      "clause": "pmuy-adult-woman",
+      "expr": "profile.is_woman == true and profile.age >= 18",
+      "id": "adult_woman",
+      "reads": [
+        "age",
+        "is_woman"
+      ]
+    },
+    {
+      "asks": "Is the applicant an Indian citizen residing in India?",
+      "clause": "pmuy-citizen",
+      "expr": "profile.is_indian_citizen == true",
+      "id": "indian_citizen",
+      "reads": [
+        "is_indian_citizen"
+      ]
+    },
+    {
+      "asks": "Does the applicant or any household member possess an LPG or Piped Natural Gas connection?",
+      "clause": "pmuy-no-existing-connection",
+      "expr": "profile.household_has_lpg_or_png == false",
+      "id": "no_lpg_in_household",
+      "reads": [
+        "household_has_lpg_or_png"
+      ]
+    },
+    {
+      "asks": "Will the applicant fill in the Deprivation Declaration and consent to its verification?",
+      "clause": "pmuy-deprivation-declaration",
+      "expr": "profile.will_give_deprivation_declaration == true",
+      "id": "gives_deprivation_declaration",
+      "reads": [
+        "will_give_deprivation_declaration"
+      ]
+    }
+  ],
+  "decision": "ALL(conditions)",
+  "effective_from": null,
+  "effective_to": null,
+  "name_en": "Pradhan Mantri Ujjwala Yojana (free LPG connection)",
+  "scheme": "pmuy",
+  "sources": [
+    {
+      "checksum": "sha256:e2ecac3614bacb5febbf6fe3ef190c41b4bbe0835c33dec61b7a8de95cd780ad",
+      "extractor": "pdfminer.six",
+      "id": "kyc-form",
+      "pdf": "source/kyc-form.pdf",
+      "retrieved_at": "2026-10-13",
+      "txt": "source/kyc-form.txt",
+      "url": "https://www.pmuy.gov.in/documents/Ujjwala-KYC_englishnew.pdf"
+    }
+  ],
+  "tier": 1,
+  "version": 1
+}

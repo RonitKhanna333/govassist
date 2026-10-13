@@ -172,6 +172,18 @@ _HIDDEN_SCHEMES = {"demo-scheme"}
 # Names people actually use, per language. The official English name stays
 # in `name_en`.
 SCHEME_NAMES = {
+    "pm-svanidhi": {"en": "Loans for street vendors (PM SVANidhi)",
+                    "hi": "रेहड़ी-पटरी वालों के लिए लोन (PM स्वनिधि)",
+                    "pa": "ਰੇਹੜੀ-ਫੜ੍ਹੀ ਵਾਲਿਆਂ ਲਈ ਲੋਨ (PM ਸਵਨਿਧੀ)",
+                    "ta": "தெருவோர வியாபாரிகளுக்குக் கடன் (PM SVANidhi)"},
+    "nsap": {"en": "Old-age pension (NSAP)",
+             "hi": "बुढ़ापा पेंशन (NSAP)",
+             "pa": "ਬੁਢਾਪਾ ਪੈਨਸ਼ਨ (NSAP)",
+             "ta": "முதியோர் ஓய்வூதியம் (NSAP)"},
+    "pmuy": {"en": "Free LPG gas connection (Ujjwala)",
+             "hi": "मुफ़्त गैस कनेक्शन (उज्ज्वला)",
+             "pa": "ਮੁਫ਼ਤ ਗੈਸ ਕੁਨੈਕਸ਼ਨ (ਉੱਜਵਲਾ)",
+             "ta": "இலவச எரிவாயு இணைப்பு (உஜ்வலா)"},
     "pmfme": {"en": "Food processing business support (PMFME)",
               "hi": "खाद्य प्रसंस्करण उद्यम सहायता (PMFME)",
               "pa": "ਖ਼ੁਰਾਕ ਪ੍ਰੋਸੈਸਿੰਗ ਕਾਰੋਬਾਰ ਸਹਾਇਤਾ (PMFME)",

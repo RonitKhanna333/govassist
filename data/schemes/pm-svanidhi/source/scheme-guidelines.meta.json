@@ -1,0 +1,11 @@
+{
+  "id": "scheme-guidelines",
+  "url": "https://www.mohua.gov.in/static/uploads/2026/01/bde957bc3a87fb001c05ddd09484edda.pdf",
+  "local_file": "",
+  "retrieved_at": "2026-10-13",
+  "checksum": "sha256:c3e73b7107ee281e8c875478604722d0fdb8234ed0f4ebd8644a79d7722c43be",
+  "extractor": "pdfminer.six",
+  "pages": 15,
+  "characters": 29439,
+  "hand_corrected": false
+}

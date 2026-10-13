@@ -404,3 +404,18 @@ def test_hindi_number_words(text, expected):
 ])
 def test_hindi_number_ambiguity_is_not_guessed(text):
     assert parse_number(text) is None
+
+
+@pytest.mark.parametrize("scheme,profile,verdict", [
+    ("nsap", {"household_is_bpl": True, "age": 60}, "ELIGIBLE"),
+    ("nsap", {"household_is_bpl": True, "age": 59}, "NOT_ELIGIBLE"),
+    ("pmuy", {"is_woman": True, "age": 18, "is_indian_citizen": True,
+              "household_has_lpg_or_png": False,
+              "will_give_deprivation_declaration": True}, "ELIGIBLE"),
+    ("pmuy", {"is_woman": True, "age": 30, "household_has_lpg_or_png": True}, "NOT_ELIGIBLE"),
+    ("pm-svanidhi", {"is_street_vendor": True, "vends_in_town_or_peri_urban": True}, "ELIGIBLE"),
+    ("pm-svanidhi", {"is_street_vendor": False}, "NOT_ELIGIBLE"),
+])
+def test_added_scheme_boundaries(scheme, profile, verdict):
+    body = _client().post("/chat", json={"scheme": scheme, "profile": profile}).json()
+    assert body["verdict"] == verdict

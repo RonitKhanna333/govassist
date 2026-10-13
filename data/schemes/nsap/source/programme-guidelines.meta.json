@@ -1,0 +1,11 @@
+{
+  "id": "programme-guidelines",
+  "url": "http://www.esomsa.hp.gov.in/sites/default/files/NSAP.pdf",
+  "local_file": "",
+  "retrieved_at": "2026-10-13",
+  "checksum": "sha256:0c40f855361da341498b85d098bbc27d343ffd2be3cee7ab55572f660a14e7b4",
+  "extractor": "pdfminer.six",
+  "pages": 56,
+  "characters": 77150,
+  "hand_corrected": false
+}

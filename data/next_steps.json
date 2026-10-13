@@ -29,38 +29,111 @@
     "data/attributes.json."
   ],
   "pmfme": {
-    "benefits": ["individual-capital-subsidy"],
-    "documents": ["loan-documents-required"],
+    "benefits": [
+      "individual-capital-subsidy"
+    ],
+    "documents": [
+      "loan-documents-required"
+    ],
     "apply": [],
-    "after": ["grant-adjustment-after-three-years"],
-    "good_to_know": ["individual-land-cost-exclusion"]
+    "after": [
+      "grant-adjustment-after-three-years"
+    ],
+    "good_to_know": [
+      "individual-land-cost-exclusion"
+    ]
   },
   "apy": {
-    "benefits": ["apy-pension-amount", "apy-spouse-pension", "apy-nominee"],
+    "benefits": [
+      "apy-pension-amount",
+      "apy-spouse-pension",
+      "apy-nominee"
+    ],
     "documents": [],
     "apply": [],
-    "after": ["apy-contribution"],
+    "after": [
+      "apy-contribution"
+    ],
     "good_to_know": []
   },
   "pm-kmy": {
-    "benefits": ["pmkmy-pension", "pmkmy-government-match"],
+    "benefits": [
+      "pmkmy-pension",
+      "pmkmy-government-match"
+    ],
     "documents": [],
     "apply": [],
-    "after": ["pmkmy-contribution"],
+    "after": [
+      "pmkmy-contribution"
+    ],
     "good_to_know": []
   },
   "pmjjby": {
-    "benefits": ["pmjjby-benefit"],
+    "benefits": [
+      "pmjjby-benefit"
+    ],
     "documents": [],
     "apply": [],
-    "after": ["pmjjby-premium"],
-    "good_to_know": ["pmjjby-lien-period", "pmjjby-termination-age"]
+    "after": [
+      "pmjjby-premium"
+    ],
+    "good_to_know": [
+      "pmjjby-lien-period",
+      "pmjjby-termination-age"
+    ]
   },
   "pmsby": {
-    "benefits": ["pmsby-benefits"],
+    "benefits": [
+      "pmsby-benefits"
+    ],
     "documents": [],
     "apply": [],
-    "after": ["pmsby-premium"],
-    "good_to_know": ["pmsby-termination"]
+    "after": [
+      "pmsby-premium"
+    ],
+    "good_to_know": [
+      "pmsby-termination"
+    ]
+  },
+  "pm-svanidhi": {
+    "benefits": [
+      "svanidhi-loan-tranches",
+      "svanidhi-interest-subsidy",
+      "svanidhi-credit-card"
+    ],
+    "documents": [],
+    "apply": [
+      "svanidhi-certificate-or-recommendation"
+    ],
+    "after": [
+      "svanidhi-next-tranche"
+    ],
+    "good_to_know": []
+  },
+  "nsap": {
+    "benefits": [],
+    "documents": [],
+    "apply": [
+      "nsap-gram-panchayat-identifies",
+      "nsap-application-form"
+    ],
+    "after": [],
+    "good_to_know": [
+      "nsap-help-with-documents"
+    ]
+  },
+  "pmuy": {
+    "benefits": [
+      "pmuy-free-connection",
+      "pmuy-cylinder-choice"
+    ],
+    "documents": [],
+    "apply": [
+      "pmuy-deprivation-declaration"
+    ],
+    "after": [],
+    "good_to_know": [
+      "pmuy-no-existing-connection"
+    ]
   }
 }

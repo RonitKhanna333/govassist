@@ -1,0 +1,293 @@
+{
+  "edges": [
+    {
+      "from": "clause:pmuy-adult-woman",
+      "predicate": "BEARS_ON",
+      "to": "attribute:age"
+    },
+    {
+      "from": "clause:pmuy-adult-woman",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_woman"
+    },
+    {
+      "from": "clause:pmuy-adult-woman",
+      "predicate": "FROM",
+      "to": "source:kyc-form"
+    },
+    {
+      "from": "clause:pmuy-citizen",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_indian_citizen"
+    },
+    {
+      "from": "clause:pmuy-citizen",
+      "predicate": "FROM",
+      "to": "source:kyc-form"
+    },
+    {
+      "from": "clause:pmuy-cylinder-choice",
+      "predicate": "FROM",
+      "to": "source:kyc-form"
+    },
+    {
+      "from": "clause:pmuy-deprivation-declaration",
+      "predicate": "BEARS_ON",
+      "to": "attribute:will_give_deprivation_declaration"
+    },
+    {
+      "from": "clause:pmuy-deprivation-declaration",
+      "predicate": "FROM",
+      "to": "source:kyc-form"
+    },
+    {
+      "from": "clause:pmuy-free-connection",
+      "predicate": "FROM",
+      "to": "source:kyc-form"
+    },
+    {
+      "from": "clause:pmuy-no-existing-connection",
+      "predicate": "BEARS_ON",
+      "to": "attribute:household_has_lpg_or_png"
+    },
+    {
+      "from": "clause:pmuy-no-existing-connection",
+      "predicate": "FROM",
+      "to": "source:kyc-form"
+    },
+    {
+      "from": "condition:adult_woman",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmuy-adult-woman"
+    },
+    {
+      "from": "condition:adult_woman",
+      "predicate": "TESTS",
+      "to": "attribute:age"
+    },
+    {
+      "from": "condition:adult_woman",
+      "predicate": "TESTS",
+      "to": "attribute:is_woman"
+    },
+    {
+      "from": "condition:gives_deprivation_declaration",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmuy-deprivation-declaration"
+    },
+    {
+      "from": "condition:gives_deprivation_declaration",
+      "predicate": "TESTS",
+      "to": "attribute:will_give_deprivation_declaration"
+    },
+    {
+      "from": "condition:indian_citizen",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmuy-citizen"
+    },
+    {
+      "from": "condition:indian_citizen",
+      "predicate": "TESTS",
+      "to": "attribute:is_indian_citizen"
+    },
+    {
+      "from": "condition:no_lpg_in_household",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmuy-no-existing-connection"
+    },
+    {
+      "from": "condition:no_lpg_in_household",
+      "predicate": "TESTS",
+      "to": "attribute:household_has_lpg_or_png"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmuy-no-existing-connection"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmuy-adult-woman"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmuy-citizen"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmuy-cylinder-choice"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmuy-deprivation-declaration"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmuy-free-connection"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmuy-no-existing-connection"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "PROVIDES",
+      "to": "clause:pmuy-cylinder-choice"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "PROVIDES",
+      "to": "clause:pmuy-free-connection"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "REQUIRES",
+      "to": "condition:adult_woman"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "REQUIRES",
+      "to": "condition:gives_deprivation_declaration"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "REQUIRES",
+      "to": "condition:indian_citizen"
+    },
+    {
+      "from": "scheme:pmuy",
+      "predicate": "REQUIRES",
+      "to": "condition:no_lpg_in_household"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "attribute:age",
+      "name": "age",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:household_has_lpg_or_png",
+      "name": "household_has_lpg_or_png",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_indian_citizen",
+      "name": "is_indian_citizen",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_woman",
+      "name": "is_woman",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:will_give_deprivation_declaration",
+      "name": "will_give_deprivation_declaration",
+      "type": "Attribute"
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:pmuy-adult-woman",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": true,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:pmuy-citizen",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": true,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:pmuy-cylinder-choice",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": true,
+      "version": 1
+    },
+    {
+      "clause_type": "procedure",
+      "id": "clause:pmuy-deprivation-declaration",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": true,
+      "version": 1
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:pmuy-free-connection",
+      "page": 1,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": true,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmuy-no-existing-connection",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": true,
+      "version": 1
+    },
+    {
+      "asks": "Is the applicant an adult woman (18 years and above)?",
+      "expr": "profile.is_woman == true and profile.age >= 18",
+      "id": "condition:adult_woman",
+      "type": "Condition"
+    },
+    {
+      "asks": "Will the applicant fill in the Deprivation Declaration and consent to its verification?",
+      "expr": "profile.will_give_deprivation_declaration == true",
+      "id": "condition:gives_deprivation_declaration",
+      "type": "Condition"
+    },
+    {
+      "asks": "Is the applicant an Indian citizen residing in India?",
+      "expr": "profile.is_indian_citizen == true",
+      "id": "condition:indian_citizen",
+      "type": "Condition"
+    },
+    {
+      "asks": "Does the applicant or any household member possess an LPG or Piped Natural Gas connection?",
+      "expr": "profile.household_has_lpg_or_png == false",
+      "id": "condition:no_lpg_in_household",
+      "type": "Condition"
+    },
+    {
+      "authority": "Ministry of Petroleum and Natural Gas",
+      "effective_from": null,
+      "effective_to": null,
+      "id": "scheme:pmuy",
+      "name": "Pradhan Mantri Ujjwala Yojana (free LPG connection)",
+      "tier": 1,
+      "type": "Scheme",
+      "version": 1
+    },
+    {
+      "checksum": "sha256:e2ecac3614bacb5febbf6fe3ef190c41b4bbe0835c33dec61b7a8de95cd780ad",
+      "id": "source:kyc-form",
+      "retrieved_at": "2026-10-13",
+      "type": "SourceDocument",
+      "url": "https://www.pmuy.gov.in/documents/Ujjwala-KYC_englishnew.pdf"
+    }
+  ],
+  "scheme": "pmuy",
+  "version": 1
+}

@@ -1,0 +1,201 @@
+{
+  "edges": [
+    {
+      "from": "clause:ignoaps-age-and-amount",
+      "predicate": "BEARS_ON",
+      "to": "attribute:age"
+    },
+    {
+      "from": "clause:ignoaps-age-and-amount",
+      "predicate": "FROM",
+      "to": "source:programme-guidelines"
+    },
+    {
+      "from": "clause:nsap-application-form",
+      "predicate": "FROM",
+      "to": "source:programme-guidelines"
+    },
+    {
+      "from": "clause:nsap-bpl-category",
+      "predicate": "BEARS_ON",
+      "to": "attribute:household_is_bpl"
+    },
+    {
+      "from": "clause:nsap-bpl-category",
+      "predicate": "FROM",
+      "to": "source:programme-guidelines"
+    },
+    {
+      "from": "clause:nsap-gram-panchayat-identifies",
+      "predicate": "FROM",
+      "to": "source:programme-guidelines"
+    },
+    {
+      "from": "clause:nsap-help-with-documents",
+      "predicate": "FROM",
+      "to": "source:programme-guidelines"
+    },
+    {
+      "from": "clause:nsap-not-left-out-of-bpl-list",
+      "predicate": "FROM",
+      "to": "source:programme-guidelines"
+    },
+    {
+      "from": "condition:age_60_or_more",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:ignoaps-age-and-amount"
+    },
+    {
+      "from": "condition:age_60_or_more",
+      "predicate": "TESTS",
+      "to": "attribute:age"
+    },
+    {
+      "from": "condition:below_poverty_line",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:nsap-bpl-category"
+    },
+    {
+      "from": "condition:below_poverty_line",
+      "predicate": "TESTS",
+      "to": "attribute:household_is_bpl"
+    },
+    {
+      "from": "scheme:nsap",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:ignoaps-age-and-amount"
+    },
+    {
+      "from": "scheme:nsap",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:nsap-application-form"
+    },
+    {
+      "from": "scheme:nsap",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:nsap-bpl-category"
+    },
+    {
+      "from": "scheme:nsap",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:nsap-gram-panchayat-identifies"
+    },
+    {
+      "from": "scheme:nsap",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:nsap-help-with-documents"
+    },
+    {
+      "from": "scheme:nsap",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:nsap-not-left-out-of-bpl-list"
+    },
+    {
+      "from": "scheme:nsap",
+      "predicate": "REQUIRES",
+      "to": "condition:age_60_or_more"
+    },
+    {
+      "from": "scheme:nsap",
+      "predicate": "REQUIRES",
+      "to": "condition:below_poverty_line"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "attribute:age",
+      "name": "age",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:household_is_bpl",
+      "name": "household_is_bpl",
+      "type": "Attribute"
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:ignoaps-age-and-amount",
+      "page": 12,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": true,
+      "version": 1
+    },
+    {
+      "clause_type": "procedure",
+      "id": "clause:nsap-application-form",
+      "page": 16,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:nsap-bpl-category",
+      "page": 12,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "procedure",
+      "id": "clause:nsap-gram-panchayat-identifies",
+      "page": 16,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "procedure",
+      "id": "clause:nsap-help-with-documents",
+      "page": 10,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:nsap-not-left-out-of-bpl-list",
+      "page": 16,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "asks": "Is the person 60 years of age or above?",
+      "expr": "profile.age >= 60",
+      "id": "condition:age_60_or_more",
+      "type": "Condition"
+    },
+    {
+      "asks": "Does the person belong to the Below Poverty Line (BPL) category?",
+      "expr": "profile.household_is_bpl == true",
+      "id": "condition:below_poverty_line",
+      "type": "Condition"
+    },
+    {
+      "authority": "Ministry of Rural Development",
+      "effective_from": null,
+      "effective_to": null,
+      "id": "scheme:nsap",
+      "name": "National Social Assistance Programme -- Indira Gandhi National Old Age Pension (IGNOAPS)",
+      "tier": 1,
+      "type": "Scheme",
+      "version": 1
+    },
+    {
+      "checksum": "sha256:0c40f855361da341498b85d098bbc27d343ffd2be3cee7ab55572f660a14e7b4",
+      "id": "source:programme-guidelines",
+      "retrieved_at": "2026-10-13",
+      "type": "SourceDocument",
+      "url": "http://www.esomsa.hp.gov.in/sites/default/files/NSAP.pdf"
+    }
+  ],
+  "scheme": "nsap",
+  "version": 1
+}

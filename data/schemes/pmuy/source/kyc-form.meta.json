@@ -1,0 +1,11 @@
+{
+  "id": "kyc-form",
+  "url": "https://www.pmuy.gov.in/documents/Ujjwala-KYC_englishnew.pdf",
+  "local_file": "",
+  "retrieved_at": "2026-10-13",
+  "checksum": "sha256:e2ecac3614bacb5febbf6fe3ef190c41b4bbe0835c33dec61b7a8de95cd780ad",
+  "extractor": "pdfminer.six",
+  "pages": 2,
+  "characters": 9016,
+  "hand_corrected": false
+}

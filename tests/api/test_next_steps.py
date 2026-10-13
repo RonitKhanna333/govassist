@@ -39,6 +39,10 @@ ELIGIBLE_PROFILES = {
                "consents_to_auto_debit": True},
     "pmsby": {"has_bank_or_post_office_account": True, "age": 30,
               "consents_to_auto_debit": True},
+    "pm-svanidhi": {"is_street_vendor": True, "vends_in_town_or_peri_urban": True},
+    "nsap": {"household_is_bpl": True, "age": 65},
+    "pmuy": {"is_woman": True, "age": 30, "is_indian_citizen": True,
+             "household_has_lpg_or_png": False, "will_give_deprivation_declaration": True},
 }
 
 

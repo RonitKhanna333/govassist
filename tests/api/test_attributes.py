@@ -39,7 +39,7 @@ def test_readme_keys_are_excluded(registry):
     assert not any(k.startswith("_") for k in registry)
 
 
-SCHEMES = ["pmfme", "pmsby", "pmjjby", "apy", "pm-kmy"]
+SCHEMES = ["pmfme", "pmsby", "pmjjby", "apy", "pm-kmy", "pm-svanidhi", "nsap", "pmuy"]
 
 
 @pytest.mark.parametrize("scheme", SCHEMES)

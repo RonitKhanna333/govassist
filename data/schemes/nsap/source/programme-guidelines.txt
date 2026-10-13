@@ -1,0 +1,4443 @@
+~ROGRAMM}j 
+
+GUIDELINES 
+
+
+
+
+Recall  the  face  of  the  poorest  and  the  weakest 
+
+man (woman) whom you may have seen, and ask 
+
+yourself, if the step you contemplate is going to be 
+
+of  any  use  to  him  (her).  Will  he  (she)  gain 
+
+anything  by  it?  Will  it  restore  him  (her)  to  a 
+
+control  over  his  (her)  own  life  and  destiny?  In 
+
+other  words,  will  it  lead  to  swaraj  (freedom)  for 
+
+the hungry and spiritually starving millions? 
+
+……Mahatma Gandhi 
+
+“Father of the Nation” 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Article 41 of the Indian Constitution 
+
+(Right to work, to education and to public assistance in 
+
+certain cases) 
+
+“The  State  shall,  within  the  limits  of  its  economic  capacity 
+
+and  development,  make  effective  provision  for  securing  the 
+
+right to work, to education, and to public assistance in cases 
+
+of unemployment, old age, sickness and disablement, and in 
+
+other cases of undeserved want.” 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+CONTENTS 
+
+
+Chapter 
+
+Content and Sub-heads 
+
+Page no. 
+
+I 
+
+II 
+
+III 
+
+IV 
+
+Historical Background 
+1.1  Introduction 
+1.2  Changes in the composition of  NSAP 
+
+Salient Features of Schemes of NSAP 
+2.1 Key Principles 
+2.2  Components of NSAP 
+2.3  Eligibility Criteria and Scale of Assistance 
+2.4 Norms for Central Assistance 
+
+Implementation 
+3.1  Selection of Beneficiaries 
+3.2  Sanction 
+3.3  Appeal and Review 
+3.4  Record of applications 
+3.5  Timeline  for  different  processes  relating  to 
+
+schemes of NSAP 
+
+3.6 Administrative Arrangements 
+
+Allocation,  Release  and  Disbursement  of 
+Funds 
+4.1  Allocation of Central Funds – Criteria 
+4.2  Release of Funds 
+4.3  Procedure for release of First Installment 
+4.4  Procedure for release of Second Installment 
+4.5  Disbursement of  Pensions 
+
+V 
+
+Electronic / IT enabled transfer of pensions 
+5.1  Use of Information Technology 
+5.2  NSAP-MIS 
+
+(ii) 
+
+1 
+1 
+1 
+
+4 
+4 
+6 
+6 
+7 
+
+9 
+9 
+11 
+12 
+12 
+12 
+
+13 
+
+16 
+
+16 
+16 
+17 
+17 
+18 
+
+21 
+21 
+21 
+
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+  
+  
+ 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+  
+ 
+  
+ 
+ 
+  
+ 
+ 
+ 
+  
+ 
+ 
+   
+ 
+  
+ 
+ 
+  
+ 
+ 
+
+VI 
+
+VII 
+
+Monitoring and Evaluation 
+6.1 Advisory Committees 
+6.2  State Nodal Department 
+6.3  Monthly  and  Quarterly Progress Reports 
+6.4  Nodal Officers Meeting 
+6.5  Performance Review Committee (PRC) 
+6.6  Area Officers 
+6.7  National Level Monitors 
+6.8  Vigilance and Monitoring Committees 
+6.9  Grievance Redressal Mechanism 
+6.10  Social Audit 
+
+Administrative Expenses 
+7.1  Provision 
+7.2  Eligible items of expenditure 
+7.3  Items of expenditure not permissible 
+7.4  One time expenses 
+7.5  Other conditions 
+
+VIII 
+
+Convergence 
+
+IX 
+
+State Specific Variations in Guidelines 
+9.1 Formulation of State Specific Guidelines and 
+approval 
+
+24 
+24 
+25 
+25 
+25 
+25 
+26 
+26 
+26 
+26 
+27 
+
+29 
+29 
+29 
+30 
+30 
+30 
+
+32 
+
+33 
+33 
+
+(ii) 
+
+ 
+ 
+ 
+  
+ 
+ 
+  
+  
+ 
+  
+ 
+ 
+  
+ 
+ 
+ 
+  
+ 
+  
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+  
+ 
+ 
+  
+  
+ 
+ 
+  
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+CHAPTER – I 
+
+
+HISTORICAL BACKGROUND 
+
+
+1.1 
+
+Introduction 
+
+1.1.1  The Directive Principles of State Policy of the Constitution of India enjoin upon the 
+
+State  to  undertake  within  its  means  a  number  of  welfare  measures,  targeting  the  poor  and 
+
+the destitute in particular. Article 41 of the Constitution of India directs the State to provide 
+
+public  assistance  to  its  citizens  in  the  case  of  unemployment,  old  age,  sickness  and 
+
+disablement  as  well  as  in  other  cases  of  undeserved  want,  within  the  limit  of  the  State’s 
+
+economic capacity and development. Social security, invalid and old age pensions figure as 
+Items 23 and 24 of the 7th  Schedule of the Constitution of India in the Concurrent List. It is 
+
+in  compliance  of  these  guiding  principles,  that  the  Government  of  India  introduced  on 
+
+Independence  Day,  1995  the  National  Social  Assistance  Programme  (NSAP)  as  a  fully 
+
+funded Centrally Sponsored Scheme targeting the destitutes, defined as any person who has 
+
+little  or  no  regular  means  of  subsistence  from  his  /  her  own  source  of  income  or  through 
+
+financial support from family members or other sources, to be identified by the States and 
+
+UTs,  with the objective of providing a basic level of financial support. 
+
+1.1.2  The NSAP initially had the following three components:­
+
+a)  National Old Age Pension Schemes (NOAPS) 
+
+
+b)  National Family Benefit Scheme (NFBS) 
+
+
+c)  National Maternity Benefit Scheme (NMBS) 
+
+
+1.2  Changes in the composition of NSAP 
+
+1.2.1  Transfer of National Maternity Benefit Scheme to Department of  Family Welfare 
+
+The National Maternity Benefit Scheme was transferred to the Department of Family 
+
+Welfare  to  become  part  and  parcel  of  the  Population  Stabilization  Programme  w.e.f. 
+
+1.4.2001. 
+
+1
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+1.2.2 
+
+Introduction of Annapurna Scheme 
+
+On 1st  April 2000, a new scheme known as the Annapurna Scheme was introduced 
+
+to provide 10 kgs of food grains per month free of cost to eligible beneficiaries who could 
+
+not be covered under NOAPS. 
+
+1.2.3 
+
+Transfer to State Plan as Additional Central Assistance (ACA) 
+
+In the year 2002-03, NSAP was transferred to the State Plan and funds were, from 
+
+then  on,  released  as  Additional  Central  Assistance  (ACA)  to  States  and  UTs  with  the 
+
+Ministry of Finance releasing funds  to the States Consolidated Fund as a single allocation 
+
+for  all  the  sub-schemes,  and  with  the  freedom  given  to  the  States  to  allocate  to  the 
+
+individual sub-schemes as per need.  In the case of Union Territories (UTs), the Ministry of 
+
+Home Affairs made the releases. 
+
+1.2.4  Expansion to cover all eligible BPL persons 
+
+From the year 2007, the scheme was expanded to cover all eligible  persons  Below 
+
+Poverty  Line  (BPL).  The  scheme  for  old  aged  persons  was  renamed  as  Indira  Gandhi 
+
+National Old Age Pension Scheme (IGNOAPS). 
+
+1.2.5  Introduction  of  Indira  Gandhi  National  Widow  Pension  Scheme  (IGNWPS)  and 
+
+Indira Gandhi National Disability Pension Scheme (IGNDPS) 
+
+NSAP was expanded in 2009 to cover more vulnerable groups below poverty line. In 
+
+February  2009,  Government  of  India  approved  pension  to  widows  below  poverty line  in 
+
+the  age  group  of  40-64  years.  This  scheme  was  named  Indira  Gandhi  National  Widow 
+
+Pension Scheme (IGNWPS).  It also approved pension to persons suffering from severe or 
+
+multiple  disabilities  in  the  age  group  of  18-64  years.  This  scheme  was  named  Indira 
+
+Gandhi  National  Disability  Pension  Scheme  (IGNDPS).  For  the  purpose  of  defining 
+
+severe or multiple disabilities the following legal provisions are followed:­
+
+(a) As  per  Section  56(4)  of  the  Persons  with  Disabilities  Act,  1995  (PWD  Act,  95), 
+
+“persons with severe disability” means a person with 80% or more of one or more 
+
+disabilities. 
+
+2
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+(b) As per Section 2(h)  of the National Trust for the Welfare of Persons with Autism, 
+
+Cerebral  Palsy,  Mental  Retardation  and  Multiple  Disabilities  Act,  1999  (National 
+
+Trust  Act,1999),  “Multiple  Disabilities”  means  combination  of  2  or  more 
+
+disabilities. 
+
+1.2.6  Reconversion to Centrally Sponsored Scheme (CSS) 
+
+From 1st  April, 2014, NSAP has again become a Centrally Sponsored Scheme (CSS) 
+
+under the Ministry of Rural Development. Funds are now released by the Ministry of Rural 
+
+Development  to  all  States  and  Union  Territories,  based  on  annual  allocation,  sub-scheme 
+
+wise. 
+
+3
+ 
+
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+CHAPTER- II 
+
+
+SALIENT FEATURES OF SCHEMES OF NSAP 
+
+
+2.1  Key Principles 
+
+In this segment, the guiding principles of the NSAP have been highlighted. These are non­
+
+negotiable  features,  based  on  the  Constitutional  provisions.  We  must  not  lose  sight  of  the 
+
+fact that the persons eligible for pensions/assistance under this scheme belong to the most 
+
+vulnerable  category of  society.  Therefore,  it  becomes  the  moral  duty of  the  implementing 
+
+agency  to  ensure  least  burden  on  them,  in  the  identification,  sanction  and  verification 
+
+processes.  The  key principles  are  enlisted  below,  and  in  the  following  chapters  they have 
+
+been discussed in detail. 
+
+a) 	 Universal coverage of eligible persons and pro-active identification : 
+
+In this process it may be ensured that onus is not on the beneficiary to prove her/his 
+
+eligibility.  The  implementing agency should also ensure coverage  on special priority  for 
+
+the vulnerable groups like manual scavengers, persons affected by leprosy, AIDS, Cancer, 
+
+TB and other serious ailments, bonded  labourers, families affected due to natural or man-
+
+made  disaster  etc.  Transgender,  Dwarfs  who  fulfill  the  eligibility  criteria  must  also  be 
+
+included. 
+
+b) 	 Transparent  and  people  friendly  process  for  application,  sanction,  appeal 
+
+and review: 
+
+This  would  include  providing  support  to  the  eligible  people  in  obtaining  their 
+
+documents to establish their eligibility. States may device methods for certification by local 
+
+governments, if documents are not available with the eligible persons. 
+
+4
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+c) 	 Regular  monthly  disbursement  of  pensions  and  benefits  preferably  at  the 
+
+door-step of the beneficiaries- This  should  be  achieved  in  the  shortest  possible 
+
+period.  As  far  as  possible  monthly  disbursement  should  be  ensured;  if  not  done 
+
+already it has to be achieved in the shortest possible time. 
+
+d) 	 Electronic Transfer-
+
+The  mode  of  disbursement  may be  decided  on  the  basis 
+
+of choice and convenience of the beneficiaries.  However to ensure efficiency and 
+
+regular  transfer,  payment  into  the  bank  account/  post  office  account  or  through 
+
+electronic  money  order  is  preferred.  A  system  of  SMS  alert  and  door  step 
+
+payment through BC or any other mode should be ensured. 
+
+e) 	 Robust Social Audit and Annual Verification 
+
+f) 	 Key role for local self-government institutions 
+
+g) 	 IT based MIS - for sanction, disbursement and monitoring 
+
+h) 	 Robust grievance redressal system - with provision for appeal and review 
+
+i) 	 Automatic Convergence -with other schemes to provide maximum benefit as the 
+
+beneficiaries under the NSAP are from BPL families which are the target group in 
+
+most  other  Schemes.  Every  beneficiary  should  be  enrolled  under  Rashtriya 
+
+Swasthya Bima Yojana (RSBY). 
+
+j) 	 State  Specific  Guidelines-There  are  variations  in  the  methods/processes  adopted 
+
+for implementation. It would not be possible to harmonize all the variations, since 
+
+they  are  largely  based  on  precedents  and  local  situations.  Therefore  States  may 
+
+suggest  variations  needed  while  complying  with 
+
+the  key  principles  and 
+
+requirements  of  the  Guidelines,  and  submit  the  same  within  three  months,  for  a 
+
+one  time  approval  of  the  National  Social  Assistance  Advisory  Committee  in  the 
+
+Ministry of Rural Development (See Chapter 6, para 6.1.1) 
+
+5
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+2.2  Components of NSAP 
+
+The NSAP at present includes  five  sub-schemes as its components :­
+
+a) 
+
+b) 
+
+c) 
+
+d) 
+
+e) 
+
+Indira Gandhi National Old Age Pension Scheme (IGNOAPS) 
+
+Indira Gandhi National Widow Pension Scheme (IGNWPS) 
+
+Indira Gandhi National Disability Pension Scheme (IGNDPS) 
+
+National Family Benefit Scheme (NFBS) 
+
+Annapurna Scheme 
+
+2.3  Eligibility Criteria and Scale of Assistance 
+
+The assistance under the sub-schemes of NSAP are applicable for persons belonging 
+
+to  Below  Poverty  Line  (BPL)  category.  The  other  eligibility  criteria  and  the  scale  of 
+
+assistance under the sub-schemes of NSAP are as follows:­
+
+o  Indira  Gandhi  National  Old  Age  Pension  Scheme  (IGNOAPS):  The 
+
+eligible  age  for  IGNOAPS  is  60  years.  The  pension  is  Rs.200  p.m.  for 
+
+persons  between  60  years  and  79  years.  For  persons  who  are  80  years  and 
+
+above the pension is Rs.500/- per month. 
+
+o  Indira Gandhi National Widow Pension Scheme (IGNWPS):  The eligible 
+
+age is 40  years and the pension is Rs.300 per month.  After attaining the age 
+
+of 80 years, the beneficiary will get Rs.500/- per month. 
+
+o  Indira  Gandhi  National  Disability  Pension  Scheme  (IGNDPS):  The 
+
+eligible age for the pensioner is 18 years and above and the disability level has 
+
+to be 80%. The amount is Rs.300 per month and after attaining the age of 80 
+
+years,  the  beneficiary  will  get  Rs.500/- per  month.  Dwarfs  will  also  be  an 
+
+eligible category for this pension. 
+
+6
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+o  National  Family  Benefit  Scheme  (NFBS):  Rs.  20000/- will  be  given  as  a 
+
+lumpsum  assistance  to  the  bereaved  household  in  the  event  of  death  of  the 
+
+bread-winner.  It  is  clarified  that  any  event  of  death  (natural  or  otherwise) 
+
+would make the family eligible for assistance.  A woman in the family, who 
+
+is  a  home  maker,  is  also  considered  as  a  ‘bread-winner’  for  this  purpose. 
+
+The family benefit will be paid to such surviving member of the household of 
+
+the  deceased  poor,  who  after  local  inquiry,  is  found  to  be  the  head  of  the 
+
+household.  For  the  purpose  of  the  scheme,  the  term  “household’  would 
+
+include  spouse,  minor  children,  unmarried  daughters  and  dependent  parents. 
+
+In  case  of  death  of  an  unmarried  adult,  the  term  household  would  include 
+
+minor  brothers/  sisters  and  dependent  parents.  The  death  of  such  a  bread­
+
+winner should have occurred whilst he/she is  more than 18 years of age and 
+
+less  than  60  years  of  age.  The  assistance  would  be  given  to  every  case  of 
+
+death of breadwinner in a family. 
+
+o  Annapurna Scheme: 10 kgs of food grains (wheat or rice) is given per month 
+
+per  beneficiary.  The  scheme  aims  at  providing  food  security  to  meet  the 
+
+requirements of those eligible old aged persons who have remained uncovered 
+
+under the IGNOAPS. 
+
+2.4  Norms for Central Assistance 
+
+Central  assistance  to  States  /  UT  under  NSAP  is  determined  on  the  basis  of  BPL 
+
+population  of  the  State.  For  calculating  the  estimated  number  of  beneficiaries  under  each 
+
+scheme for each State/UT, the population figures as per the census of 2001 and the poverty 
+
+ratio determined by the Planning Commission have been taken into account. The estimated 
+
+number  of  beneficiaries  each  year  is  determined  on  the  reports  of  the  previous  year 
+
+submitted  by  the  State  Governments.  In  view  of  the  limitation  of  fund  available,  if  there 
+
+are more deserving beneficiaries, the State has the option to give them pension from its 
+
+own resources. 
+
+7
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+2.4.1  States  are  strongly  urged  to  provide  an  additional  amount  at  least  an  equivalent 
+
+amount to the assistance provided by the Central Government so that the beneficiaries can 
+
+get a decent level of assistance. 
+
+2.4.2  Many  State  Governments  have  their  own  social  pension  schemes  for  vulnerable 
+
+groups,  some  of  which  had  been  started  even  before  the  Central  Government  pension 
+
+schemes. Naturally there is wide variance in guidelines, eligibility conditions and assistance 
+
+norms across the country. This has created differences in the level of social assistance and 
+
+eligibility criteria among different States / UTs. 
+
+2.4.3 	 Priority  to  particularly  vulnerable  individuals  and  families  under  all  the  sub-
+
+schemes of NSAP: 
+
+It  is  the  responsibility  of  the  implementing  authorities  to  adhere  to  a  policy  of 
+
+prioritising  in  favour  of  those  applicants  whose  socio-economic  and  health  condition  is 
+
+vulnerable. Thus, persons who are suffering from long-term/terminal ailments like leprosy, 
+
+TB, AIDS, Cancer and such like ailments deserve special attention. Similarly, transgender, 
+
+manual  scavengers,  bonded  labourers,  women  victims  of  crime  and  harassment,  deserted 
+
+women also deserve to be addressed on priority. It is clarified that only BPL persons from 
+
+the  eligible  categories  would  be  considered  under  NSAP  except  widows  suffering  from 
+
+AIDS  who  will  be  considered  if  they are  not  attracted  by  any  of  the  exclusion  criteria  of 
+
+having a job in government, owning five acres of land or  more or owning a four wheeler 
+
+for own use. 
+
+8
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+CHAPTER III 
+
+
+IMPLEMENTATION 
+
+
+3.1 	
+
+Selection of Beneficiaries 
+
+3.1.1 	 Awareness generation: 
+
+One  of  the  main  tasks  for  attaining  the  objective  of  the  schemes  of  NSAP  is 
+
+awareness  generation  among  the  people  about  eligibility,  scale  of  assistance  and  the 
+
+procedure  to  be  followed  for  obtaining  benefits.  District,  Block/Intermediate  and  Village 
+
+level panchayats and urban local government institutions should play a vital role in creating 
+
+awareness among the people. Self-Help Groups (SHGs) of the poor also have a critical role 
+
+to play.  States should ensure wide and continuous publicity about the entitlements under 
+
+the  schemes  of  NSAP  and  the  procedure  for  claiming  them  through  posters,  brochures, 
+
+media and other means. 
+
+3.1.2 	 Confirmation of the existing beneficiaries : 
+
+There  is  a  need  for  annual  verification  of  the  existing  beneficiaries  under  NSAP. 
+
+The States may constitute Special Verification Teams for the purpose under an authorized 
+
+officer.  The  teams  should  include  representatives  of  Non-Government  Organisations  of 
+
+repute which are active in the locality.  Details of members of the team and the process may 
+
+be given wide publicity. 
+
+After the verification, lists of persons proposed to be confirmed or deleted should be 
+
+published  separately.  The  list  proposed  for  deletion  should  also  give  the  reasons  for 
+
+deletion.  It  may  be  indicated  that  any  interested  person  may  file  claims  and  objections 
+
+within 15 days to the head of the special Verification Team whose details would be clearly 
+
+indicated. 
+
+If  there  is  any  second  appeal,  it  should  be  made  before  the  Revision  Authority 
+
+mentioned in Para 3.3. 
+
+9
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+3.1.3  Identification of new beneficiaries: 
+
+For the identification of new beneficiaries, Gram Panchayats / Municipalities should 
+
+be  given  the  central  role.  Elected  heads  and  representatives  should  be  sensitized  on  the 
+
+criteria and processes of NSAP.  Based on the available BPL list, the beneficiaries should 
+
+be  proactively  identified  by  reaching  out  to  their  households.  However  if  an  eligible 
+
+person’s name does not figure in the BPL list, he/she should not be left out. Following the 
+
+directions  of  the  Hon’ble  Supreme  Court  of  India  in  W.P  no.  196  of  2001,  the  deserving 
+
+person's eligibility should be established and included in the select list. 
+
+Applications  are  needed  for  enrollment  of  a  new  beneficiary.  A  specimen  form  is 
+
+given  as  Annexe  III.  The  States  may  prepare  a  simple  format  in  the  local  language  and 
+
+make the application forms available widely, free of cost.  Also it should be downloadable 
+
+from the website. While individuals can file applications, it is incumbent on the authorized 
+
+officials  to  reach  out  to  potential  beneficiaries  on  an  ‘out  today’  approach  and  get  the 
+
+application  forms  filled  up  and  provide  assistance  to  get  the  relevant  records.  Field  level 
+
+workers / officials should be entrusted with the task of identifying beneficiaries and getting 
+
+the forms filled up.  Also support should be provided to get the requisite certificates from 
+
+the authorities concerned. 
+
+For age, the birth certificate or school certificate may be relied on.  In their absence 
+
+ration  card  and  EPIC  may  be  considered. 
+
+If  there  is  no  valid  document,  any  Medical 
+
+Officer of any government hospital may be authorized to issue the age certificate. 
+
+In  the  case  of  widows,  the  State  may  designate  a  Revenue  Authority  to  issue  the 
+
+certificate.  States  may  also  ensure  that  authorities  issuing  death  certificates  for  married 
+
+males,  must  ensure  that  name  of  the  surviving  wife(widow)  is  mentioned  in  the  death 
+
+certificate.  It  has  been  reported  in  several  instances,  that  deserving  women  are  unable  to 
+
+submit  their  claim  for  IGNWPS,  because  the  death  certificate  of  their  husband  does  not 
+
+have their name, to prove their eligibility. 
+
+10
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+In  case  of  persons  with  disability,  the  State  should  mandatorily organize  camps  at 
+
+convenient localities to which the potential  beneficiaries are taken  by vehicle free of  cost. 
+
+Disability Certificates should be issued on the spot. 
+
+3.1.4  Verification of applications 
+
+The  States  may  designate  a  Verification  Officer  or  Verification  Team  under  an 
+
+authorized  officer  to  verify  the  applications  with  reference  to  facts  related  to  eligibility. 
+
+This should be completed within two weeks from the date of receipt of the application.  The 
+
+Verification  Officer  should  make  the  necessary  recommendation  for  sanction  or  rejection 
+
+with reasons. 
+
+3.1.5  Discussion in the Gram Sabha / Ward Sabha / Area Sabha. 
+
+The list of applicants with the recommendations of the Verifying Authority should be 
+
+discussed in the Gram Sabha in rural areas or Ward Sabha / Area Sabha  as designated by 
+
+the  State  Government  in  urban  areas  and  thereafter  in  the  Gram  Panchayats  and 
+
+Municipalities.  Suggestions  of  these  fora  should  be  considered  and  reported  on  by  the 
+
+Verification Officer.  If the time limits are not adhered to by Gram Sabha / Ward Sabhas, 
+
+Gram  Panchayats 
+
+/  Municipalities 
+
+the  Verification  Officers  could  submit  his 
+
+recommendations  to  the  Sanctioning  Authority  under  intimation  to  the  Gram  Panchayat  / 
+
+Municipality. 
+
+3.2 
+
+Sanction : 
+
+3.2.1  Every  State  shall  designate  “Sanctioning  Authority”  at  the  appropriate  level  – 
+
+Municipality  /  Block  level.  After  receipt  of  applications  which  are  verified  and 
+
+recommended  by  the  Gram  Sabha  /  Ward  Committee  /  Area  Sabha,  the  Sanctioning 
+
+Authority will convey approval to the applicant in the form of a Sanction Order with a copy 
+
+to Gram Panchayat / Municipality concerned. 
+
+3.2.2  The  time  for  processing  of  application  from the  time  of  receipt  till  sanction  or 
+
+rejection should not exceed sixty days. 
+
+3.2.3  The  Sanctioning  Authority  will  issue  Sanction  Order  under  his  seal.  The  model 
+
+format for sanction order is suggested in Annexe – IV. 
+
+11
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+3.2.4  Every beneficiary who has been sanctioned pension under schemes of NSAP shall be 
+
+issued  a  Pension  Passbook.  The  Passbook  shall  contain  details  of  the  Sanction  Order, 
+
+particulars  of  the  pensioner  and  disbursement  details.  Suggested  format  of  Pensioner’s 
+
+Passbook is enclosed at Annexe – V. 
+
+3.3  Appeal and Review: 
+
+In case of rejection of the application, the ground for rejection has to be recorded and 
+
+has to be intimated to the beneficiary with a copy to Gram Panchayat / Municipality.  Such 
+
+applicant may prefer first appeal to an Appellate Authority and the second appeal (review) 
+
+to  a  Reviewing  Authority.  Both  the  Appellate  and  Reviewing  Authorities  shall  be 
+
+nominated by the State Governments, and their role should be publicized in such a manner 
+
+that beneficiaries, public representatives, CSOs are aware. 
+
+3.4  Record of applications: 
+
+The  list  of  beneficiaries  to  whom  sanctions  are  issued  should  be  displayed  at  the 
+
+Gram  Panchayat  /  Ward  /  Municipal  Office  and  updated  every  three  months.  A  file 
+
+containing photocopies of all applications, the register recording receipt of applications and 
+
+Sanction  Orders  and  Rejections  shall  be  kept  open  and  accessible  for  inspection  at 
+
+respective offices. 
+
+3.5  Timeline for different processes relating to schemes of NSAP : 
+
+Verification after submission of  applications 
+
+Gram Sabha / Ward 
+
+Gram Panchayat / Municipality 
+
+Sanction of Pension 
+
+Time  period  for  disposal  of  Appeals  (if  pension  is  not 
+sanctioned) 
+
+Time period for disposal of second Appeal 
+
+15 days 
+
+20 days 
+
+15 days 
+
+10 days 
+
+15 days 
+
+15 days 
+
+12
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+The  administrative  arrangements  should  be  given  wide  publicity  and  displayed  on 
+
+notice boards in the Gram Panchayats and Municipalities for public awareness. 
+
+3.6  Administrative  Arrangements: 
+
+At  the  district  level  the  implementation  of  the 
+
+scheme should be entrusted to Zilla Parishad or its equivalent. At the local level, the Gram 
+
+Panchayat /Municipality would implement the programmes. If the Gram Panchayat is found 
+
+to  be  small  to  implement  the  scheme,  the  State  may  entrust  the  task  to  the  Intermediate 
+
+Panchayat.  In  such  cases,  Gram  Panchayats  should  be  given  clear  roles  in  selection  of 
+
+beneficiaries and in supervision and monitoring. The administrative functions at the State / 
+
+UT level, District level and Panchayat / Municipality level are as follows :­
+
+3.6.1 	 State / UT Level 
+
+(i) 	
+
+Ensure 
+
+timely  disbursement  of 
+
+funds 
+
+to  districts/Municipality  after 
+
+ascertaining  what  amount  is  to  be  allocated  to  each  sub  scheme.  The  State 
+
+Nodal  Department  should  ensure  collection  and  submission  of  quarterly 
+
+reports of expenditure to the Ministry in the format at Annexe- I. 
+
+(ii) 	 Comply  with  any  modifications  that  Ministry  of  Rural  Development  may 
+
+make, based on review. 
+
+(iii) 	
+
+Intimate  to  the  Ministry  the  number  of  beneficiaries  under  each  scheme  of 
+
+NSAP, through MPR in prescribed format. 
+
+(iv) 	 Constitute  State  level  and  District  Level  Committees  for  implementation, 
+
+review and evaluation of NSAP. This would include Social Audit also. 
+
+(v) 	
+
+Identify/nominate,  at  least  one  Nodal  Officer  of  suitable  rank  each  at  the 
+
+district and Intermediate Panchayat / Municipality level with supporting staff 
+
+for effective implementation of NSAP. 
+
+(vi) 	 Furnish  a  certificate  annually  by  15th  December  of  each  year  indicating  the 
+
+number  of  persons  covered  under  the  schemes  of  NSAP  (the  format  is  at 
+
+Annexe – II) 
+
+13
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+(vii) 	 Adopt  and  use  NSAP-MIS.  If  the  state  has  its  own  MIS  software,  it  should 
+
+enable it to port the required data to NSAP-MIS. 
+
+3.6.2 	 District Level 
+
+(i) 	 Efficient  implementation  of  the  NSAP  in  accordance  with  the  guidelines  and  the 
+
+procedures therein. 
+
+(ii) 	 Giving wide publicity to  NSAP and generation of awareness. 
+
+(iii) Convening meetings of the District Level Committee regularly. 
+
+(iv) Monitoring and compiling information about the implementation of the scheme and 
+
+furnishing it to the State authorities on a quarterly basis, for onward transmission to 
+
+the Ministry. 
+
+3.6.3 	 Gram / Intermediate Panchayat / Municipality Level 
+
+(i) 	 Disseminating information about NSAP regarding  procedure for obtaining benefits. 
+
+In this task, voluntary organizations, SHGs, Aasha workers, Aaganwadi workers etc. 
+
+can be involved actively. 
+
+(ii) Periodic reviews, discussions should be held in Gram Sabha/ Ward level meetings. 
+
+(iii) Wherever  SHGs  of  NULM  or  NRLM  are  in  existence,  they  should  be  actively 
+
+involved in identification of beneficiaries. 
+
+(iv) The  Gram  Panchayats  /  Municipalities  should  play  an  active  role  in  the 
+
+identification of the beneficiaries under all the schemes of NSAP. 
+
+(v) The  identification  could  be  based  on  (a)  application  by  the  candidate  or  (b)  own 
+
+volition  of  Gram  Panchayat  /  Municipality  or  (c)  report  of  any  other  competent 
+
+authority.  In  all  cases  the  application  form  has  to  be  filled  up.  However,  due  care 
+
+should  be  taken,  to  ensure  minimum  load  on  beneficiary,  considering  their 
+
+vulnerability. 
+
+(vi) Monitoring and necessary follow-up in sanctions and disbursement. 
+
+14
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+(vii) 	 The  Gram  Panchayats  /  Municipalities  shall  report  every  case  of  death  of 
+
+pensioner  to  the  designated  Sanctioning  Authority.  Cases  of  mistaken  /  false 
+
+identity  should also be reported immediately for corrective action. 
+
+15
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+CHAPTER IV 
+
+
+ALLOCATION, RELEASE AND DISBURSEMENT OF FUNDS 
+
+
+4.1  Allocation of Central Funds – Criteria 
+
+4.1.1  As  per  the  existing  criteria  funds  are  allocated  between  States  /  UTs  based  on  the 
+
+estimated number of beneficiaries under the different schemes of NSAP in each State / UT. 
+
+If the States / UTs report a lower coverage of beneficiaries than the estimated number, the 
+
+allocation of funds for such State / UT would be based on the reported number. 
+
+4.1.2  Till  the  Socio-Economic  Caste  Census  (SECC)  is  finalized,  the  allocation  of  funds 
+
+among the States / UTs would be based on the existing BPL population. Once the SECC is 
+
+finalized, the allocation of funds to the States / UTs for the schemes of NSAP would be on 
+
+the basis of the number of old aged, widowed and disabled people from among the eligible 
+
+population arrived at using the SECC data for which criteria will be fixed by the Ministry of 
+
+Rural Development. 
+
+4.1.3  In  case  the  number  of  eligible  beneficiaries  is  more  than  the  estimated  number  of 
+
+beneficiaries  in  any State  /  UT,  the  expenditure  on  excess  number  of  beneficiaries  can  be 
+
+met from the resources of the State/UT. 
+
+4.1.4  Three  percent  of  the  funds  allotted  to  a  State/UT  may  be  used  for  administrative 
+
+expenses. 
+
+4.1.5  The States / UTs shall intimate the distribution of the funds received between the sub 
+
+schemes  of  NSAP  to  the  Ministry  of  Rural  Development  within  a  month  after  the 
+
+allocation of State/UTs is conveyed to them. 
+
+4.2  Release of Funds 
+
+4.2.1  Funds for the schemes of National Social Assistance Programme (NSAP) would be 
+
+released  to  the  Consolidated  Fund  of  the  State  Government.  The  releases  shall  be  as 
+
+follows:­
+
+16
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+a)  The annual allocation will be released in two installments. 
+
+b)  First  installment  shall  be  equal  to  50%  of  the  annual  allocation  fixed  in 
+
+accordance with the provisions mentioned in para 4.1. 
+
+c)  Second installment shall be equal to the annual allocation minus first installment, 
+
+as per conditions listed in para 4.4. 
+
+4.3 
+
+Procedure for release of First Installment 
+
+a) 	 First installment shall be released automatically to all the States who have taken the 
+
+second installment in the previous year. 
+
+b) 	 The  unspent  balance,  if  any,  will  be  temporarily  deducted  from  the  first 
+
+installment and made good at the time of the second installment if the dues to 
+
+the beneficiaries of the previous financial year have been fully cleared and the 
+
+amount spent by the State Government. 
+
+c) 	 States who have not received the second installment in the previous financial year, 
+
+will have to submit proposals for first installment alongwith all requisite documents 
+
+which  were  required  to  be  submitted  for  the  release  of  second  installment  of  the 
+
+previous financial year. 
+
+d) 	 States  will  also  have  to  submit  documents  with  proof  of  fulfillment  of 
+
+conditionalities, if any, indicated during earlier releases. 
+
+4.4 
+
+Procedure for release of Second Installment 
+
+Release  of  second  installment  to  the  State  will  be  subject  to  the  following 
+
+conditions:­
+
+a)  Utilisation of at least 60% of total available funds (including opening balance 
+
+plus releases during the year and miscellaneous receipts). 
+
+b)  The second installment of the Administrative funds be released upon the 
+
+utilization  of  60%  of  the  available  Administrative  funds  and  subject  to 
+
+fulfillment of conditions, if any, stipulated during the previous release. 
+
+c)  Fulfillment of conditionalities, if any, indicated during earlier releases. 
+
+The State Government shall furnish the following documents alongwith the proposal:­
+
+17
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+a) 	 The application for release of 2nd  installment should be submitted by the State 
+
+Government in the prescribed proforma at Annexe – VI. 
+
+b) 	 The  proposal  for  release  of 
+
+installment  should  be  submitted  by 
+15thDecember. No proposal for release of 2nd  installment would be considered 
+after 15thDecember, unless there is a justifiable reason for delay. 
+
+2nd 
+
+c) 	 Utilization Certificate (for State as a whole) for the funds received during the 
+
+previous  financial  year  in  the  prescribed  proforma  (Annexe  - VII).  This 
+
+should indicate scheme-wise utilization. 
+
+d) 	 Utilization Certificate for the funds received during the current financial year 
+
+in the prescribed proforma (Annexe – VII). 
+
+e) 	 A  certificate  that  the  3%  administrative  expenses  have  been  incurred  on 
+
+permissible items within the approved ceiling. (Annexe VI) 
+
+f) 	 A  certificate  that  the  funds  have  been  transferred  to  the  beneficiaries  as  per 
+
+provisions of the guidelines. (Annexe VI) 
+
+g) 	 Non-diversion and non-embezzlement certificate (Annexe VI) 
+
+h) 	 The  Audit  report  of  the  previous  financial  year  has  been  received  from  all 
+
+implementing agencies which has been examined and found to be in order. 
+
+4.5.  Disbursement of Pensions. 
+
+4.5.1  The  guiding  principle  for  disbursement  of  pension  has  to  be  the  convenience  and 
+
+choice of the beneficiary.  Given their physical, social and economic vulnerability, it should 
+
+be ensured that an infirm/old beneficiary will not have to travel more than 3 kms to access 
+
+his/her  pension  account.  As  far  as  possible,  for  people  who  cannot  cover  the  distance 
+
+physically, the objective should be to provide door step services. 
+
+4.5.2  The possible modes of payment are Banks, Post Office Account, Money Order and 
+
+Cash  disbursement.  However  the  preferred  mode  of  payment  should  be  Bank  Account  or 
+
+Post Office Savings Account. At the same time in some areas, crediting the pension amount 
+
+into the bank/post office may not entirely serve the purpose as the beneficiaries may find it 
+
+difficult to travel to the nearest bank/post office branch.  In order to deliver the pension at 
+
+the door step, banking correspondent model could be adopted as per the instructions issued 
+
+by the RBI. 
+
+18
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+4.5.3  Postal  Money  Order  ensures  door  step  delivery  of  pension  and  can  be  used  where 
+
+beneficiaries  prefer  that  mode.  However,  to  encourage  savings,  and  to  ensure  financial 
+
+inclusion,  the States should consciously encourage transfer to Bank/Post Office  Accounts, 
+
+which when enabled through IT will result in timely delivery, and there will be no leakage 
+
+or delays in disbursement. 
+
+4.5.4  Payment of assistance in cash to beneficiaries should be adopted only if other modes 
+
+are not workable.  If the payment is to be made in cash, the following measures should be 
+
+adopted :­
+
+a) 	 The payment will be disbursed in public meetings such as Gram Sabha in rural areas 
+
+and Ward Committees / Area Sabhas in urban areas. 
+
+b) 	 The  payment  should  be  made  on  a  specific  day  of  every  month  which  is  widely 
+
+publicized. 
+
+c) 	 The  amount  of  pension  due  will  be  disbursed  to  the  beneficiaries  in  terms  of  100 
+
+rupee  notes  by  a  designated  officer  of  suitable  rank.  The  idea  is  to  prevent 
+
+harassment of the beneficiaries. 
+
+d) 	 In extreme cases where a beneficiary is found to be incapable of receiving his / her 
+
+pension due at the specified place of disbursement, door step delivery of the pension 
+
+dues shall be ensured within seven days. 
+
+e) 	 Necessary arrangements must be made at the places of disbursement for convenience 
+
+of the beneficiaries especially during the summer and rainy seasons. 
+
+f) 	 The  list  of  beneficiaries  in  respect  of  that  particular  Gram  Panchayat  /  Ward  in 
+
+vernacular language  must be displayed at the place of disbursement for information 
+
+of general public on the day of disbursement. 
+
+g) 	 Adequate  security  arrangements  must  be  ensured  by  the  officer  concerned  at  the 
+
+place of pension disbursement and for transportation of the pension funds if required. 
+
+h) 	 Receipt  of  payment  shall  be  taken  from  the  beneficiary  and  kept  on  record  in  the 
+
+Gram Panchayat / Municipal Office. 
+
+19
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+i) 	 The  name  of  the  beneficiary  should  be  announced  in  the  Gram  Sabha  /  Ward 
+
+Committee / Area Sabha meetings in the presence of all members. 
+
+j) 	 The cash disbursement process should be verified specifically in Social Audit. 
+
+20
+ 
+
+ 
+ 
+ 
+
+CHAPTER V 
+
+
+ELECTRONIC / IT ENABLED TRANSFER OF PENSIONS 
+
+
+5.1  Use of Information Technology 
+
+5.1.1  In  NSAP,  the  requirement  for  efficient  service  delivery  would  entail  time  bound 
+
+sanction,  release  and  disbursement  of  pensions. 
+
+In  order  to  enhance  efficiency  in 
+
+implementing NSAP both for sanction and disbursement of pensions, use of IT is essential. 
+
+5.2  NSAP - MIS 
+
+5.2.1  To  put  in  place  a  fund  management  system  that  is  IT-enabled,  the  Ministry  has 
+
+developed a software, which is transaction / work-flow based.  It can also be used by States 
+
+/ UTs for their own pension schemes.  The Ministry has developed this MIS for all States 
+
+and UTs to adopt.  States and UTs which have developed their own software will have to 
+
+ensure porting of their information / data onto NSAP-MIS through a bridge-software. It is 
+
+mandatory  that,  the  States  having  their  own  software  must  ensure/enable  porting  of 
+
+data on the Ministry’s NSAP-MIS. The detailed Guidelines for use of NSAP-MIS may be 
+
+seen at Annexe VIII. The functional features of NSAP-MIS include:­
+
+5.2.2  Beneficiaries  Database  - The  States  /UTs  are  required  to  maintain  a  database  of 
+
+eligible  beneficiaries  and  upload  it  in  the  public  domain.  The  beneficiary  data  should 
+
+include all  details  of  the beneficiary including his / her  photograph.  Since belonging to a 
+
+BPL  family  is  a  pre-condition  for  sanction  of  pension 
+
+the  proposed  link  with  the  BPL 
+
+database should be used to avoid duplication of pensioners. 
+
+5.2.3  Legacy  Data  - This  legacy  database  is  required  to  be  uploaded  on  the  NSAP 
+
+website.  For  this  purpose,  legacy data  formats  for  IGNOAPS,  IGNWPS  and  IGNDPS  are 
+
+placed on the NSAP website.  Since legacy data is huge, it can be entered in the legacy data 
+
+formats  which  are  downloadable  from  the  NSAP  website  and  entered  offline  (without 
+
+continuous use of internet) and sent to Ministry / NIC Delhi for processing and uploading. 
+
+The  data  should  be  complete  in  all  respects  and  the  mandatory fields  must  be  filled.  The 
+
+data on new pensioners’ needs to be entered online. 
+
+21
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+
+5.2.4  Process flow  for new beneficiaries - For new pensioners, the data entry should be 
+
+made  directly  on  the  NSAP  website,  using  the  State  /  District  /  Sub-district  logins.  The 
+
+identification  form  of  a  new  beneficiary  is  filled  by  the  ‘application  receiver’,  the 
+
+verification is done by the ‘verifying officer’, the sanctioning and issue of sanction order is 
+
+done  by  ‘sanctioning  authority’  and  disbursement  is  done  by  the  “Pension  Disbursing 
+
+Authority (PDA)”. There are separate logins created for each role in the whole procedure. 
+
+5.2.5  Fund  Flow  - The  fund  flow  module  contains  the  estimation  of  funds  required, 
+
+allocation and release. Estimation is done from bottom – up i.e, village or ward to District to 
+
+State and then Ministry, as per number of beneficiaries.  Allocation and release is done from 
+
+top to down i.e., Ministry to State to District,  upto the level of the PDA. 
+
+5.2.6  Pension Disbursing Authorities - State Governments are required to nominate  and 
+
+designate the ‘Pension Disbursing Authority’. Depending upon the mode of disbursement, 
+
+the PDA can be set up at State / District / Block / GP or Municipality level. 
+
+5.2.7  Acquittance  Roll  - In  order  to  disburse  pension  to  the  beneficiaries  under  the 
+
+jurisdiction  of  a  PDA,  Gram  Panchayat  wise  or  Ward  wise,  Acquittance  roll  is  to  be 
+
+generated  every  month  and  used  for  disbursing  the  pension.  The  Acquittance  roll  would 
+
+indicate the name of the beneficiary and the amount due to her / him. 
+
+5.2.8  Updation of the Disbursement Ledger - Once the pension has been disbursed and 
+
+the disbursement details of the pension amount paid, signatures of pensioners are taken on 
+
+the  Acquittance  roll,  these  details  need  to  be  updated  in  the  disbursement  ledger  in  the 
+
+NSAP website to enable updation of disbursement to the beneficiaries and for updating fund 
+
+availability status with the PDAs for further allocation. 
+
+5.2.9  Discontinuation  –  There  is  provision  for  entering  the  results  of  the  periodic 
+
+verification.  In case a pensioner’s pension has to be discontinued, due to death / migration / 
+
+crossing BPL or any other reason, this facility can be used to stop the pension. 
+
+5.2.10 Reinstate  –  In  case  a  pension  has  been  discontinued,  but  the  pensioner  becomes 
+
+eligible later, he / she can appeal to the Sanctioning Authority.  If found eligible, he can be 
+
+reinstated. 
+
+22
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+5.2.11 Central  Plan  Scheme  Monitoring  System  (CPSMS)  –  CPSMS  is  a  web-based 
+
+outline  transaction  system for  fund  management  and  e-payment  to  implementing  agencies 
+
+and  beneficiaries.  The  primary objective  of  CPSMS  is  to  establish  an  efficient fund flow 
+
+system and expenditure network.  It generates scheme specific MIS on utilization of funds 
+
+released from Consolidated Fund of India on real time basis.  Accordingly, States / UTs 
+
+should use CPSMS for disbursing the funds under the schemes of NSAP. 
+
+5.2.12 Aadhaar  based  platform for pension  disbursement :- This  platform will further 
+
+enhance  efficiency  in  the  sanction,  payment  and  disbursement  process.  Many  States  and 
+
+UTs have reached an advanced stage in Aadhaar enrolment of beneficiaries, recognizing the 
+
+fact  that  this  will  help  in  reduction  of  leakages  and  duplication.  It  could  also  provide 
+
+mobility to  the  pensioners  in  case  of  migration  from  one  place  to  another.  This  platform 
+
+will support financial inclusion also. 
+
+The  State  should  develop  a  careful  plan  sensitive  to  the  special  needs  of  the 
+
+beneficiaries  to  enable  them  to  get  Aadhaar  numbers  through  proactive  outreach.  This 
+
+should be followed up by seeding the Aadhaar numbers in the Bank / Post Office accounts. 
+
+It should be ensured at the same time that no beneficiary is denied his or her entitlements 
+
+for the reason that she has no bank / Post Office account and/or Aadhaar number. 
+
+23
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+CHAPTER VI 
+
+
+MONITORING AND EVALUATION 
+
+
+6.1  Advisory Committees. 
+
+6.1.1  National Social Assistance Advisory Committee (NSAAC) 
+
+A National Social Assistance Advisory Committee will be established at the all India 
+
+level  to  assist  the  Ministry of  Rural  Development  in  the  monitoring  and  evaluation  of  the 
+
+NSAP  and  to  advise  on  matters  related  to  policy  and  its  effective  implementation.  It  will 
+
+also clear state specific variations in guidelines within the overall framework of NSAP. The 
+
+NSAAC  members  may include representatives from the related Ministries or Departments 
+
+of the Central Government viz., Ministry of Social Justice and Empowerment, Ministry of 
+
+Disability  Affairs,  Ministry  of  Women  and  Child  Development,  Ministry  of  Health  and 
+
+Family  Welfare,  Ministry  of  Labour,  upto  five  representatives  from  civil  society 
+
+organizations  and  academic  institutions  and  five  Secretaries  from  State  Governments  on 
+
+rotation covering all regions of the country. The NSAAC may meet at least twice in a year. 
+
+6.1.2  State Level Committee 
+
+The State level Committee should be headed by the Chief Secretary or Additonal Chief 
+
+Secretary nominated by Chief Secretary and should include (a) Secretaries of Departments 
+
+concerned such as Finance, Rural Development, Panchayati Raj, Municipal Affairs, Social 
+
+Welfare,  Health,  Revenue,  Women  and  Child  Development,  Minorities,  SC,  ST  etc.,  (b) 
+
+two  Representatives  of  Banks/Post  Office  (c)  Four  Chairpersons,  2  each  of  Zilla  Parishad 
+
+and Municipalities (d)  Collectors  from three  districts  in rotation,  and (e) four independent 
+
+experts  and  representatives  of  NGOs. 
+
+This  Committee  will  be  responsible  for 
+
+implementation,  monitoring  and  evaluation  of  the  programme  and  matters  concerned 
+
+therewith. State Committees should meet at least twice a year. 
+
+6.1.3  District Level Committee 
+
+District  level  Committee  may  be  headed  by  the  Chairperson  Zilla  Parishad  /  Chief 
+
+Executive  Officer,  Zilla  Parishad  /  District  Collector  and  should  include  (a)  District  level 
+
+officials  of  Departments  concerned  (b)  four  representatives  from  among  Chairpersons  of 
+
+24
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Gram  /Intermediate  Panchayats  and  Municipalities  and  (c)  four  independent  experts  and 
+
+representatives  of  NGOs  working  in  this  area.  The  District  level  Committee  will  be 
+
+responsible  for  implementation,  monitoring  and  evaluating  the  programme  within  the 
+
+district and for matters concerned therewith.  They should submit their reports to the State 
+
+nodal department on a monthly basis. 
+
+6.2  State Nodal Department 
+
+6.2.1  The  States  /  UTs  should  as  far  as  possible  implement  the  Scheme  through  one 
+
+department.  If  this  is  not  feasible,  a  nodal  department  will  be  identified  for  coordinating 
+
+with the different implementing departments for periodic review and submission of reports 
+
+to Government of India. 
+
+6.3  Monthly and Quarterly  Progress Reports 
+
+6.3.1  State Governments through the Nodal department will submit physical and financial 
+
+progress  under  different  schemes  of  NSAP  to  the  Government  of  India.  For  this, 
+
+Quarterly/Monthly  Progress  Reports  have  been  prescribed  as  at  Annexe- I.  The 
+
+Monthly/Quarterly  Progress  Reports  have  to  be  furnished  online  by  the  State  Nodal 
+Department by 15th  of every month after obtaining reports from the district and field offices 
+
+in  a  regular  manner.  The  Quarterly/Monthly  Progress  Reports  will  be  generated 
+
+automatically once NSAP-MIS is fully operational. 
+
+6.4  Nodal Officers Meeting 
+
+6.4.1  All  the  State  Governments  are  required  to  designate  an  officer  of  appropriate  rank, 
+
+other  than  Secretary  of  the  Nodal  Department,  as  a  State  nodal  officer  for  NSAP.  The 
+
+State nodal officer is responsible for furnishing of Monthly Progress Reports and any other 
+
+information required by the Ministry of Rural Development  from time to time.  The nodal 
+
+officer is also required to attend the nodal officers meeting which is  held every quarter by 
+
+the Ministry of Rural Development.  Ministry has to be kept informed about any change of 
+
+nodal officer in the State. 
+
+6.5  Performance Review Committee (PRC) 
+
+6.5.1  The  progress  of  all  rural  development  programmes  are  reviewed  by  the  Secretary, 
+
+Ministry of  Rural  Development  with  the  Secretaries  of  the  State  departments  during  PRC 
+
+25 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+meetings held at the end of every quarter.  The progress of NSAP is also included as one of 
+
+the agenda items during the PRC meetings.  In the PRC Meetings, States may raise issues 
+
+relating  to  implementation  and  also  share  their  experiences  and  give  suggestions  for 
+
+improvements. 
+
+6.6  Area Officers 
+
+6.6.1  Area Officers are designated from among officers of Ministry of Rural Development, 
+
+for field visits and interaction with beneficiaries, and local public representatives. 
+
+6.6.2  Area  Officers  report  will  be  shared  with  the  State  Government  for  improving  the 
+
+implementation of schemes. 
+
+6.7  National Level Monitors (NLMs) 
+
+6.7.1  National  Level  Monitors  (third  party  monitors)  are  appointed  by  the  Ministry  of 
+
+Rural  Development  to  undertake  field  visits  and  report  on  the  implementation  of  various 
+
+rural  development  programmes.  The  NLMs  are  assigned  to  different  States  and  are 
+
+provided with questionnaires for the purpose of  assessment of  implementation of  schemes 
+
+in  the  field.  The  NLMs  review  would  also  monitor  schemes  under  NSAP  and  the  State 
+
+Nodal Department have to proactively assist NLMs and facilitate their visits.  The reports 
+
+of NLMs will be shared with the State Government for follow-up action. 
+
+6.8  Vigilance and Monitoring Committees:  The VMCs at the State and District levels 
+
+are also a forum for review of implementation of the programme. 
+
+6.9  Grievance  Redressal  Mechanism  :  The  State  should  put  in  place  a  grievance 
+
+redressal system at the Gram / Intermediate Panchayat /  District / Municipality levels,  and 
+
+designate  an  officer  of  appropriate  seniority  to  whom  the  grievances  can  be  addressed. 
+
+Timelines  for  dealing  with  grievances  should  be  fixed.  Complainant  must  be  given  a 
+
+receipt, indicating the time line for redressal.  The office of the designated officer must keep 
+
+a record of  complaints  received, action taken  and  the outcome.  The complainant  must be 
+
+informed in writing about action taken. 
+
+26 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+6.10 
+
+Social Audit 
+
+6.10.1 
+
+Participation of the public in decision making and policy execution is one of 
+
+the tenets of good governance.  If the members of  the society particularly the stakeholders 
+
+of a scheme are involved in scrutinizing and evaluating the implementation of the scheme at 
+
+the  field  level,  the  learnings  can  help  to  implement  the  scheme  in  a  more  meaningful 
+
+manner and the shortcomings, if any, found and brought the fore, could be eliminated.  It is 
+
+for this purpose that ‘Social Audit’ is essential in the implementation and monitoring of the 
+
+schemes  under  NSAP.  Social  Audit  not  only leads  to  the  refinement  of  the  schemes  but 
+
+also  enhances  transparency  and  accountability,  besides  redressing  grievances  of  the 
+
+beneficiaries. 
+
+6.10.2 
+
+Social Audit is to be conducted by the Gram Sabha / Ward Committee.  Social 
+
+Audit  under  NSAP  should  be  held  at  least  once  in  every  six  months.  Hence,  one  of  the 
+
+agenda  items  of  at  least  two  Gram  Sabhas  /  Ward  meetings  convened  by  the  Gram 
+
+Panchayat/ Municipality during the year needs to be “Conduct of Social Audit for schemes 
+
+of NSAP”.  The announcement of the Social Audit should be made by the District Officer at 
+
+least 30 days in advance.  For each Social Audit, the Gram Sabha / Ward will elect for itself 
+
+a Social Audit Committee comprising at least two beneficiaries from each of the schemes 
+
+under NSAP of which one shall be a woman in addition to its regular members (appointed 
+
+for Social Audit of MGNREGA / IAY). 
+
+It should be ensured beneficiaries from amongst 
+
+SCs,  STs  and  Minorities  also  are  represented  in  the  Social  Audit  Committee.  The  Gram 
+
+Panchayat / Municipality / Block / District Officers shall ensure that all relevant information 
+
+such as names and addresses of beneficiaries, mode of disbursement of pension, amount of 
+
+pension disbursed etc., are  made available to the Social Audit Committee at least 15 days 
+
+in advance.  The Committee can verify the information if it desires to do so, by physically 
+
+visiting the beneficiaries.  The Committee should also review action taken on complaints 
+
+from the record of the officer designated for grievance redressal. 
+
+6.10.3 
+
+The  Social  Audit  Committee  will  read  out  its  findings  publicly  in  the  Gram 
+
+Sabha/ Ward meetings on the scheduled date for Social Audit.  The staff implementing the 
+
+programme  at  Gram  /  Intermediate  Panchayat  /  Municipality  level  shall  also  be  present 
+
+during  the  Social  Audit.  Participants  shall  be  given  an  opportunity  to  seek  and  obtain 
+
+27 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+information  from  the  officials  concerned  and  verify  records.  The  Action  Taken  Report 
+
+relating to the previous Social Audit shall be read out at the beginning of each Social Audit. 
+
+The minutes of Social Audit held shall be recorded by an officer authorized, signed by all 
+
+the participants, and sent to the District Officer. 
+
+6.10.4 
+
+The  State  nodal  department  should  monitor  reports  of  Social  Audits 
+
+conducted and send reports to the Ministry of Rural Development in NSAP-MIS. 
+
+28 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Chapter VII 
+
+ADMINISTRATIVE EXPENSES 
+
+7.1 
+
+Provision 
+
+7.1.1 
+
+State  Governments  are  permitted  to  utilize  upto  3%  of  the  NSAP  funds  released 
+
+during the  year towards administrative expenses to streamline implementation of Schemes 
+
+under NSAP subject to the  conditions mentioned in following paras. 
+
+7.1.2  The provision is meant to enable effective implementation of NSAP Schemes.  The 
+
+States can decide the norms and formula for allocating this 3% as per local requirements. 
+
+7.2 
+
+Eligible items of expenditure 
+
+7.2.1  Activities permissible under administrative activities are  : 
+
+(a) Printing and distribution of Pension Passbook, printing of application forms. 
+
+(b) Organising Camps for issue of disability certificates to disability pension 
+
+beneficiaries 
+
+(c) 1% of the administrative expenses may be earmarked for Information, 
+
+Education & Communication (IEC) - awareness generation activities 
+
+ 
+ 
+ 
+
+Preparation and dissemination of IEC  material 
+Community mobilization 
+Use of media 
+
+(d) Training - Nodal officers, officials of PRIs, Urban local bodies, NGOs 
+
+ 
+ 
+
+Development of training modules and materials 
+Organization of training programmes 
+
+(e) Impact assessment 
+
+(f) MIS 
+ 
+ 
+ 
+
+Data Entry 
+Report generation 
+Training of stakeholders in MIS 
+
+29 
+
+     
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+
+(g) Quality supervision 
+ 
+ 
+ 
+
+Annual Verification 
+Conducting Evaluation Studies and Impact assessment studies 
+Social Audit 
+
+(h) Operational Expenses 
+ 
+
+Expenses  related  to  the  disbursement  of  NSAP  such  as  Bank/Post  Office 
+charges, and money order charges. 
+
+(j) Stationery related to computational processes/MIS 
+
+7.3 
+
+Items of expenditure not permissible 
+
+7.3.1 
+
+These  would include -
+
+(a)  Salaries/ remunerations/ honoraria of functionaries already engaged by the 
+Government / PRIs/ Municipalities / any other implementing agency 
+
+(b)    Purchase of new vehicles and repair of old vehicles 
+(c)    Civil works 
+
+7.4 
+
+One-time expenses 
+
+7.4.1  Under administrative charges one time expenses  may  be allowed on following 
+
+items: 
+
+(a)  Augmentation of computational facilities at the Block level 
+(b) Almirahs for record-keeping and functional furniture. 
+
+7.5 
+
+Other Conditions 
+
+7.5.1  The  administrative  expenses  will  be  met  from  the  funds  available  with  the  State 
+
+Government and will not be released separately. 
+
+7.5.2  Administrative expenses are over and above the expenditure States already  incur in 
+
+implementation of NSAP Schemes and not meant to replace it. 
+
+7.5.3  Further  as  per  para  2.3.4(v)  State  Governments  have  to  identify/create,  out  of  their 
+
+own  resources,  at  least  one  programme  officer  of  suitable  rank  at  the  district  and  block 
+
+levels with supporting staff for effective implementation of NSAP. 
+
+30 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+7.5.4  The  State  will  distribute  the  administrative  expenses  under  NSAP  among  the  State 
+
+headquarters/districts/Gram/Intermediate Panchayat / Municipalities as per need. 
+
+7.5.5.  Expenditure  incurred  on  administrative  expenses  will  be  intimated  by  the  State 
+
+Government  to  the  Government  of  India  at  the  end  of  every  financial  year  in  the 
+
+consolidated utilization certificate of the State (Para 2 in Annexure VII ). 
+
+31 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Chapter VIII 
+
+CONVERGENCE 
+
+8.1 
+
+In  order  to  ensure  wider  social  security  it  is  necessary  to  converge  different  anti-
+
+poverty programmes with NSAP.  The following convergence should be automatic :-
+
+a)  All  the  NSAP  beneficiaries  should  be  enrolled  for  benefits  under  RSBY  or  State 
+
+plevel health insurance schemes. 
+
+b)  All the NSAP beneficiaries should be covered under Aam Adami Bima Yojana. 
+
+c)  Special  efforts  should  be  made  to  provide  housing  under  Indira  Awaas  Yojana  and 
+
+urban housing schemes to eligible beneficiaries under NSAP. 
+
+d)  The State Livelihood Missions, both rural and urban, should proactively enroll all the 
+
+women beneficiaries of NSAP in the SHGs of NRLM / NULM. 
+
+e)  It should be ensured that all NSAP beneficiaries automatically get the benefit of food 
+
+security. 
+
+f)  NSAP beneficiaries of rural areas and / or their family members should be given job 
+
+cards and proactively provided employment under MGNREGA. 
+
+g)  NSAP  beneficiaries  and  /  or  their  children  should  be  given  preference  for  training 
+
+under Ajeevika Skills Programme. 
+
+8.2  At the micro-level, using the SHG network data on the needs of each family should 
+
+be  collected  and  converged.  NSAAC  should  specifically  coordinate  the  convergence 
+
+exercise. 
+
+8.3 
+
+The above suggestions  are not exhaustive. The States  may have their own schemes 
+
+for the betterment of the lives of the poor families. There may be new schemes in the future 
+
+also. There should be a conscious effort to refer to the data base of the NSAP beneficiaries 
+
+whenever  identification  of  beneficiaries  in  other  schemes  is  done,  because  given  their 
+
+vulnerable socio-economic and health conditions, the NSAP beneficiaries would be eligible 
+
+for the other schemes also. 
+
+32 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Chapter IX 
+
+STATE SPECIFIC VARIATION OF GUIDELINES 
+
+9.1 
+
+Formulation of State Specific Variation of Guidelines 
+
+In Chapter 2 of the guidelines the key-principle governing the implementation of the 
+
+schemes under NSAP have been highlighted.  These principles should be the guiding factor 
+
+in the implementation plan of NSAP at the State / District and local level.  In the subsequent 
+
+Chapters, the processes and procedures have been discussed in detail. 
+
+However, it has been observed that there are variations in the methods that the States 
+
+adopt.  It is also understood that these variations are as a result of local requirements.  It will 
+
+definitely take time to harmonise and come up with a uniform procedure. 
+
+Therefore the States are permitted to come out with variations within the framework 
+
+of the key principles of NSAP.  These guidelines will be subject to a one-time approval of 
+
+the  National  Social  Assistance  Advisory  Committee  constituted  in  the  Ministry  of  Rural 
+
+Development. 
+
+The State guidelines should contain the following details: 
+
+ 
+Procedure for identification of beneficiaries, sanction of pension 
+  Time lines for the different process including appeal and review. 
+  Administrative arrangements 
+  Mode of disbursement 
+ 
+  Road map for electronic transfer, MIS and monitoring. 
+
+Process for social audit and annual verification 
+
+The  state  guidelines  should  be  submitted  to  the  National  Committee  within  three  months 
+
+from the date of issue of these guidelines. 
+
+33 
+
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Monthly/  Quarterly  Progress Report * 
+
+1.  Opening balance under NSAP as on 1st April (in lakh) 
+
+2.  Funds released for NSAP, upto month of reporting (in lakh) 
+
+Annexe I 
+
+3.  Total available funds 
+
+Item 
+
+Annapurna 
+
+Indira 
+Gandhi 
+National Old 
+Age Pension 
+Scheme 
+(IGNOAPS) 
+
+Indira 
+Gandhi 
+National 
+Widow 
+Pension 
+Scheme 
+(IGNWPS) 
+
+Indira 
+Gandhi 
+National 
+Disability 
+Pension 
+Scheme 
+(IGDNDPS) 
+
+National 
+Family 
+Benefit 
+Scheme 
+(NFBS) 
+
+1. Total Funds Utilized 
+(in lakh) 
+
+2. Mode of Disbursement ( in numbers) 
+
+a.  Bank Account 
+
+b.  Post Office Account 
+
+c.  Money Order 
+
+d.  Cash 
+
+3.Total number beneficiaries 
+
+*Reports for every Quarter (June, September, December, March) should come in the same format with cumulative figures. 
+*State to ensure that similar reports are received monthly from districts and Municipalities. 
+*Release for next quarter will be based on figures reported in Quarterly Progress Report/Monthly Progress Reports (MPRs) 
+
+Signature of Designated Officer 
+
+Name …………………………… 
+
+Designation…………………….. 
+
+Seal……………………………… 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Annexe II 
+
+Certificate of Coverage 
+(To be submitted by 15th December) 
+
+Government of ………. 
+
+Year_______________ 
+
+INDIRA GANDHI NATIONAL OLD AGE PENSION SCHEME (IGNOAPS) 
+
+This is to certify that_________ (number) persons eligible and belonging to Below Poverty 
+
+Line (BPL) household both in rural and urban areas have been covered under IGNOAPS and are 
+
+receiving the pension. 
+
+It  is  also  confirmed  that  for  the  purpose  of  identifying  new  eligible  beneficiaries  under 
+
+IGNOAPS, the Guidelines of NSAP, have been followed. 
+
+(Signature) 
+Secretary of Nodal Department for NSAP 
+
+or 
+
+Officer designated. 
+
+Date…………………… 
+
+Seal …………………... 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Annexe II 
+(Contd.) 
+
+Certificate of Coverage 
+(To be submitted by 15th December) 
+
+Government of ………. 
+
+Year_______________ 
+
+INDIRA GANDHI NATIONAL WIDOW PENSION SCHEME (IGNWPS) 
+
+This is to certify that_________ (number) persons eligible and belonging to Below Poverty 
+
+Line (BPL) household both in rural and urban areas have been covered under IGNWPS and are 
+
+receiving the pension. 
+
+It  is  also  confirmed  that  for  the  purpose  of  identifying  new  eligible  beneficiaries  under 
+
+IGNWPS, the Guidelines of NSAP, have been followed. 
+
+(Signature) 
+Secretary of Nodal Department for NSAP 
+
+or 
+
+Officer designated. 
+
+Date…………………… 
+
+Seal …………………... 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Annexe II 
+(contd.) 
+
+Certificate of Coverage 
+(To be submitted by 15th December) 
+
+Government of ………. 
+
+Year_______________ 
+
+INDIRA GANDHI NATIONAL DISABILITY PENSION SCHEME (IGNDPS) 
+
+This is to certify that_________ (number) persons eligible and belonging to Below Poverty 
+
+Line (BPL) household both in rural and urban areas have been covered under IGNDPS and are 
+
+receiving the pension. 
+
+It  is  also  confirmed  that  for  the  purpose  of  identifying  new  eligible  beneficiaries  under 
+
+IGNDPS, the Guidelines of NSAP, have been followed. 
+
+(Signature) 
+Secretary of Nodal Department for NSAP 
+
+or 
+
+Officer designated. 
+
+Date…………………… 
+
+Seal …………………... 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Annexe II 
+(contd.) 
+
+Certificate of Coverage 
+(To be submitted by 15th December) 
+
+Government of ………. 
+
+Year_______________ 
+
+NATIONAL FAMILY BENEFIT SCHEME (NFBS) 
+
+This is to certify that_________ (number) persons eligible and belonging to Below Poverty 
+
+Line  (BPL)  household  both  in  rural  and  urban  areas  have  been  covered  under  NFBS  and 
+
+received the onetime benefit. 
+
+It is also confirmed that for the purpose of deciding eligibility under NFBS, the Guidelines 
+
+of NSAP, have been followed. 
+
+(Signature) 
+Secretary of Nodal Department for NSAP 
+
+or 
+
+Officer designated. 
+
+Date…………………… 
+
+Seal …………………... 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+MODEL APPLICATION FORM FOR NATIONAL SOCIAL ASSISTANCE 
+PROGRAMME (NSAP) 
+
+Pension Scheme: 
+
+D 
+IGNOAPS 
+
+D 
+IGNWPS 
+
+D 
+IGNDPS 
+
+Annexe III 
+
+Photo 
+
+Name of Pensioner 
+
+: ____________________________________________ 
+
+Father’s/Mother’s Name 
+Or 
+Husband’s/Wife’s Name 
+
+:___________________________________________ 
+
+Gender (Male/Female) :
+
+ ______________ 
+
+Date of Birth                                        _________/_________/___________ 
+or 
+(Proof of Birth)________________________________________________ 
+
+Category 
+
+:____________________________________ 
+
+(SC/ST/OBC/Minority/Gen.) 
+
+Address : __________________________________________________________ 
+
+Village/locality:______________________________________________________ 
+
+GramPanchayat:/Ward:________________________________________________ 
+
+Sub District/Block 
+
+:__________________________________________ 
+
+District 
+
+State 
+
+:__________________________________________ 
+
+:______________________PIN  ________________ 
+
+Aadhar no.: _____________________________ Ration Card no.:______________ 
+
+Electoral Photo Identity Card (EPIC) no.__________________________________ 
+
+ 
+ 
+
+BPL Detail:  Year:__________   Location:________________  Family ID no.:____________ 
+
+Member ID no.:____________ 
+
+In case of Disability Pension- Type of Disability____________________________________ 
+(As indicated in certificate) 
+
+Details of Bank/ Post Office Account of Pensioner: _________________________________ 
+(if available) 
+
+Signature of the Applicant/Thumb Impression 
+
+Counter Signature 
+
+of Verification Officer  _______________________ 
+
+Name_____________________ 
+
+Designation_________________ 
+
+ 
+ 
+ 
+ 
+   
+
+Annexe III 
+(contd.) 
+
+MODEL APPLICATION FORM FOR BENEFIT UNDER NFBS 
+
+A.  Details of Deceased 
+
+Name 
+
+: 
+
+__________  S/o  __________________________ 
+
+Gender (Male/Female) 
+
+:_________  Age at the Time of Death:    _________ 
+
+Address::______________________________________ 
+
+Village: ____________________________________________________ 
+
+Gram Panchayat:/Ward/locality 
+
+:_______________________________________ 
+
+Sub District/Block 
+
+:__________________________________________ 
+
+District 
+
+State 
+
+BPL Details 
+
+:__________________________________ 
+
+:______________________  PIN  ________________ 
+
+Year:_________Location:___________Family ID No.:_____________ 
+
+Member ID No.:_____________ 
+
+B.  Details of the Family Member to be provided Assistance 
+
+Name 
+
+: 
+
+__________  S/o  __________________________ 
+
+Gender (Male/Female) 
+
+:_________  Date of Birth(with proof):    _________ 
+
+Address::______________________________________ 
+
+Village: ____________________________________________________ 
+
+Gram Panchayat:/Ward/locality 
+
+:_______________________________________ 
+
+Sub District/Block 
+
+:__________________________________________ 
+
+District 
+
+State 
+
+BPL Details 
+
+:__________________________________ 
+
+:______________________  PIN  ________________ 
+
+Year:_________Location:___________Family ID No.:_____________ 
+
+Member ID No.:_____________ 
+
+Signature of the Applicant/Thumb Impression 
+
+Counter Signature 
+Of Verification Officer  _______________________ 
+
+Name_____________________ 
+
+Designation_________________ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+
+Annexe IV 
+
+NATIONAL SOCIAL ASSISTANCE PROGRAMME(NSAP) 
+
+MODEL SANCTION ORDER 
+
+IGNOAPS 
+
+/ 
+
+IGNWPS 
+
+/ 
+
+IGNDPS* 
+
+Sanction Order no.  ________________________  Date 
+
+____/____/_____ 
+
+Until  further  notice  on  the  expiry  of  every  month  be  pleased  to  pay 
+
+Shri/Smt/Ms.____________________________________ 
+
+____________Father’s/Husband’s 
+
+name___________________________________________________,  Age________  Gram 
+
+Panchayat 
+
+/ 
+
+Ward 
+
+/ 
+
+Municipality____________________________ 
+
+Sub 
+
+District_____________________Area_____________ 
+
+District 
+
+__________________, 
+
+State__________________, at the rate of Rs.___________ per month from________________. 
+
+Pension Disbursement Authority (PDA)  ___________________________,  _____________. 
+
+Signature & Seal of 
+
+Sanctioning Authority  ____________________________ 
+
+*Strike off which is not applicable 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Annexe IV 
+(contd.) 
+
+NATIONAL SOCIAL ASSISTANCE PROGRAMME(NSAP) 
+
+MODEL SANCTION ORDER 
+
+NATIONAL FAMILY BENEFIT SCHEME ( NFBS ) 
+
+Sanction Order no.  ________________________  Date 
+
+____/____/_____ 
+
+Please  pay  (Name  of 
+
+the  Applicant)___________________________________ 
+
+Father’s 
+
+/  Husband’s  name____________________________Rs._______,  under  National 
+
+Family  Benefit  Scheme  on  account  of  death  of  (Name  of  deceased  person)_______________ 
+
+Age 
+
+(of 
+
+deceased 
+
+person)_____________  Gram 
+
+Panchayat/  Ward/Municipality 
+
+_____________________Sub  District________________  District  ____________________, 
+
+State___________________________. 
+
+Signature & Seal of 
+
+Sanctioning  Authority 
+
+____________________ 
+
+*Strike off which is not applicable 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+NATIONAL SOCIAL ASSISTANCE PROGRAMME (NSAP) 
+
+Annexe-V 
+
+Pensioner’s Pass Book-Model 
+
+IGNOAPS  /  IGNWPS  /  IGNDPS 
+
+Name of Pensioner_______________________________, 
+
+S/o / W/o _______________________________ 
+
+Address________________________________________ 
+
+Village / Ward___________________________________ 
+
+Gram Panchayat / Municipality ____________________ 
+
+Sub District/Block________________________District_____________________ 
+
+State_________________ 
+
+ 
+ 
+      
+      
+ 
+
+Sanction Order no._____________ Date_______________ 
+
+Photo 
+
+Name of Pensioner   :___________________________ 
+
+Father’s /Husband’s Name :______________________________________ 
+
+Date of Birth_______ /______ /_______  or  Proof of Birth__________________________ 
+
+Category 
+(SC/ST/OBC/Minority/Gen.) 
+
+:______________  Gender (Male/Female) 
+
+:______________ 
+
+In case of Disability Pension, Type of Disability__________________________ 
+(As specified in disability certificate) 
+
+Mode of Disbursement: 
+
+Bank 
+
+/ 
+
+Post Office Account 
+
+/  M.O. 
+
+/ 
+
+Cash 
+
+Aadhaar No.:_____________________________________. 
+
+Electoral Photo Identity Card (EPIC) No.:_____________  ________________ 
+
+Ration Card No.:(if available)______________________ 
+
+BPL Details 
+
+Year:_________  Location:___________  Family ID No.:__________ 
+
+Member ID No.:_____________ 
+
+ 
+ 
+ 
+ 
+ 
+
+PENSION DISBURSEMENT DETAILS 
+
+Date of Sanction____________/ Sanction  Order No. ____________ 
+
+April 
+
+May 
+
+June 
+
+July 
+
+August 
+
+September 
+
+Year 
+
+Amt.  Sign  Amt.  Sign  Amt.  Sign  Amt.  Sign  Amt.  Sign  Amt.  Sign 
+
+2014 
+
+2015 
+
+2016 
+
+2017 
+
+2018 
+
+2019 
+
+ 
+ 
+
+October 
+
+November  December 
+
+January 
+
+February 
+
+March 
+
+Year 
+
+Amt.  Sign  Amt.  Sign  Amt.  Sign  Amt.  Sign  Amt.  Sign  Amt.  Sign 
+
+2014 
+
+2015 
+
+2016 
+
+2017 
+
+2018 
+
+2019 
+
+
+NATIONAL SOCIAL ASSISTANCE PROGRAMME 
+
+PROFORMA FOR RELEASE OF SECOND INSTALMENT 
+
+Annexe-VI 
+
+1.  Year: 
+
+: __________________________ 
+
+2.  Name of State/UT 
+
+: __________________________ 
+
+3.  Central Allocation for the current year:
+
+ _____________________ (Rs in lakh) 
+
+4.  Funds received as First Installment:  _______________________( Rs. in lakh) 
+
+5.  Funds carried over from previous year:______________________(Rs. in lakh) 
+
+6.  Total Available Funds:                        ______________________( Rs. in lakh) 
+
+7.  Total funds utilized 
+
+______________________( Rs. in lakh) 
+
+8.  Percentage of utilization 
+
+______________________ 
+
+9.  Utilization Certificate for the previous year to be enclosed in proforma (Annexe VIII). 
+
+10. It is certified that: 
+
+(i)  The  Audit  report  of  the  previous  financial  year  has  been  received  from  all 
+implementing agencies which has been examined and found to be in order. 
+
+(ii)  No  major  irregularities  such  as  embezzlement,  diversion  of  funds  etc.,  have  been 
+noticed in the audit report for the previous  year in respect of any implementing agency 
+under National Social Assistance Programme; 
+
+(iii)  The  funds  have  been  transferred  to  the  beneficiaries  as  per  provisions  of  the 
+guidelines. 
+
+(iv)  All  conditions  laid  down  in  the  NSAP  guidelines  are  being  fulfilled  while 
+implementing the scheme. 
+
+(v) 3 % expenditure has been incurred on permissible items with in the approved ceiling. 
+
+Signature of the Designated Officer  ______________ 
+
+Name:________________ 
+
+Designation:________________ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+UTILISATION CERTIFICATE 
+
+(NATIONAL SOCIAL ASSISTANCE PROGRAMME) 
+
+Annexe VII 
+
+Name of the State/UT ______________________________________ 
+
+Utilization Certificate for the year __________________________________ 
+
+(a)  Unspent balance from previous year _____________________________ 
+
+(b) Total grants received during the year________________ 
+
+(c)  Miscellaneous receipts of the State, if any under NSAP & Annapurna _____________________ 
+
+(d) Total funds available ___________________ (Rs. in lakh) 
+
+Certificate  that  a  sum  of  Rs.______________________  lakh  was  received  by  the  State  of 
+
+_____________________ as Central Assistance during ___________ from Government of India 
+
+(Ministry  of  Rural  Development)  under  National  Social  Assistance  Programme  including 
+
+Annapurna 
+
+Scheme. 
+
+Further 
+
+a 
+
+sum 
+
+of 
+
+Rs._______________(Rs. 
+
+______________________________________ only) being unspent balance of the previous year 
+
+__________  was  allowed  to  be  brought  forward  for  utilization  during  the  current  year 
+
+_____________.  The  miscellaneous  receipts  of 
+
+the  State/UTs  during 
+
+the  year  were 
+
+Rs.____________ lakh. 
+
+2. 
+
+It is also certified that out of the total available funds of Rs.___________ (Rupees 
+
+_________________________) 
+
+Sum 
+
+of 
+
+Rs. 
+
+_________________ 
+
+(Rupees 
+
+______________________________) has been utilized by State/UTs for the purpose for which 
+
+it  was  sanctioned  which  includes  an  amount  of  Rs.  ______________________  towards 
+
+Administrative charges. 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+It 
+
+is 
+
+further  certified 
+
+that 
+
+the  unspent  balance  of  Rs.  _______________(Rupees 
+
+_________________________)  remaining  at  the  end  of  the  year  will  be  utilized  for  the 
+
+programme next year / remaining part of the year. 
+
+3. 
+
+Certified  that  I  have  satisfied  myself  that  the  conditions  on  which  grant-in-aid  was 
+
+sanctioned have been duly fulfilled/are being fulfilled and that  I have exercised the reasonable 
+
+checks  to  see  that  the  money  has  been  actually  utilized  for  the  purpose  for  which  it  was 
+
+sanctioned. 
+
+Dated ____________ 
+
+Signature:_________________ 
+
+Name:___________________ 
+
+Designation & Seal of Nodal Secretary_________________________ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
