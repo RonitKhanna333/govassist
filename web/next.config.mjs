@@ -1,3 +1,5 @@
+import { resolveApiBase } from "./lib/apiConfig.mjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Next 16 blocks cross-origin dev resources by default. Without this,
@@ -8,10 +10,10 @@ const nextConfig = {
   // The generated AGENTS.md/CLAUDE.md would collide with the real ones at
   // the repo root, which are hand-written and carry the corpus gate rules.
   agentRules: false,
-  // Vercel injects this public value at build time per environment. The
-  // client module also carries the safe local default for development.
+  // Embed the hosted default on Vercel even when the project setting is absent.
+  // Explicit environment settings still support separate preview backends.
   env: {
-    NEXT_PUBLIC_API_BASE: process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:8000",
+    NEXT_PUBLIC_API_BASE: resolveApiBase(),
   },
 };
 
