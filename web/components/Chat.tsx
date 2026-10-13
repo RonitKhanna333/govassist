@@ -22,6 +22,7 @@ import { useSpeech } from "@/lib/useSpeech";
 import { AnswerControls } from "./AnswerControls";
 import { Citations } from "./Citations";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { NextSteps } from "./NextSteps";
 import { SiteNav } from "./SiteNav";
 
 const DEFAULT_SCHEME = "pmfme";
@@ -411,6 +412,10 @@ export function Chat() {
               {busy && <div className="bubble bot">{t("chat.thinking")}</div>}
               <div ref={threadEnd} />
             </div>
+
+            {latest?.next_steps && !busy && (
+              <NextSteps checklist={latest.next_steps} t={t} />
+            )}
 
             {latest?.pending && !busy && (
               <AnswerControls

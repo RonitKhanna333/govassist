@@ -109,6 +109,32 @@ export interface ChatResponse {
   reply_citations?: Citation[];
   /** True when this turn recorded an answer to the question on screen. */
   acknowledged?: boolean;
+  /** "What should I do next?" -- only once a verdict exists. */
+  next_steps?: NextSteps | null;
+}
+
+/** One checklist step: always a committed clause, never generated text. */
+export interface NextStep {
+  clause_id: string;
+  /** Plain-language gloss (localized when translation is configured). */
+  plain: string;
+  /** Verbatim official wording -- never translated. */
+  quote: string;
+  page: number | null;
+  source_url: string;
+  uncertain: boolean;
+}
+
+export type NextStepSection = "benefits" | "documents" | "apply" | "after" | "good_to_know";
+
+export interface NextSteps {
+  status: "eligible" | "not_eligible";
+  sections: { key: NextStepSection; items: NextStep[] }[];
+  /** Sections the reviewed official text doesn't cover: said, not filled in. */
+  gaps: NextStepSection[];
+  confirm: ({ kind: "review_pending" } | ({ kind: "failed" | "uncertain" } & NextStep))[];
+  authority: string | null;
+  sources: { id: string; url: string }[];
 }
 
 export class ApiError extends Error {
