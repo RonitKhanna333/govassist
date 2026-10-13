@@ -94,6 +94,13 @@ def get_engine(url: str | None = None):
     # aggressively and always check liveness before handing a connection out.
     return create_engine(
         url, pool_pre_ping=True, pool_recycle=280, pool_size=1, max_overflow=2,
+        # Supabase's transaction pooler (port 6543) and pgbouncer hand each
+        # transaction to whichever server connection is free, so a statement
+        # psycopg prepared on one is missing on the next. psycopg prepares
+        # automatically after a query runs 5 times, which made the failure
+        # appear only after a few requests ("prepared statement ... does not
+        # exist"). None turns automatic preparation off.
+        connect_args={"prepare_threshold": None},
     )
 
 
