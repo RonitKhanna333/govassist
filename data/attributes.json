@@ -28,7 +28,13 @@
     "questions are a fixed set, so translating them per request would add",
     "latency and a model dependency for text that never changes. The polarity",
     "rule applies in every language -- 'already' must survive as pehle hi /",
-    "pehlan hi / erkanave -- and a native speaker should review any edit."
+    "pehlan hi / erkanave -- and a native speaker should review any edit.",
+    "",
+    "`value` describes what a well-formed answer looks like for a numeric",
+    "attribute (whole number, not negative, a percentage within 0-100). It is an",
+    "input domain used to reject malformed values before they reach the rule",
+    "engine -- never an eligibility threshold. Thresholds live only in each",
+    "scheme's reviewed conditions."
   ],
   "applicant_type": {
     "ask": "Are you applying for your own business, on your own?",
@@ -123,6 +129,7 @@
     "ask": "How many people work in your business?",
     "help": "Count everyone who works there, including yourself and any family members who help.",
     "unit": "people",
+    "value": {"integer": true, "min": 0},
     "label": "People working",
     "i18n": {
       "hi": {
@@ -170,6 +177,7 @@
   "age": {
     "ask": "How old are you?",
     "unit": "years",
+    "value": {"integer": true, "min": 0},
     "label": "Your age",
     "i18n": {
       "hi": {
@@ -260,6 +268,7 @@
     "ask": "What share of the total cost can you pay yourself?",
     "help": "You need to put in at least 10 out of every 100 rupees of the project cost. A bank loan can cover most of the rest.",
     "unit": "percent",
+    "value": {"min": 0, "max": 100},
     "label": "Share you can pay",
     "i18n": {
       "hi": {
@@ -460,6 +469,7 @@
     "ask": "How much farmland do you own, in hectares?",
     "help": "1 hectare is about 2.5 acres. So 2 hectares is about 5 acres.",
     "unit": "hectares",
+    "value": {"min": 0},
     "label": "Land owned",
     "i18n": {
       "hi": {

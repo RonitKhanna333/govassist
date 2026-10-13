@@ -29,8 +29,10 @@ jobs:
         run: python data/scripts/validate.py --all
       - name: Check generated projections are fresh
         run: python data/scripts/build.py --all --check
-      - name: Audit Python dependencies
-        continue-on-error: true
+      # Blocking: any known advisory in the deployed runtime set
+      # (requirements.txt) fails the build. A registry/network outage also
+      # fails it -- re-run the job rather than skipping the check.
+      - name: Audit Python runtime dependencies
         run: |
           python -m pip install pip-audit
           python -m pip_audit --strict -r requirements.txt
@@ -47,15 +49,19 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # Vitest 5 and jsdom 30 need Node 22+; Node 20 is end-of-life.
+          node-version: "22"
           cache: npm
           cache-dependency-path: web/package-lock.json
       - name: Install locked dependencies
         run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Run frontend tests
         run: npm test
       - name: Check production build
         run: npm run build
-      - name: Audit frontend dependencies
-        continue-on-error: true
-        run: npm audit --audit-level=high
+      # Blocking for everything that ships to users. Dev-only tooling is
+      # audited by hand; see the exception documented in docs/deploy.md.
+      - name: Audit production frontend dependencies
+        run: npm audit --omit=dev --audit-level=high

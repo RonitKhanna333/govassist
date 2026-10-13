@@ -13,7 +13,9 @@ being trustworthy:
   5  every expression parses under the restricted grammar
   6  clause ids are unique and attribute naming is consistent
   7  clause types are recognised and clauses carry the fields they need
-  8  the corpus agrees with the recorded review decisions
+  8  the corpus agrees with the recorded review decisions, and those
+     decisions are attributable human approvals of the committed content
+     (warnings by default; errors with --require-review)
 
 Exit code is 1 if anything fails, so CI blocks the merge.
 
@@ -41,7 +43,16 @@ from parse_scheme import (
     repo_root,
     scheme_dir,
 )
+from review_binding import PENDING as REVIEW_PENDING
+from review_binding import STALE, UNATTRIBUTED, UNBOUND, assess_scheme
+from review_binding import VALID as REVIEW_VALID
 from state import APPROVED, load_state
+
+_REVIEW_PROBLEM = {
+    UNATTRIBUTED: "recorded by {by!r}, which is not an attributable human reviewer",
+    UNBOUND: "recorded without a content binding, so it does not show what was reviewed",
+    STALE: "the reviewed content has changed since it was approved",
+}
 
 SEVERITY_ERROR = "error"
 SEVERITY_WARN = "warn"
@@ -232,16 +243,45 @@ def check_clause_shape(scheme: Scheme, result: Result) -> None:
                         f"flagged uncertain: {clause.note or 'no note given'}")
 
 
-def check_review_state(scheme: Scheme, directory: Path, result: Result) -> None:
-    """8 -- the corpus matches what was actually reviewed."""
+def check_review_state(scheme: Scheme, directory: Path, result: Result,
+                       require_review: bool = False) -> None:
+    """8 -- the corpus matches what was actually reviewed.
+
+    "Approved" alone is not enough: the approval must be attributable to a
+    person and bound to the content committed now (see review_binding.py).
+    An approval that fails either test is reported as pending human review.
+    These are warnings by default -- like any unreviewed scheme, it still
+    builds and the UI labels it "not yet reviewed" -- and errors under
+    --require-review, which is the release gate.
+    """
     state = load_state(scheme.scheme, directory)
+    flag = result.error if require_review else result.warn
 
     if not state.is_approved("4_clauses"):
-        result.warn("review", scheme.scheme,
-                    "gate 4 (clause review) is not approved")
+        flag("review", scheme.scheme, "gate 4 (clause review) is not approved")
     if not state.is_approved("5_conditions"):
-        result.warn("review", scheme.scheme,
-                    "gate 5 (rule logic review) is not approved")
+        flag("review", scheme.scheme, "gate 5 (rule logic review) is not approved")
+
+    assessment = assess_scheme(scheme, state.data)
+    for gate, verdict in assessment.gates.items():
+        if verdict not in (REVIEW_VALID, REVIEW_PENDING):
+            entry = state.data.get("gates", {}).get(gate, {})
+            flag("review", scheme.scheme,
+                 f"gate {gate} is recorded as approved but is pending human review: "
+                 f"{_REVIEW_PROBLEM[verdict].format(by=entry.get('by'))}")
+    for kind, verdicts in (("clause", assessment.clauses),
+                           ("condition", assessment.conditions)):
+        records = state.data.get(f"{kind}s", {})
+        by_problem: dict[str, list[str]] = {}
+        for item, verdict in verdicts.items():
+            if verdict not in (REVIEW_VALID, REVIEW_PENDING):
+                by_problem.setdefault(verdict, []).append(item)
+        for verdict, items in sorted(by_problem.items()):
+            names = ", ".join(sorted({str(records.get(i, {}).get("by")) for i in items}))
+            flag("review", scheme.scheme,
+                 f"{len(items)} {kind} approval(s) pending human review: "
+                 f"{_REVIEW_PROBLEM[verdict].format(by=names)}",
+                 ", ".join(sorted(items)))
 
     accepted = set(state.accepted_clauses())
     if not accepted:
@@ -258,7 +298,7 @@ def check_review_state(scheme: Scheme, directory: Path, result: Result) -> None:
                     "clause was accepted but is not in scheme.md")
 
 
-def validate_scheme(path: Path) -> Result:
+def validate_scheme(path: Path, require_review: bool = False) -> Result:
     scheme = load_scheme(path)
     directory = path.parent
     result = Result(scheme=scheme.scheme)
@@ -270,7 +310,7 @@ def validate_scheme(path: Path) -> Result:
     check_expressions(scheme, result)
     check_consistency(scheme, result)
     check_clause_shape(scheme, result)
-    check_review_state(scheme, directory, result)
+    check_review_state(scheme, directory, result, require_review)
 
     return result
 
@@ -311,6 +351,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--file", help="validate a specific scheme.md")
     parser.add_argument("--strict", action="store_true",
                         help="treat warnings as failures")
+    parser.add_argument("--require-review", action="store_true",
+                        help="release gate: fail unless Gates 4 and 5 hold valid, "
+                             "attributable human approvals of the committed content")
     parser.add_argument("--root")
     args = parser.parse_args(argv)
 
@@ -337,7 +380,7 @@ def main(argv: list[str] | None = None) -> int:
             failed += 1
             continue
         try:
-            result = validate_scheme(path)
+            result = validate_scheme(path, args.require_review)
         except SchemeParseError as exc:
             console.heading(f"validate — {path.parent.name}")
             print()

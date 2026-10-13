@@ -26,6 +26,8 @@ retrieval (docs/phase2-design.md) becomes necessary when schemes get large.
 
 from __future__ import annotations
 
+import math
+import re
 from dataclasses import dataclass, field
 
 from api.agents import verifier
@@ -66,20 +68,42 @@ def classify(llm: LLMProvider, pending_question: str | None,
     if kind not in ("answer", "question", "chat"):
         kind = "question"
 
-    raw = parsed.get("value")
-    value: object = None
-    if pending_kind == "number":
-        try:
-            number = float(raw)
-            value = int(number) if number.is_integer() else number
-        except (TypeError, ValueError):
-            value = None
-    elif isinstance(raw, str) and raw.lower() in ("yes", "no"):
-        value = raw.lower() == "yes"
-    elif isinstance(raw, bool):
-        value = raw
+    # A value is only ever taken from an answer. The prompt allows a value
+    # alongside a question ("both answers and asks"), but "Do I need to be
+    # over 18?" carries an 18 that nobody said about themselves.
+    if kind != "answer":
+        return Intent(kind)
+    return Intent(kind, _typed_value(parsed.get("value"), pending_kind))
 
-    return Intent(kind, value)
+
+_NUMERIC_TEXT = re.compile(r"-?\d+(?:\.\d+)?")
+
+
+def _typed_value(raw: object, pending_kind: str | None) -> object:
+    """The model's value if it has the type the question needs, else None.
+
+    `float()` alone accepted "nan", "inf" and `true` (as 1.0); none of those
+    is a number a person said. Domain checks (whole number, not negative)
+    happen afterwards in api/rules/values.py, the same as for every other
+    source of a value.
+    """
+    if pending_kind == "number":
+        if isinstance(raw, bool):
+            return None
+        if isinstance(raw, (int, float)):
+            number = float(raw)
+        elif isinstance(raw, str) and _NUMERIC_TEXT.fullmatch(raw.strip()):
+            number = float(raw.strip())
+        else:
+            return None
+        if not math.isfinite(number):
+            return None
+        return int(number) if number.is_integer() else number
+    if isinstance(raw, bool):
+        return raw
+    if isinstance(raw, str) and raw.strip().lower() in ("yes", "no"):
+        return raw.strip().lower() == "yes"
+    return None
 
 
 @dataclass

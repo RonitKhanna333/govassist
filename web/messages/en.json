@@ -50,5 +50,9 @@
   "mic.error.no_device": "No microphone was found on this device.",
   "mic.error.busy": "The microphone is being used by another app. Close it and try again.",
   "mic.error.insecure": "Voice input needs a secure (https) page.",
-  "mic.error.other": "Couldn't start the microphone. Please type your answer instead."
+  "mic.error.other": "Couldn't start the microphone. Please type your answer instead.",
+  "answer.invalid.whole_min": "Please enter a whole number, {min} or more.",
+  "answer.invalid.range": "Please enter a number from {min} to {max}.",
+  "answer.invalid.min": "Please enter a number, {min} or more.",
+  "answer.invalid.number": "Please enter a number."
 }

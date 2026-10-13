@@ -22,6 +22,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.auth.router import router as auth_router
+from api.body_limit import BodySizeLimitMiddleware
 from api.routers.chat import router as chat_router
 
 DEFAULT_ORIGINS = [
@@ -53,6 +54,9 @@ def allowed_origins() -> list[str]:
 
 app = FastAPI(title="GovAssist API", version="0.1.0")
 
+# Inner to CORS, so a 413 still carries the CORS headers the browser needs
+# to show it instead of an opaque network error.
+app.add_middleware(BodySizeLimitMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins(),
@@ -60,8 +64,11 @@ app.add_middleware(
     # This regex is scoped to the GovAssist web project. Never use a broad
     # *.vercel.app regex here: credentials are enabled.
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
+    # PUT is PUT /auth/profile (saving answers to an optional account).
+    # Methods widen what an already-trusted origin may do; they never widen
+    # which origins are trusted.
+    allow_methods=["GET", "POST", "PUT", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-Diagnostic-Token"],
 )
 
 app.include_router(chat_router)

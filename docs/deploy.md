@@ -40,7 +40,9 @@ Neither key is in the repo and neither should be. Add them per project in
   `ULCA_API_KEY` / `BHASHINI_INFERENCE_KEY`, optionally `DATABASE_URL`, and
   optionally `CORS_ORIGINS` for exact preview origins. `GOVASSIST_RATE_LIMIT`
   defaults to 180 requests per client IP per 60 seconds on each warm function
-  instance.
+  instance; the per-route limits below have their own variables.
+  `GOVASSIST_DIAGNOSTIC_TOKEN` (16+ characters) enables the operator-only
+  provider probe.
 - `govassist-web`: configure `NEXT_PUBLIC_API_BASE` separately for each Vercel
   environment. Production should point to the production API. A PR Preview
   should point to the matching API Preview deployment. The value is not
@@ -58,14 +60,66 @@ Vercel preview pattern. Additional preview origins can be supplied as a
 comma-separated list of exact origins in `CORS_ORIGINS`. There is no wildcard
 `*.vercel.app` rule because credentials are enabled.
 
-`POST /chat` has a modest in-memory fixed-window safeguard: 180 requests per
-client IP per 60 seconds per warm function instance, returning HTTP 429 with a
-`Retry-After` header. The classroom default is 180 because several students
-may share one NAT/proxy address. The server intentionally does not trust
-arbitrary forwarded headers, so this remains a shared-IP approximation rather
-than per-person identity. The frontend shows a specific busy message and
-never turns a rate-limit response into a verdict. This is not a distributed
-quota; configure a Vercel/deployment-level limit before a larger public launch.
+Every route that costs something has an in-memory fixed-window guard that
+answers HTTP 429 with `Retry-After` **before** any provider call or password
+hash runs:
+
+| Route | Default per client IP per 60 s | Variable | Why |
+|---|---|---|---|
+| `POST /chat` | 180 | `GOVASSIST_RATE_LIMIT` | may call Groq; classroom NAT headroom |
+| `POST /transcribe` | 20 | `GOVASSIST_TRANSCRIBE_RATE_LIMIT` | Whisper/Bhashini quota |
+| `POST /speak` | 30 | `GOVASSIST_SPEAK_RATE_LIMIT` | TTS provider calls |
+| `POST /auth/register`, `POST /auth/login` | 10 (shared) | `GOVASSIST_AUTH_RATE_LIMIT` | scrypt costs ~64 MB per hash |
+| `GET /health?probe=llm` | 5, and only with `X-Diagnostic-Token` | `GOVASSIST_PROBE_RATE_LIMIT` | spends Groq quota |
+
+Plain `GET /health` stays open, unlimited and free: it reports configuration
+presence only. Without `GOVASSIST_DIAGNOSTIC_TOKEN` the probe returns 403 and
+never contacts Groq.
+
+Request bodies are capped before a route reads them: 64 KB for JSON routes and
+4 MB for `/transcribe` audio (HTTP 413). Field limits sit on top: a chat
+message is at most 1,000 characters, `/speak` text 2,000, and a profile at
+most 64 attributes.
+
+**What this does not do.** The counters live in one process's memory, so each
+warm serverless instance counts separately, a cold start resets them, and
+parallel instances multiply the effective limit. They are keyed on the
+connecting address; forwarded headers are deliberately not trusted (any client
+can set them), so users behind one NAT share a bucket and, on a host whose
+proxy hides the client address, every caller may share one. This is
+accidental-loop and casual-abuse protection, **not** a distributed quota.
+Before a larger public launch, configure a deployment-wide limit in front of
+the API -- for example Vercel Firewall rate-limiting rules (WAF) on
+`/chat`, `/transcribe`, `/speak` and `/auth/*`, or the equivalent at a
+reverse proxy/CDN -- and keep provider-side spending caps on the Groq and
+Bhashini accounts. None of that is configured by this repository.
+
+The frontend shows a specific busy message and never turns a rate-limit
+response into a verdict.
+
+## Dependency audits
+
+CI fails on any high or critical advisory in the Python runtime set
+(`pip-audit --strict -r requirements.txt`) and in production npm packages
+(`npm audit --omit=dev --audit-level=high`).
+
+Documented exception, dev tooling only: `npm audit` without `--omit=dev`
+reports GHSA-vfj7-8cjw-p6xm (`braces`, stack exhaustion on deeply nested glob
+patterns) through `eslint-config-next -> @next/eslint-plugin-next ->
+fast-glob -> micromatch -> braces`. Every `braces` version is in the affected
+range, so there is no patched release to move to; npm's only offer is a
+forced downgrade to `eslint-config-next@14`, which does not support Next 16.
+The package runs only when a developer or CI lints repository-authored files
+with repository-authored glob patterns, and it is never bundled or deployed.
+Re-check when a fixed `braces` (or a `fast-glob` without it) is published.
+
+The October 2026 remediation moved `next` 16.3.5 -> 16.3.8 (GHSA-vcvr-r3jv-pc5j
+and six further Next advisories), `sharp` 0.35.4 -> 0.35.5 (GHSA-wq5f-xc86-pv6w)
+and `source-map-js` 1.2.1 -> 1.2.2 (GHSA-68fv-2mgg-jv7q). For the critical
+`next/og` advisory: the vulnerable code shipped in the installed package, but
+no route in this app imports `next/og` or renders `ImageResponse`, so no
+exploitable path was demonstrated -- the upgrade removes the package-level
+exposure rather than a known live one.
 
 ## Preview-to-API wiring
 
