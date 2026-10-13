@@ -81,6 +81,33 @@ def firewall_probe(request: Request, rounds: int = 2) -> dict:
     from api.onboarding.router import _task_for
 
     webhook, _ = _callback_urls()
+    if request.query_params.get("webhooks") == "1":
+        # Same long script, different shapes of webhook URL.
+        task = script.build_interview_task("hi-Latn", "Test")
+        base = (os.environ.get("VOICE_WEBHOOK_URL") or "https://example.com/voice/webhook")
+        shapes = {
+            "query_token": f"{base}?token=abcdef0123456789",
+            "query_other_name": f"{base}?k=abcdef0123456789",
+            "path_segment": f"{base}/abcdef0123456789",
+            "no_query": base,
+        }
+        out = {}
+        for name, url in shapes.items():
+            results = []
+            for _ in range(2):
+                body = {"phone_number": "+910000000000", "task": task, "language": "hi",
+                        "webhook": url}
+                try:
+                    r = http.post(f"{bland.BASE_URL}/calls",
+                                  data=json_codec.dumps(body).encode("utf-8"),
+                                  headers={"Content-Type": "application/json",
+                                           "Authorization": "probe-invalid-key"}, timeout=20)
+                    blocked = r.status_code == 403 and "cloudflare" in r.text[:3000].lower()
+                    results.append("BLOCKED" if blocked else f"pass({r.status_code})")
+                except http.RequestException as exc:
+                    results.append(f"error({type(exc).__name__})")
+            out[name] = results
+        return out
     variants = {
         "tiny_ascii": "Say hello.",
         "tiny_devanagari": "नमस्ते कहिए।",
