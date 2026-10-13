@@ -46,14 +46,17 @@ MAX_PASSWORD_LENGTH = 256
 
 
 class RegisterBody(BaseModel):
-    email: str = Field(max_length=320)
+    # One of the two. Phone is the usual one for the people this is for.
+    email: str | None = Field(default=None, max_length=320)
+    phone: str | None = Field(default=None, max_length=20)
     password: str = Field(max_length=MAX_PASSWORD_LENGTH)
     display_name: str | None = Field(default=None, max_length=120)
     locale: str | None = Field(default=None, max_length=16)
 
 
 class LoginBody(BaseModel):
-    email: str = Field(max_length=320)
+    email: str | None = Field(default=None, max_length=320)
+    phone: str | None = Field(default=None, max_length=20)
     password: str = Field(max_length=MAX_PASSWORD_LENGTH)
 
 
@@ -81,7 +84,7 @@ def get_sessions():
 
 def _public(user: User) -> dict:
     return {
-        "id": user.id, "email": user.email,
+        "id": user.id, "email": user.email, "phone": user.phone,
         "display_name": user.display_name, "locale": user.locale,
         "profile": json.loads(user.profile_json or "{}"),
     }
@@ -125,15 +128,45 @@ def _require_signing_config() -> None:
 
 
 _DUPLICATE = "That email can't be registered."
+_DUPLICATE_PHONE = "That phone number can't be registered."
+_E164 = re.compile(r"^\+[1-9]\d{7,14}$")
+
+
+def normalize_phone(raw: str) -> str | None:
+    """'98765 43210', '+91 98765-43210', '919876543210' -> '+919876543210'.
+
+    A bare 10-digit number starting 6-9 is an Indian mobile. Anything that
+    can't be made into E.164 is None, never a guess.
+    """
+    text = (raw or "").strip()
+    digits = re.sub(r"\D", "", text)
+    if text.startswith("+"):
+        candidate = "+" + digits
+    elif len(digits) == 10 and digits[0] in "6789":
+        candidate = "+91" + digits
+    elif len(digits) == 12 and digits.startswith("91"):
+        candidate = "+" + digits
+    else:
+        return None
+    return candidate if _E164.fullmatch(candidate) else None
 
 
 @router.post("/register", dependencies=[Depends(enforce(auth_rate_limiter))])
 def register(body: RegisterBody, sessions=Depends(get_sessions)) -> dict:
-    email = body.email.strip().lower()
     password = body.password
-
-    if not _EMAIL_RE.match(email):
-        raise HTTPException(422, "That doesn't look like an email address.")
+    email = phone = None
+    if body.phone:
+        phone = normalize_phone(body.phone)
+        if phone is None:
+            raise HTTPException(422, "That doesn't look like a phone number.")
+        if not (body.display_name or "").strip():
+            raise HTTPException(422, "Please tell us your name.")
+    elif body.email:
+        email = body.email.strip().lower()
+        if not _EMAIL_RE.match(email):
+            raise HTTPException(422, "That doesn't look like an email address.")
+    else:
+        raise HTTPException(422, "A phone number or an email is needed.")
     if len(password) < MIN_PASSWORD_LENGTH:
         raise HTTPException(
             422, f"Use at least {MIN_PASSWORD_LENGTH} characters for your password.",
@@ -141,14 +174,17 @@ def register(body: RegisterBody, sessions=Depends(get_sessions)) -> dict:
     _require_signing_config()
 
     with sessions() as session:
-        if session.scalar(select(User).where(User.email == email)):
+        taken = (select(User).where(User.phone == phone) if phone
+                 else select(User).where(User.email == email))
+        if session.scalar(taken):
             # Same wording as a wrong password on login, and a 409 rather
             # than a distinct message, so this endpoint isn't a way to
             # enumerate who has an account.
-            raise HTTPException(409, _DUPLICATE)
+            raise HTTPException(409, _DUPLICATE_PHONE if phone else _DUPLICATE)
 
         user = User(
             email=email,
+            phone=phone,
             password_hash=hash_password(password),
             display_name=((body.display_name or "").strip() or None),
             locale=(body.locale or "en")[:8],
@@ -162,7 +198,7 @@ def register(body: RegisterBody, sessions=Depends(get_sessions)) -> dict:
             # Two registrations for one email raced past the check above;
             # the unique index decides, and the loser gets the same 409.
             session.rollback()
-            raise HTTPException(409, _DUPLICATE) from exc
+            raise HTTPException(409, _DUPLICATE_PHONE if phone else _DUPLICATE) from exc
         except AuthConfigError as exc:
             session.rollback()
             raise HTTPException(500, str(exc)) from exc
@@ -175,17 +211,25 @@ def register(body: RegisterBody, sessions=Depends(get_sessions)) -> dict:
 
 @router.post("/login", dependencies=[Depends(enforce(auth_rate_limiter))])
 def login(body: LoginBody, sessions=Depends(get_sessions)) -> dict:
-    email = body.email.strip().lower()
     password = body.password
     _require_signing_config()
+    if body.phone:
+        phone = normalize_phone(body.phone)
+        query = select(User).where(User.phone == phone) if phone else None
+        failure = "Phone number or password is incorrect."
+    elif body.email:
+        query = select(User).where(User.email == body.email.strip().lower())
+        failure = "Email or password is incorrect."
+    else:
+        raise HTTPException(422, "A phone number or an email is needed.")
 
     try:
         with sessions() as session:
-            user = session.scalar(select(User).where(User.email == email))
+            user = session.scalar(query) if query is not None else None
             # One message for "no such user" and "wrong password", always --
             # different wording tells an attacker which half they guessed.
             if user is None or not verify_password(password, user.password_hash):
-                raise HTTPException(401, "Email or password is incorrect.")
+                raise HTTPException(401, failure)
             return {"token": create_token(user.id, user.email), "user": _public(user)}
     except AuthConfigError as exc:
         raise HTTPException(500, str(exc)) from exc

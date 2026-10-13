@@ -158,7 +158,34 @@ def init_db(engine=None) -> None:
     change against data someone cares about keeping."""
     from api.auth.models import User  # noqa: F401 -- registers tables
     from api.family import models as family_models  # noqa: F401
+    from api.onboarding import models as onboarding_models  # noqa: F401
     from api.graph.models import GraphEdge, GraphNode  # noqa: F401
 
     engine = engine or get_engine()
     Base.metadata.create_all(engine)
+    _add_missing_columns(engine)
+
+
+def _add_missing_columns(engine) -> None:
+    """The one schema change made since tables were first created in a real
+    database: users gained `phone`, and `email` became optional.
+
+    create_all() never alters an existing table, so a deployment whose users
+    table predates this would 500 on every phone sign-up. Each step checks
+    first and is safe to run on every cold start. Anything beyond this needs
+    a real migration tool.
+    """
+    from sqlalchemy import inspect, text
+
+    inspector = inspect(engine)
+    if "users" not in inspector.get_table_names():
+        return
+    columns = {c["name"]: c for c in inspector.get_columns("users")}
+    with engine.begin() as conn:
+        if "phone" not in columns:
+            conn.execute(text("ALTER TABLE users ADD COLUMN phone VARCHAR(20)"))
+            conn.execute(text(
+                "CREATE UNIQUE INDEX IF NOT EXISTS ix_users_phone ON users (phone)"))
+        if (engine.dialect.name == "postgresql" and "email" in columns
+                and not columns["email"].get("nullable", True)):
+            conn.execute(text("ALTER TABLE users ALTER COLUMN email DROP NOT NULL"))

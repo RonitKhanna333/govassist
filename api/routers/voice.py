@@ -233,7 +233,8 @@ def ask(body: dict, request: Request,
     scheme = str(body.get("scheme") or "pmfme")
     locale = get_locale(body.get("locale") or "hi").code
     question = str(body.get("question") or "").strip()
-    _check_scheme(scheme)
+    if scheme != "all":
+        _check_scheme(scheme)
     if not question:
         raise HTTPException(422, "question is required")
 
@@ -244,11 +245,17 @@ def ask(body: dict, request: Request,
         except LanguageError:
             pass  # try the question as spoken; Groq handles Hindi input
 
-    clauses = [
-        Citation(clause_id=row["id"], quote=row["quote"], plain=row["plain"],
-                 source_url=row["source_url"], page=row["page"])
-        for row in load_clauses(scheme, repo_root()).values()
-    ]
+    from api.onboarding import interview
+
+    clauses = []
+    for slug in (interview.schemes() if scheme == "all" else [scheme]):
+        prefix = f"{slug}/" if scheme == "all" else ""
+        for row in load_clauses(slug, repo_root()).values():
+            # Clause ids are unique within a scheme, not across schemes.
+            clauses.append(Citation(clause_id=prefix + row["id"], quote=row["quote"],
+                                    plain=f"[{script.scheme_name(slug, 'en')}] {row['plain']}"
+                                    if scheme == "all" else row["plain"],
+                                    source_url=row["source_url"], page=row["page"]))
     reply = conversation.answer_question(llm, english, clauses)
 
     if reply.busy:
@@ -267,6 +274,23 @@ def ask(body: dict, request: Request,
         "grounded": True,
         "clauses": [c.clause_id for c in reply.citations],
     }
+
+
+@router.post("/eligibility")
+def eligibility(body: dict, request: Request) -> dict:
+    """The end-of-call result, for the agent to read out.
+
+    The agent sends what the caller said; our parser reads it and every
+    scheme's rules decide. The answer is fixed text, so the agent has no
+    room to add a scheme or an amount. The profile stored afterwards comes
+    from the real transcript (see the webhook), not from this request.
+    """
+    _check_webhook_token(request)
+    from api.onboarding import service
+
+    locale = get_locale(body.get("locale") or "hi").code
+    profile, _ = service.read_answers(service.coerce_answers(body.get("answers")))
+    return {"result": service.summary_text(profile, locale)}
 
 
 def _check_webhook_token(request: Request) -> None:
@@ -292,6 +316,8 @@ async def webhook(request: Request,
 
     log.info("voice webhook keys: %s", sorted(body.keys()))
     metadata = body.get("metadata") or {}
+    if metadata.get("kind") == "interview":
+        return _interview_webhook(body, metadata, llm)
     scheme = str(metadata.get("scheme") or body.get("scheme") or "pmfme")
     locale = get_locale(metadata.get("locale") or "hi").code
     _check_scheme(scheme)
@@ -418,3 +444,58 @@ def result_message(scheme: str, locale: str, verdict: str,
         except LanguageError:
             pass  # English reason beats no message at all
     return phrase(key, locale).format(scheme=name, reason=reason, url=url)
+
+
+def _interview_webhook(body: dict, metadata: dict, llm: LLMProvider) -> dict:
+    """A general interview call ended: keep the record, update the profile."""
+    import json
+
+    from api.auth.models import User
+    from api.auth.router import get_sessions
+    from api.onboarding import service
+    from api.onboarding.models import CallRecord
+    from sqlalchemy import select
+
+    locale = get_locale(metadata.get("locale") or "hi").code
+    call_id = str(body.get("call_id") or "")
+    answered = not (body.get("answered_by") in ("voicemail", "no-answer")
+                    or body.get("status") in ("failed", "busy", "no-answer", "canceled"))
+
+    heard: dict = {}
+    values: dict = {}
+    unparsed: list[str] = []
+    if answered:
+        questions = {a: f.ask for a, f in service.fields(locale).items()}
+        heard = extract.find_answers(llm, questions, body.get("transcripts"),
+                                     body.get("concatenated_transcript"))
+        values, unparsed = service.read_answers(heard)
+
+    sessions = get_sessions()
+    with sessions() as session:
+        record = session.scalar(select(CallRecord).where(CallRecord.call_id == call_id))
+        if record is None:
+            record = CallRecord(call_id=call_id or None, locale=locale,
+                                user_id=metadata.get("user_id"))
+            session.add(record)
+        service.complete_record(record, "completed" if answered else "not_answered",
+                                body.get("transcripts"), heard, values)
+        if values and record.user_id:
+            user = session.get(User, record.user_id)
+            if user is not None:
+                user.profile_json = service.merge_profile(user.profile_json, values)
+        session.commit()
+        profile = {}
+        if record.user_id:
+            user = session.get(User, record.user_id)
+            profile = json.loads(user.profile_json or "{}") if user else {}
+
+    log.info("interview call %s: answered=%s recorded=%s unparsed=%s",
+             call_id, answered, sorted(values), unparsed)
+    return {"kind": "interview", "answered": answered, "heard": heard,
+            "recorded": values, "unparsed": unparsed,
+            "verdicts": interview_verdicts(profile)}
+
+
+def interview_verdicts(profile: dict) -> dict:
+    from api.onboarding import interview
+    return interview.verdicts(profile)

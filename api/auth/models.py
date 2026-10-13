@@ -31,7 +31,13 @@ class User(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     # Stored lowercased so "A@b.com" and "a@b.com" cannot become two accounts.
-    email: Mapped[str] = mapped_column(String(320), unique=True, index=True)
+    # Optional: most people this app is for sign up with a phone number.
+    email: Mapped[str | None] = mapped_column(String(320), unique=True, index=True,
+                                              nullable=True)
+    # E.164 ("+919876543210"). The login for phone-first accounts, and the
+    # number a "call me back" rings -- never any other number.
+    phone: Mapped[str | None] = mapped_column(String(20), unique=True, index=True,
+                                              nullable=True)
     password_hash: Mapped[str] = mapped_column(String(255))
     display_name: Mapped[str | None] = mapped_column(String(120), nullable=True)
     locale: Mapped[str] = mapped_column(String(8), default="en")

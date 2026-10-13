@@ -157,28 +157,67 @@ def list_tools() -> list[dict]:
     return tools if isinstance(tools, list) else []
 
 
-def ensure_tool(url: str, scheme: str, locale: str) -> str:
-    """The tool id for this scheme and language, creating it once if needed.
+def ensure_tool_definition(definition: dict) -> str:
+    """The id of a tool with this name and URL, creating it once if needed.
 
     A tool whose URL no longer matches (the secret or host changed) is
     created again rather than reused, so a call never points at a dead URL.
     """
-    name = tool_name(scheme, locale)
-    if name in _tool_ids:
-        return _tool_ids[name]
+    name, url = definition["name"], definition["url"]
+    key = f"{name}|{url}"
+    if key in _tool_ids:
+        return _tool_ids[key]
     for tool in list_tools():
         tool_body = tool.get("tool") or tool
         if tool_body.get("name") == name and tool_body.get("url") == url:
             tool_id = tool.get("tool_id") or tool.get("id") or tool_body.get("tool_id")
             if tool_id:
-                _tool_ids[name] = str(tool_id)
-                return _tool_ids[name]
-    created = _request("POST", "/tools", json=tool_definition(url, scheme, locale))
+                _tool_ids[key] = str(tool_id)
+                return _tool_ids[key]
+    created = _request("POST", "/tools", json=definition)
     tool_id = created.get("tool_id") or (created.get("data") or {}).get("tool_id")
     if not tool_id:
         raise VoiceError("Bland did not return a tool id")
-    _tool_ids[name] = str(tool_id)
-    return _tool_ids[name]
+    _tool_ids[key] = str(tool_id)
+    return _tool_ids[key]
+
+
+def ensure_tool(url: str, scheme: str, locale: str) -> str:
+    return ensure_tool_definition(tool_definition(url, scheme, locale))
+
+
+ELIGIBILITY_TOOL = "GovAssist eligibility"
+
+
+def eligibility_tool_definition(url: str, locale: str, questions: dict[str, str]) -> dict:
+    """POST /v1/tools body: the end-of-call result, decided by our rules.
+
+    The agent passes what the caller said to each question, in their own
+    words; the server parses those words and runs every scheme's rules.
+    The agent only reads out what comes back -- it never decides.
+    """
+    return {
+        "name": f"{ELIGIBILITY_TOOL} {locale}",
+        "description": (
+            "Call this once, at the end, after the questions. For each "
+            "question id, give exactly what the caller said in reply, in "
+            "their own words; leave out questions they didn't answer. Then "
+            "say the returned result to the caller, without changing it."
+        ),
+        "speech": "एक सेकंड जी, आपका नतीजा देख रहा हूँ।" if locale == "hi"
+                  else "One moment, let me check your result.",
+        "url": url,
+        "method": "POST",
+        "headers": {"Content-Type": "application/json"},
+        "body": {"answers": "{{input}}", "locale": locale},
+        "input_schema": {
+            "type": "object",
+            "properties": {attr: {"type": "string", "description": ask}
+                           for attr, ask in questions.items()},
+        },
+        "response": {"result": "$.result"},
+        "timeout": 20000,
+    }
 
 
 # -- calls ------------------------------------------------------------------
@@ -208,13 +247,17 @@ def call_payload(phone: str, task: str, webhook: str | None, locale: str,
 
 def start_call(phone: str, task: str, webhook: str | None, locale: str = "hi",
                metadata: dict | None = None, ask_url: str | None = None,
-               scheme: str = "pmfme") -> str:
+               scheme: str = "pmfme", extra_tools: list[dict] | None = None,
+               max_minutes: int | None = None) -> str:
     """Place the call. Returns the provider's call id."""
     _key()
     check_number(phone)  # before any request that could create a tool
     tool_ids = [ensure_tool(ask_url, scheme, locale)] if ask_url else []
-    body = _request("POST", "/calls", json=call_payload(
-        phone, task, webhook, locale, metadata or {}, tool_ids))
+    tool_ids += [ensure_tool_definition(d) for d in extra_tools or []]
+    payload = call_payload(phone, task, webhook, locale, metadata or {}, tool_ids)
+    if max_minutes:
+        payload["max_duration"] = max_minutes
+    body = _request("POST", "/calls", json=payload)
     call_id = body.get("call_id")
     if not call_id:
         raise VoiceError(f"Bland did not start the call: {body.get('message')}")

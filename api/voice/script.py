@@ -194,3 +194,131 @@ def build_task(scheme: str, locale: str = "hi") -> str:
 def attribute_kinds(scheme: str) -> dict[str, str]:
     """attribute -> "number" | "boolean" | "choice", for parsing replies."""
     return {q["attribute"]: q["kind"] for q in questions(scheme, "en")}
+
+
+# -- the general interview (no scheme chosen up front) -----------------------
+
+_INTERVIEW_OPEN = {
+    "hi": """आप GovAssist की हेल्पलाइन से बात कर रहे हैं। इस व्यक्ति ने ख़ुद कॉल \
+माँगी थी। आपका काम है कुछ आसान सवाल पूछना, ताकि पता चल सके कि कौन-कौन सी \
+सरकारी योजनाएँ उनके काम आ सकती हैं।
+
+शुरुआत (अपने शब्दों में): नमस्ते कहें, नाम लेकर बात करें ({name} जी), बताएँ कि \
+आप GovAssist से बोल रहे हैं और उन्होंने कॉल माँगी थी, चार-पाँच मिनट लगेंगे, और \
+पूछें कि क्या अभी बात करना ठीक रहेगा।
+""",
+    "en": """You are calling from the GovAssist helpline. This person asked for \
+the call themselves. Your job is to ask a few simple questions to find out which \
+government schemes could help them.
+
+Opening (in your own words): greet them by name ({name}), say you're calling from \
+GovAssist because they asked for a call, it takes four or five minutes, and ask if \
+now is a good time.
+""",
+}
+
+_INTERVIEW_END = {
+    "hi": """आख़िर में -- नतीजा:
+- सारे सवाल पूरे होने पर (या जो पूछे जा सके, उनके बाद) "GovAssist eligibility" \
+टूल चलाएँ। उसमें हर सवाल के आगे व्यक्ति ने जो कहा, वो उन्हीं के शब्दों में डालें; \
+जिसका जवाब नहीं मिला उसे ख़ाली छोड़ दें।
+- टूल जो नतीजा लौटाए, वही सहज ढंग से बोलें। अपनी तरफ़ से कोई योजना, रकम या नतीजा \
+न जोड़ें, न घटाएँ। पात्रता आप ख़ुद कभी तय नहीं करेंगे -- सिर्फ़ टूल बताता है।
+- फिर बताएँ कि पूरी जानकारी और ज़रूरी काग़ज़ों की सूची उनके GovAssist डैशबोर्ड \
+पर है, धन्यवाद कहें और कॉल ख़त्म करें।
+""",
+    "en": """At the end -- the result:
+- When the questions are done (or as many as could be asked), call the
+  "GovAssist eligibility" tool. For each question, put what the person said, in
+  their own words; leave out any they didn't answer.
+- Say the result the tool returns, naturally. Never add or remove a scheme, an
+  amount or a result. You never decide eligibility yourself -- only the tool does.
+- Then say the full details and the list of documents are on their GovAssist
+  dashboard, thank them and end the call.
+""",
+}
+
+
+def _shared_style(code: str) -> str:
+    """The speaking style, mishearing, privacy and when-to-end sections of
+    the scheme script -- one copy, so the two scripts can't drift apart."""
+    text = _INSTRUCTIONS[code]
+    start_marker = "बोलने का ढंग" if code == "hi" else "How to talk"
+    end_marker = "योजना के बारे में सवाल:" if code == "hi" else "Questions about the scheme:"
+    start, end = text.index(start_marker), text.index(end_marker)
+    return text[start:end].rstrip() + "\n"
+
+
+def build_interview_task(locale: str = "hi", name: str = "") -> str:
+    from api.onboarding import interview
+
+    code = get_locale(locale).code
+    if code not in CALL_LOCALES:
+        raise ValueError(f"calls aren't available in {code} yet")
+
+    sequence = interview.order()
+    number = {attr: i for i, attr in enumerate(sequence, start=1)}
+    skips = interview.skip_rules(code)
+
+    lines = []
+    for attr in sequence:
+        f = interview.field_for(attr, code)
+        if f is None:
+            continue
+        line = f"{number[attr]}. {f.ask}"
+        if f.kind == "number" and f.unit:
+            line += f"  [{f.unit}]"
+        opener_of = [s for s in interview.schemes() if interview.gate(s) == attr]
+        if opener_of:
+            low, high = interview.number_limits(opener_of[0], "age")
+            if low is not None or high is not None:
+                if code == "hi":
+                    when = (f"{low:g} से {high:g} साल के बीच" if low is not None and high is not None
+                            else f"{low:g} साल या उससे ज़्यादा" if low is not None
+                            else f"{high:g} साल या उससे कम")
+                    line += f"\n   (यह सवाल सिर्फ़ तब पूछिए जब उम्र {when} हो।)"
+                else:
+                    when = (f"between {low:g} and {high:g}" if low is not None and high is not None
+                            else f"{low:g} or more" if low is not None else f"{high:g} or less")
+                    line += f"\n   (Only ask this if their age is {when}.)"
+        rule = skips.get(attr)
+        if rule:
+            skipped = sorted(number[a] for a in rule["skip"])
+            span = ", ".join(_ranges(skipped))
+            yes_no = ("हाँ" if rule["answer"] == "yes" else "नहीं") if code == "hi" else rule["answer"]
+            line += (f"\n   (अगर जवाब \"{yes_no}\" हो, तो सवाल {span} मत पूछिए।)" if code == "hi"
+                     else f"\n   (If the answer is \"{yes_no}\", skip questions {span}.)")
+        lines.append(line)
+
+    heading = ("सवाल, इसी क्रम में। जिस सवाल का जवाब पहले ही मिल चुका हो, उसे दोबारा न पूछें:"
+               if code == "hi" else
+               "Questions, in this order. Don't re-ask anything already answered:")
+    ask_tool = ("""
+योजनाओं के बारे में सवाल:
+- अगर व्यक्ति किसी योजना के बारे में कुछ पूछे, तो "GovAssist scheme info all" टूल चलाएँ \
+और उसका जवाब सहज ढंग से बोलें। अपनी जानकारी से कभी जवाब न दें। फिर सवालों पर लौटें।
+""" if code == "hi" else """
+Questions about schemes:
+- If they ask anything about a scheme, call the "GovAssist scheme info all" tool and
+  say its answer naturally. Never answer from your own knowledge. Then carry on.
+""")
+    return (_INTERVIEW_OPEN[code].format(name=name or ("आप" if code == "hi" else "there"))
+            + "\n" + _shared_style(code) + ask_tool + "\n" + _INTERVIEW_END[code]
+            + "\n" + heading + "\n" + "\n".join(lines))
+
+
+def _ranges(numbers: list[int]) -> list[str]:
+    """[9, 10, 11, 14] -> ["9-11", "14"]."""
+    out: list[str] = []
+    start = prev = None
+    for n in numbers:
+        if start is None:
+            start = prev = n
+        elif n == prev + 1:
+            prev = n
+        else:
+            out.append(f"{start}-{prev}" if prev != start else str(start))
+            start = prev = n
+    if start is not None:
+        out.append(f"{start}-{prev}" if prev != start else str(start))
+    return out
