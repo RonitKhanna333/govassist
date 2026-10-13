@@ -128,6 +128,40 @@ def _callback_urls() -> tuple[str | None, str | None]:
             (f"{ask_url}?token={secret}" if ask_url else None))
 
 
+@router.get("/calls/{call_id}")
+def call_detail(call_id: str, request: Request,
+                llm: LLMProvider = Depends(get_llm)) -> dict:
+    """One call as Bland recorded it, beside what we extracted from it.
+
+    For diagnosing a call that produced no answers. Secret-gated: it shows
+    what the caller said.
+    """
+    _check_webhook_token(request)
+    try:
+        call = bland.get_call(call_id)
+    except bland.VoiceError as exc:
+        raise HTTPException(503, str(exc)) from exc
+    metadata = call.get("metadata") or {}
+    scheme = str(metadata.get("scheme") or "pmsby")
+    locale = get_locale(metadata.get("locale") or "hi").code
+    _check_scheme(scheme)
+    questions = {q["attribute"]: q["ask"] for q in script.questions(scheme, locale)}
+    heard = extract.find_answers(llm, questions, call.get("transcripts"),
+                                 call.get("concatenated_transcript"))
+    profile, unparsed = read_answers(scheme, heard)
+    return {
+        "status": call.get("status"), "answered_by": call.get("answered_by"),
+        "call_length": call.get("call_length"), "price": call.get("price"),
+        "error_message": call.get("error_message"),
+        "transcripts": [{"user": t.get("user"), "text": t.get("text")}
+                        for t in call.get("transcripts") or [] if isinstance(t, dict)],
+        "caller_turns": extract.caller_turns(call.get("transcripts"),
+                                             call.get("concatenated_transcript")),
+        "heard": heard, "profile": profile, "unparsed": unparsed,
+        "verdict": decide(scheme, profile).verdict.value,
+    }
+
+
 @router.get("/script")
 def call_script(scheme: str = "pmfme", locale: str = "hi") -> dict:
     """The script and answer schema, for review before any call is placed."""
@@ -256,6 +290,7 @@ async def webhook(request: Request,
     if not isinstance(body, dict):
         raise HTTPException(422, "expected a JSON object")
 
+    log.info("voice webhook keys: %s", sorted(body.keys()))
     metadata = body.get("metadata") or {}
     scheme = str(metadata.get("scheme") or body.get("scheme") or "pmfme")
     locale = get_locale(metadata.get("locale") or "hi").code

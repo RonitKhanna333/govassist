@@ -574,3 +574,30 @@ def test_an_unanswered_call_texts_nobody(client):
 def test_flat_transcript_fallback():
     flat = "assistant: आपकी उम्र?\nuser: तीस साल\n"
     assert extract.caller_turns(None, flat) == ["तीस साल"]
+
+
+def test_call_detail_shows_transcript_and_extraction(client):
+    from api.deps import get_llm
+    llm = FakeLLM(['{"age": "पैंतीस साल, 35"}'])
+    app.dependency_overrides[get_llm] = lambda: llm
+    call = {"status": "completed", "answered_by": "human", "call_length": 1.2,
+            "price": 0.03, "transcripts": TRANSCRIPTS,
+            "metadata": {"scheme": "pmsby", "locale": "hi"}}
+
+    def fake(method, url, headers=None, json=None, timeout=None):
+        class R:
+            status_code = 200
+
+            @staticmethod
+            def json():
+                return call
+        return R()
+    with patch.dict("os.environ", CALL_ENV),          patch("api.voice.bland.requests.request", side_effect=fake):
+        body = client.get(f"/voice/calls/2e5f056a-4071-4a89-b072-780e68a565a1?token={SECRET}").json()
+    assert body["profile"] == {"age": 35}
+    assert body["caller_turns"][0] == "हाँ जी, खाता है"
+
+
+def test_call_detail_needs_the_secret(client):
+    with patch.dict("os.environ", {"VOICE_WEBHOOK_SECRET": SECRET}):
+        assert client.get("/voice/calls/abcdefgh12?token=no").status_code == 401

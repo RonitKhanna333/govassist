@@ -244,3 +244,10 @@ def hindi_voices() -> list[dict]:
             out.append({"id": voice.get("id") or voice.get("voice_id"),
                         "name": voice.get("name"), "tags": voice.get("tags")})
     return out
+
+
+def get_call(call_id: str) -> dict:
+    """GET /v1/calls/{id}: status, transcript and cost of one call."""
+    if not re.fullmatch(r"[A-Za-z0-9-]{8,64}", call_id):
+        raise VoiceError("bad call id")
+    return _request("GET", f"/calls/{call_id}")
