@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AnswerControls } from "./AnswerControls";
 import { SiteNav } from "./SiteNav";
 import { AccountDashboard } from "./AccountDashboard";
@@ -17,6 +17,7 @@ const COPY = {
     self: "Fill it myself", selfInfo: "Answer a few questions here. Your answers are saved as you go.",
     consent: "I agree to receive an automated GovAssist call on my account phone number and have its questions and answers saved to my account.",
     callSent: "Your callback was requested. Watch your phone. Refresh the dashboard after the call to see your saved answers.",
+    callDenied: "The calling service rejected the request. No callback was confirmed. The GovAssist operator needs to check calling access. You can fill your profile here in the meantime.",
     interview: "Your profile interview", basic: "Basics first, then only the follow-ups relevant to your answers.",
     unknown: "I’m not sure — skip for now", done: "You’ve reached the end of the available questions. Skipped answers remain unknown; you can return to them later.",
     dash: "View dashboard", back: "Back to choices", retry: "Try again", working: "Please wait…", loading: "Loading your account…", saved: "answers saved", review: "Review saved answers", anonymous: "Explore a scheme without an account",
@@ -29,6 +30,7 @@ const COPY = {
     self: "मैं ख़ुद भरूँगा", selfInfo: "यहाँ कुछ सवालों के जवाब दें। जवाब साथ-साथ सेव होंगे।",
     consent: "मैं अपने खाते के फ़ोन नंबर पर GovAssist की स्वचालित कॉल पाने और उसके सवाल-जवाब अपने खाते में सेव करने के लिए सहमत हूँ।",
     callSent: "कॉल का अनुरोध भेज दिया गया है। फ़ोन पर ध्यान रखें। कॉल के बाद सेव किए गए जवाब देखने के लिए डैशबोर्ड रीफ़्रेश करें।",
+    callDenied: "कॉल सेवा ने अनुरोध अस्वीकार कर दिया। कॉल की पुष्टि नहीं हुई है। GovAssist संचालक को कॉल सेवा की पहुँच जाँचनी होगी। तब तक आप यहाँ अपनी प्रोफ़ाइल भर सकते हैं।",
     interview: "आपकी प्रोफ़ाइल के सवाल", basic: "पहले बुनियादी सवाल, फिर आपके जवाबों के अनुसार ज़रूरी सवाल।",
     unknown: "पक्का नहीं — अभी छोड़ें", done: "अभी उपलब्ध सवाल पूरे हुए। छोड़े गए जवाब अज्ञात रहेंगे; बाद में फिर भर सकते हैं।",
     dash: "डैशबोर्ड देखें", back: "विकल्पों पर लौटें", retry: "फिर कोशिश करें", working: "कृपया रुकें…", loading: "खाता लोड हो रहा है…", saved: "जवाब सेव हुए", review: "सेव किए गए जवाब देखें", anonymous: "बिना खाता बनाए योजना देखें",
@@ -45,17 +47,18 @@ export function AccountHome() {
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [skipped, setSkipped] = useState<string[]>([]);
   const [consent, setConsent] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [loadVersion, setLoadVersion] = useState(0);
 
-  const fail = (err: unknown) => {
+  const fail = useCallback((err: unknown) => {
     if (err instanceof AccountError && err.status === 401) {
       setToken(null); setDashboard(null); setInterview(null);
     }
-    setError(err instanceof Error ? err.message : String(err));
-  };
+    setError(err instanceof AccountError && err.code === "CALLBACK_PROVIDER_ACCESS_DENIED"
+      ? t.callDenied : err instanceof Error ? err.message : String(err));
+  }, [t.callDenied]);
 
   useEffect(() => {
     if (!token) return;
@@ -64,7 +67,7 @@ export function AccountHome() {
       .then(([state, data]) => { setInterview(state); setDashboard(data); })
       .catch((err: unknown) => { if (!controller.signal.aborted) fail(err); });
     return () => controller.abort();
-  }, [token, locale, loadVersion]);
+  }, [token, locale, loadVersion, fail]);
 
   const run = async (action: () => Promise<void>) => {
     setBusy(true); setError(null);
@@ -84,11 +87,11 @@ export function AccountHome() {
         <div><p className="account-eyebrow">GovAssist</p><h1>{t.title}</h1><p className="hero-deck">{t.intro}</p></div>
         <div className="family-actions">
           <label className="account-language">Language / भाषा <select value={locale} disabled={busy} onChange={e => { setLocale(e.target.value as AccountLocale); setSkipped([]); }}><option value="en">English</option><option value="hi">हिन्दी</option></select></label>
-          {token && <button className="btn" disabled={busy} onClick={() => { setToken(null); setInterview(null); setDashboard(null); setView("choose"); setNotice(null); setSkipped([]); setConsent(false); }}>{t.out}</button>}
+          {token && <button className="btn" disabled={busy} onClick={() => { setToken(null); setInterview(null); setDashboard(null); setView("choose"); setNotice(false); setSkipped([]); setConsent(false); }}>{t.out}</button>}
         </div>
       </header>
       {error && <div className="note error" role="alert"><p>{error}</p>{token && <button className="btn" disabled={busy} onClick={() => { setError(null); setLoadVersion(v => v + 1); }}>{t.retry}</button>}</div>}
-      {notice && <p className="account-notice" role="status">{notice}</p>}
+      {notice && <p className="account-notice" role="status">{t.callSent}</p>}
       {!token ? <section className="family-card account-auth">
         <h2>{register ? t.create : t.login}</h2>
         <form className="family-form" onSubmit={e => {
@@ -116,7 +119,8 @@ export function AccountHome() {
             <article className="family-card"><h3>{t.call}</h3><p>{t.callInfo}</p>
               <label className="family-check"><input type="checkbox" checked={consent} disabled={busy} onChange={e => setConsent(e.target.checked)} />{t.consent}</label>
               <button className="btn primary" disabled={busy || !consent} onClick={() => void run(async () => {
-                await account.callback(consent, locale); setNotice(t.callSent); setDashboard(await account.dashboard(locale));
+                setNotice(false);
+                await account.callback(consent, locale); setNotice(true);
               })}>{busy ? t.working : t.call}</button>
             </article>
             <article className="family-card"><h3>{t.self}</h3><p>{t.selfInfo}</p><button className="btn primary" disabled={busy} onClick={() => void run(async () => {

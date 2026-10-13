@@ -52,6 +52,19 @@ Callbacks additionally require:
 - Optional `VOICE_ASK_URL` and `BLAND_INTERVIEW_MAX_MINUTES` (default 10;
   allowed 1–30). The older single-scheme call keeps its separate 4-minute cap.
 
+If Bland returns 401 or 403, no callback is confirmed. Failed attempts stay in
+call history. The API returns `CALLBACK_PROVIDER_ACCESS_DENIED`, the provider
+status and the failed operation (for example `GET /tools` or `POST /calls`),
+and logs that operation and the selected locale without keys, tool URLs or the
+provider response body. Hindi uses `language: hi` and English uses `en-IN`;
+both are documented Bland language codes. Each locale provisions separate
+tools, so working English tools do not prove Hindi tool creation succeeds.
+An operator must check the production `BLAND_API_KEY` against the Bland account
+and its access to that operation. A configured key alone does not prove access.
+The secret-gated `/voice/check` can check account access without placing a call;
+it also provisions the scheme-information tool. A denial during tool setup must
+be resolved before calling, since the interview needs grounded server tools.
+
 The calling provider receives the general interview script, the grounded
 scheme-information tool, and the end-of-call eligibility tool. At the end the
 agent posts the caller's spoken answers to `/voice/eligibility`; the server

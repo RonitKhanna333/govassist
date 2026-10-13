@@ -392,6 +392,28 @@ CALL_ENV = {"BLAND_API_KEY": "k", "VOICE_ALLOWED_NUMBERS": MY_NUMBER,
             "VOICE_WEBHOOK_SECRET": SECRET}
 
 
+@pytest.mark.parametrize("status", [401, 403])
+@pytest.mark.parametrize("html", [False, True])
+def test_provider_access_denial_keeps_status_and_operation_without_body(status, html, caplog):
+    class Response:
+        status_code = status
+        def json(self):
+            if html:
+                raise ValueError("HTML error with sensitive contents")
+            return {"message": "sensitive provider message"}
+    with patch.dict("os.environ", {"BLAND_API_KEY": " secret-key "}), \
+         patch("api.voice.bland.requests.request", return_value=Response()) as request:
+        with pytest.raises(bland.VoiceError) as caught:
+            bland._request("GET", "/tools")
+    assert caught.value.status_code == status
+    assert caught.value.operation == "GET /tools"
+    assert "No callback was confirmed" in str(caught.value)
+    assert request.call_args.kwargs["headers"]["Authorization"] == "secret-key"
+    assert f"GET /tools (HTTP {status})" in caplog.text
+    assert "secret-key" not in caplog.text
+    assert "sensitive" not in caplog.text + str(caught.value)
+
+
 def _place(client, fake, env=CALL_ENV):
     bland._tool_ids.clear()
     with patch.dict("os.environ", env), \

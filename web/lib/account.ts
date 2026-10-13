@@ -38,7 +38,7 @@ export interface Dashboard {
   calls: CallRecord[];
 }
 export class AccountError extends Error {
-  constructor(message: string, public status: number) { super(message); }
+  constructor(message: string, public status: number, public code?: string) { super(message); }
 }
 async function request<T>(path: string, body?: unknown, signal?: AbortSignal): Promise<T> {
   const token = getToken();
@@ -56,6 +56,11 @@ async function request<T>(path: string, body?: unknown, signal?: AbortSignal): P
   }
   if (!response.ok) {
     const data = await response.json().catch(() => ({})) as { detail?: unknown };
+    if (data.detail && typeof data.detail === "object" && "message" in data.detail) {
+      const detail = data.detail as { message?: unknown; code?: unknown };
+      throw new AccountError(typeof detail.message === "string" ? detail.message : "The request failed.",
+        response.status, typeof detail.code === "string" ? detail.code : undefined);
+    }
     throw new AccountError(typeof data.detail === "string" ? data.detail : "Please check your answers and try again.", response.status);
   }
   return response.json() as Promise<T>;
