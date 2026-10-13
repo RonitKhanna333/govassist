@@ -56,6 +56,7 @@ from api.rate_limit import (
     transcribe_rate_limiter,
 )
 from api.rules.engine import Citation, decide, known_attributes, load_clauses, load_rules
+from api.rules import next_steps
 from api.rules.forms import OTHER, answer_yes_no, summarize_profile, unresolved_fields
 from api.rules.spoken import AMBIGUOUS, NONE, QUESTION, VALUE, Reading, read_answer
 from api.rules.values import check_value, check_values, specs_for
@@ -444,7 +445,7 @@ def chat(body: ChatRequest,
                 "bot_messages": [text], "reply": text, "acknowledged": False,
                 "citations": [], "reply_citations": [], "profile": profile,
                 "profile_summary": summarize_profile(profile, content_locale),
-                "pending": None, "locale": content_locale,
+                "pending": None, "next_steps": None, "locale": content_locale,
                 "language_note": note, "speech": None,
             }
 
@@ -530,6 +531,7 @@ def chat(body: ChatRequest,
             "acknowledged": acknowledged,
             "missing_attributes": result.missing_attributes,
             "pending": pending,
+            "next_steps": None,
             "citations": [],
             "reply_citations": [c.__dict__ for c in reply_citations],
             "profile": profile, "profile_summary": summary,
@@ -560,6 +562,16 @@ def chat(body: ChatRequest,
             language_notes.append(note)
         bot_messages.append(answer)
 
+    # "What should I do next?" -- committed clauses only, no model call.
+    # The gloss is localized like any explanation; the quote is not.
+    checklist = next_steps.build(scheme, result, repo_root(), _reviewed(scheme))
+    if checklist and content_locale != CANONICAL_LOCALE:
+        steps = [item for section in checklist["sections"] for item in section["items"]]
+        for item in steps + [c for c in checklist["confirm"] if "plain" in c]:
+            item["plain"], note = _localize(language, item["plain"], content_locale)
+            if note and note not in language_notes:
+                language_notes.append(note)
+
     return {
         "domain": "scheme", "supported": True,
         "verdict": result.verdict.value, "answer": answer,
@@ -569,6 +581,7 @@ def chat(body: ChatRequest,
         "acknowledged": acknowledged,
         "missing_attributes": [],
         "pending": None,
+        "next_steps": checklist,
         # Citations stay verbatim in their source language, always.
         "citations": [c.__dict__ for c in result.citations],
         "reply_citations": [c.__dict__ for c in reply_citations],
