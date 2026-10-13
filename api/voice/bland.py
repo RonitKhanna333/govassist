@@ -70,6 +70,34 @@ def _key() -> str:
     return key
 
 
+def _safe_denial_reason(response, body: object) -> str:
+    """Keep the provider's error explanation, never its full response body."""
+    message = body.get("message") if isinstance(body, dict) else None
+    if not isinstance(message, str) and isinstance(body, dict):
+        errors = body.get("errors")
+        if isinstance(errors, list):
+            message = "; ".join(str(e.get("message") or e.get("error") or "")
+                                for e in errors[:3] if isinstance(e, dict))
+    if not isinstance(message, str) or not message.strip():
+        content_type = getattr(response, "headers", {}).get("Content-Type", "unknown").split(";", 1)[0]
+        # A gateway can return HTML instead of Bland's JSON error. Only keep
+        # its title; the page itself can contain reflected request information.
+        text = getattr(response, "text", "")[:8192]
+        title = re.search(r"<title[^>]*>([^<]*)</title>", text, re.I)
+        message = f"No JSON error message; response type {content_type}"
+        if title:
+            message += f"; title: {title.group(1)}"
+    for name in ("BLAND_API_KEY", "VOICE_WEBHOOK_SECRET"):
+        secret = os.environ.get(name, "").strip()
+        if secret:
+            message = message.replace(secret, "[redacted]")
+    message = re.sub(r"https?://\S+", "[URL redacted]", message)
+    message = re.sub(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", "[email redacted]", message)
+    message = re.sub(r"\+?\d[\d ()-]{6,}\d", "[number redacted]", message)
+    message = re.sub(r"(?i)Bearer\s+\S+", "Bearer [redacted]", message)
+    return " ".join(message.split())[:500]
+
+
 def _request(method: str, path: str, *, json: dict | None = None,
              timeout: float = 30.0) -> dict:
     try:
@@ -87,11 +115,12 @@ def _request(method: str, path: str, *, json: dict | None = None,
     except ValueError:
         body = {}
     if response.status_code in (401, 403):
+        reason = _safe_denial_reason(response, body)
         # Never log the request payload, secret tool URLs or provider HTML.
-        log.warning("Bland denied %s (HTTP %s)", operation, response.status_code)
+        log.warning("Bland denied %s (HTTP %s): %s", operation, response.status_code, reason)
         raise VoiceError(
-            "The calling service denied this request. The operator needs to check "
-            "the Bland API key and account access. No callback was confirmed.",
+            f"Bland denied {operation} (HTTP {response.status_code}): {reason}. "
+            "No callback was confirmed.",
             status_code=response.status_code, operation=operation,
         )
     if not isinstance(body, dict) or not body:

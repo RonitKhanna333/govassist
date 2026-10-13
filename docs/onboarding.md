@@ -56,7 +56,10 @@ If Bland returns 401 or 403, no callback is confirmed. Failed attempts stay in
 call history. The API returns `CALLBACK_PROVIDER_ACCESS_DENIED`, the provider
 status and the failed operation (for example `GET /tools` or `POST /calls`),
 and logs that operation and the selected locale without keys, tool URLs or the
-provider response body. Hindi uses `language: hi` and English uses `en-IN`;
+full provider response body. The warning includes a bounded provider error
+message, with configured secrets, URLs, email addresses and phone numbers
+redacted. For a non-JSON denial it reports the response content type and HTML
+title, without logging the HTML page. Hindi uses `language: hi` and English uses `en-IN`;
 both are documented Bland language codes. Each locale provisions separate
 tools, so working English tools do not prove Hindi tool creation succeeds.
 An operator must check the production `BLAND_API_KEY` against the Bland account
