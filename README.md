@@ -16,6 +16,7 @@ checked automatically rather than trusted.
 | Graph store (`api/graph/`) | 5 retrieval patterns, hop-capped, typed |
 | Agents (`api/agents/`) | Groq: NLU, composer, verifier, recompose loop |
 | Language (`api/language/`) | four text locales; Groq fallback; Bhashini provider code |
+| Family (`api/family/`) | household graph; reminders for per-family rules, never verdicts |
 | Voice (`api/voice/`) | phone calls: script from the rules, verdict from the engine |
 | Auth (`api/auth/`) | optional accounts, scrypt + JWT |
 | Frontend (`web/`) | Next.js, four languages, voice, citation panel |
@@ -31,7 +32,8 @@ API key at all.** The rule engine is deterministic and the corpus is committed
 JSON, so a zero-secret deployment still answers correctly — it just can't
 phrase the explanation or speak it. Every missing credential degrades visibly
 rather than silently. See [docs/deploy.md](docs/deploy.md), and
-[docs/voice.md](docs/voice.md) for the phone channel.
+[docs/voice.md](docs/voice.md) for the phone channel, and
+[docs/family.md](docs/family.md) for linked family records.
 
 ```bash
 pip install -e ".[dev,serve]" && pytest -q

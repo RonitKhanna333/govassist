@@ -67,6 +67,29 @@ def relation_labels(me: int, relations: list[Relation]) -> dict[int, str]:
     for child in children_of.get(me, ()):
         for grandchild in children_of.get(child, ()):
             put(grandchild, "grandchild")
+    # In-laws: in a joint family the people under one roof are often related
+    # by marriage, and "not linked" would be wrong for a father-in-law.
+    for spouse in spouses.get(me, ()):
+        for in_law in parents_of.get(spouse, ()):
+            put(in_law, "parent_in_law")
+    for child in children_of.get(me, ()):
+        for in_law in spouses.get(child, ()):
+            put(in_law, "child_in_law")
+
+    # Anyone else reachable through the graph is family, just not one of the
+    # named relationships. Only someone with no path at all is "not linked".
+    neighbours: dict[int, set[int]] = {}
+    for edge in relations:
+        neighbours.setdefault(edge.from_member, set()).add(edge.to_member)
+        neighbours.setdefault(edge.to_member, set()).add(edge.from_member)
+    stack, seen = [me], {me}
+    while stack:
+        node = stack.pop()
+        for other in neighbours.get(node, ()):
+            if other not in seen:
+                seen.add(other)
+                stack.append(other)
+                put(other, "relative")
     return labels
 
 

@@ -4,6 +4,7 @@
   "nav.presentation": "ਪੇਸ਼ਕਾਰੀ",
   "nav.live": "ਲਾਈਵ ਪ੍ਰੋਟੋਟਾਈਪ",
   "nav.evidence": "ਸਬੂਤ / ਰਿਪੋਜ਼ਟਰੀ",
+  "nav.family": "ਪਰਿਵਾਰ",
   "scheme.label": "ਸਕੀਮ",
   "chat.placeholder": "ਆਪਣੀ ਹਾਲਤ ਬਾਰੇ ਦੱਸੋ…",
   "chat.send": "ਭੇਜੋ",
@@ -73,5 +74,9 @@
   "next.official_wording": "ਸਰਕਾਰੀ ਸ਼ਬਦ",
   "next.official_document": "ਸਰਕਾਰੀ ਦਸਤਾਵੇਜ਼ ਖੋਲ੍ਹੋ",
   "next.the_scheme_office": "ਸਕੀਮ ਦਫ਼ਤਰ",
-  "next.documents.tick": "ਜੋ ਦਸਤਾਵੇਜ਼ ਤਿਆਰ ਹੋ ਜਾਵੇ, ਉਸ 'ਤੇ ਨਿਸ਼ਾਨ ਲਗਾਓ।"
+  "next.documents.tick": "ਜੋ ਦਸਤਾਵੇਜ਼ ਤਿਆਰ ਹੋ ਜਾਵੇ, ਉਸ 'ਤੇ ਨਿਸ਼ਾਨ ਲਗਾਓ।",
+  "family.hint": "ਤੁਹਾਡੇ ਪਰਿਵਾਰ ਦੇ ਰਿਕਾਰਡ ਮੁਤਾਬਕ {name} ({relation}) ਨੂੰ ਇਹ ਯੋਜਨਾ ਪਹਿਲਾਂ ਮਿਲ ਚੁੱਕੀ ਹੈ।",
+  "family.hint_note": "ਇਹ ਸਿਰਫ਼ ਪਰਿਵਾਰ ਦੇ ਰਿਕਾਰਡ ਤੋਂ ਯਾਦ ਦਿਵਾਉਣ ਲਈ ਹੈ। ਸਵਾਲ ਦਾ ਜਵਾਬ ਤੁਸੀਂ ਆਪ ਦਿਓ।",
+  "family.rel.spouse": "ਤੁਹਾਡੇ ਪਤੀ ਜਾਂ ਪਤਨੀ",
+  "family.rel.child": "ਤੁਹਾਡੀ ਔਲਾਦ"
 }

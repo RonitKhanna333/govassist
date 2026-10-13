@@ -1166,3 +1166,51 @@ a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; 
   .schemetext { flex-basis: calc(100% - 16px - 0.75rem); }
   .schemeopt .tag { margin-left: calc(16px + 0.75rem); }
 }
+
+/* -- family page ---------------------------------------------------------- */
+.family-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0 0.75rem; }
+.family-head h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 0.4rem; }
+.lang-pills { display: flex; gap: 0.35rem; }
+.lang-pills .btn.on { background: var(--sunken); border-color: var(--ink); }
+.family-privacy { color: var(--ink-soft); max-width: 62ch; line-height: 1.55; margin: 0 0 1.25rem; }
+.family-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.family-card { background: var(--raised); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.2rem; box-shadow: var(--shadow-sm); margin-bottom: 1rem; }
+.family-card h2 { font-size: 1.05rem; margin: 0 0 0.8rem; }
+.family-form { display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+.family-form label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; color: var(--ink-soft); width: 100%; }
+.family-form input, .family-form select, .member-benefit select {
+  font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm); padding: 0.55rem 0.7rem; width: 100%; max-width: 100%;
+}
+.family-row { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); width: 100%; }
+.family-check { display: flex; gap: 0.5rem; align-items: center; font-size: 0.95rem; }
+.family-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.8rem; }
+.linkish { background: none; border: 0; padding: 0; color: var(--blue); font: inherit; font-size: 0.85rem; cursor: pointer; text-decoration: underline; }
+
+.family-tree { display: flex; flex-direction: column; gap: 1.6rem; margin: 0.5rem 0 1.5rem; position: relative; }
+.family-generation { display: flex; flex-wrap: wrap; gap: 0.9rem; justify-content: center; position: relative; }
+.family-generation + .family-generation::before {
+  content: ""; position: absolute; top: -1.6rem; left: 50%; width: 1px; height: 1.6rem; background: var(--line-strong);
+}
+.member-card { background: var(--raised); border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 0.85rem 0.95rem; width: min(100%, 250px); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 0.45rem; }
+.member-card.me { border-color: var(--good); box-shadow: 0 0 0 3px var(--good-soft); }
+.member-card header { display: flex; justify-content: space-between; gap: 0.5rem; align-items: baseline; }
+.member-rel { font-size: 0.75rem; color: var(--ink-soft); background: var(--sunken); border-radius: 999px; padding: 0.1rem 0.5rem; white-space: nowrap; }
+.member-meta { margin: 0; font-size: 0.8rem; color: var(--ink-faint); }
+.member-line { margin: 0; font-size: 0.82rem; line-height: 1.7; }
+.pill { display: inline-block; font-size: 0.72rem; border-radius: 999px; padding: 0.05rem 0.5rem; margin: 0 0.25rem 0.2rem 0; }
+.pill.good { background: var(--good-soft); color: var(--good); }
+.pill.seal { background: var(--seal-soft); color: var(--seal); }
+.invite-code { margin: 0; display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.78rem; }
+.invite-code code { font-family: var(--mono); font-size: 1.15rem; letter-spacing: 0.12em; color: var(--ink); }
+.member-benefit { display: flex; gap: 0.4rem; }
+.member-benefit select { font-size: 0.78rem; padding: 0.35rem 0.45rem; }
+.btn.small { font-size: 0.78rem; padding: 0.35rem 0.6rem; }
+.muted-copy { color: var(--ink-faint); }
+@media (max-width: 520px) {
+  .member-card { width: 100%; }
+}
+
+.family-hint { border: 1px solid var(--seal-soft); background: var(--seal-soft); border-radius: var(--radius-sm); padding: 0.7rem 0.9rem; margin: 0.5rem 0; font-size: 0.9rem; }
+.family-hint p { margin: 0 0 0.3rem; }
+.family-hint p:last-child { margin: 0; font-size: 0.8rem; }

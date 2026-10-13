@@ -4,6 +4,7 @@
   "nav.presentation": "प्रस्तुति",
   "nav.live": "लाइव प्रोटोटाइप",
   "nav.evidence": "सबूत / रिपॉज़िटरी",
+  "nav.family": "परिवार",
   "scheme.label": "योजना",
   "chat.placeholder": "अपनी स्थिति बताइए…",
   "chat.send": "भेजें",
@@ -73,5 +74,9 @@
   "next.official_wording": "सरकारी शब्द",
   "next.official_document": "सरकारी दस्तावेज़ खोलें",
   "next.the_scheme_office": "योजना कार्यालय",
-  "next.documents.tick": "जो दस्तावेज़ तैयार हो जाए, उस पर निशान लगाएँ।"
+  "next.documents.tick": "जो दस्तावेज़ तैयार हो जाए, उस पर निशान लगाएँ।",
+  "family.hint": "आपके परिवार के रिकॉर्ड के अनुसार {name} ({relation}) को यह योजना पहले मिल चुकी है।",
+  "family.hint_note": "यह सिर्फ़ परिवार के रिकॉर्ड से याद दिलाने के लिए है। सवाल का जवाब आप ख़ुद दें।",
+  "family.rel.spouse": "आपके पति या पत्नी",
+  "family.rel.child": "आपकी संतान"
 }

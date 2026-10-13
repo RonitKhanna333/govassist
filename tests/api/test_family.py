@@ -400,3 +400,27 @@ def test_grandparents_and_grandchildren():
 def test_a_spouse_is_never_also_labelled_a_sibling():
     edges = [E(1, "parent_of", 2), E(1, "parent_of", 3), E(2, "spouse_of", 3)]
     assert derive.relation_labels(2, edges)[3] == "spouse"
+
+
+def test_in_laws_are_named_not_left_unlinked():
+    # 1 = me, 2 = my spouse, 3 = spouse's father, 4 = my son, 5 = son's wife
+    edges = [E(1, "spouse_of", 2), E(3, "parent_of", 2), E(1, "parent_of", 4),
+             E(4, "spouse_of", 5)]
+    labels = derive.relation_labels(1, edges)
+    assert labels[3] == "parent_in_law"
+    assert labels[5] == "child_in_law"
+
+
+def test_distant_but_connected_relatives_are_still_family():
+    # 1 = me, 2 = my sibling (shared parent 3), 4 = sibling's spouse
+    edges = [E(3, "parent_of", 1), E(3, "parent_of", 2), E(2, "spouse_of", 4)]
+    assert derive.relation_labels(1, edges)[4] == "relative"
+
+
+def test_in_laws_never_count_for_one_person_per_family():
+    """A father-in-law who received PMFME is not "self, spouse and children"."""
+    from api.family.models import BenefitRecord, Member
+    members = [Member(id=1, name="me"), Member(id=2, name="wife"), Member(id=3, name="sasur")]
+    edges = [E(1, "spouse_of", 2), E(3, "parent_of", 2)]
+    benefits = [BenefitRecord(member_id=3, scheme="pmfme")]
+    assert derive.suggestions("pmfme", 1, members, edges, benefits) == []

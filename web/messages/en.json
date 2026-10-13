@@ -4,6 +4,7 @@
   "nav.presentation": "Presentation",
   "nav.live": "Live prototype",
   "nav.evidence": "Evidence / repository",
+  "nav.family": "Family",
   "scheme.label": "Scheme",
   "chat.placeholder": "Tell me about your situation…",
   "chat.send": "Send",
@@ -73,5 +74,9 @@
   "next.official_wording": "Official wording",
   "next.official_document": "Open the official document",
   "next.the_scheme_office": "the scheme office",
-  "next.documents.tick": "Tick each one off as you gather it."
+  "next.documents.tick": "Tick each one off as you gather it.",
+  "family.hint": "Your family record says {name} ({relation}) has already received this scheme.",
+  "family.hint_note": "This is only a reminder from your family record. Please answer the question yourself.",
+  "family.rel.spouse": "your husband or wife",
+  "family.rel.child": "your child"
 }

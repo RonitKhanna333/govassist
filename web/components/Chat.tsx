@@ -22,6 +22,7 @@ import { useRecorder } from "@/lib/useRecorder";
 import { useSpeech } from "@/lib/useSpeech";
 import { AnswerControls } from "./AnswerControls";
 import { Citations } from "./Citations";
+import { FamilyHint } from "./FamilyHint";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { NextSteps } from "./NextSteps";
 import { SiteNav } from "./SiteNav";
@@ -372,6 +373,7 @@ export function Chat() {
             presentation: t("nav.presentation"),
             live: t("nav.live"),
             evidence: t("nav.evidence"),
+            family: t("nav.family"),
           }}
           active="live"
         />
@@ -496,6 +498,14 @@ export function Chat() {
 
             {latest?.next_steps && !busy && (
               <NextSteps checklist={latest.next_steps} t={t} />
+            )}
+
+            {latest?.pending && !busy && (
+              <FamilyHint
+                scheme={scheme}
+                attributes={latest.pending.fields?.map((f) => f.attribute) ?? []}
+                t={t}
+              />
             )}
 
             {latest?.pending && !busy && (
