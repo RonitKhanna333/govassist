@@ -250,10 +250,13 @@ def save_profile(body: ProfileBody, user: User = Depends(current_user),
                or (isinstance(v, float) and math.isfinite(v))
                for v in profile.values()):
         raise HTTPException(422, "profile values must be plain answers")
+    from api.onboarding.router import clean_answers
+    profile = clean_answers(profile)
 
     with sessions() as session:
-        stored = session.get(User, user.id)
-        stored.profile_json = json.dumps(profile)
+        stored = session.scalar(select(User).where(User.id == user.id).with_for_update())
+        from api.onboarding.service import merge_profile
+        stored.profile_json = merge_profile(stored.profile_json, profile)
         if body.locale:
             stored.locale = body.locale[:8]
         session.commit()

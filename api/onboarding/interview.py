@@ -98,6 +98,12 @@ def order() -> list[str]:
         key=lambda a: (-len(a.schemes), a.position),
     )
     out = [a.name for a in shared]
+    # Common personal facts before occupation-specific follow-ups. This is
+    # interview presentation only; all eligibility conditions stay in the corpus.
+    basics = ["age", "is_indian_citizen", "has_bank_or_post_office_account",
+              "has_savings_bank_account", "ever_paid_income_tax",
+              "paid_income_tax_last_year", "is_government_employee"]
+    out = [a for a in basics if a in attrs] + [a for a in out if a not in basics]
     for scheme in schemes():
         block = [n for n in per_scheme[scheme] if n not in out]
         opener = gate(scheme)
@@ -126,14 +132,17 @@ def verdicts(profile: dict) -> dict[str, str]:
     return {s: decide(s, profile).verdict.value for s in schemes()}
 
 
-def next_field(profile: dict, locale: str = "en") -> Field | None:
+def next_field(profile: dict, locale: str = "en", skipped: list[str] | None = None) -> Field | None:
     """The next question worth asking, or None when nothing is left."""
-    open_schemes = {s for s, v in verdicts(profile).items() if v == "INSUFFICIENT_INFO"}
-    attrs, _ = _catalogue()
+    missing = set()
+    for s in schemes():
+        result = decide(s, profile)
+        if result.verdict.value == "INSUFFICIENT_INFO":
+            missing.update(result.missing_attributes)
     for name in order():
-        if profile.get(name) is not None:
+        if profile.get(name) is not None or name in (skipped or []):
             continue
-        if set(attrs[name].schemes) & open_schemes:
+        if name in missing:
             return field_for(name, locale)
     return None
 

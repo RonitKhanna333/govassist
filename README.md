@@ -9,6 +9,12 @@ checked automatically rather than trusted.
 
 ## What's built
 
+The homepage now supports phone/password accounts, one general profile
+interview (self-service or AI callback), and a dashboard with server-decided
+eligibility, quoted rules, missing answers, document requirements and call
+history. See [docs/onboarding.md](docs/onboarding.md) for setup and verification
+limits. The anonymous per-scheme chat is at `/schemes`.
+
 | Layer | State |
 |---|---|
 | Corpus toolchain (`data/scripts/`) | 7 human review gates, span-validated quotes |

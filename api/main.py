@@ -26,6 +26,7 @@ from api.body_limit import BodySizeLimitMiddleware
 from api.family.router import router as family_router
 from api.routers.chat import router as chat_router
 from api.routers.voice import router as voice_router
+from api.onboarding.router import router as onboarding_router
 
 DEFAULT_ORIGINS = [
     "http://localhost:3000",
@@ -77,3 +78,4 @@ app.include_router(chat_router)
 app.include_router(auth_router)
 app.include_router(voice_router)
 app.include_router(family_router)
+app.include_router(onboarding_router)

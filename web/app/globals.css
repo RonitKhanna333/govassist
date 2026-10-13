@@ -1214,3 +1214,32 @@ a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; 
 .family-hint { border: 1px solid var(--seal-soft); background: var(--seal-soft); border-radius: var(--radius-sm); padding: 0.7rem 0.9rem; margin: 0.5rem 0; font-size: 0.9rem; }
 .family-hint p { margin: 0 0 0.3rem; }
 .family-hint p:last-child { margin: 0; font-size: 0.8rem; }
+
+/* Phone-first account, general interview and eligibility dashboard. */
+.account-page .presentation-shell { max-width: 1080px; }
+.account-eyebrow { color: var(--good); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; }
+.account-auth { max-width: 480px; margin: 2rem auto; }
+.account-language { display: flex; flex-direction: column; gap: .25rem; font-size: .8rem; }
+.account-language select { padding: .4rem; font: inherit; background: var(--paper); color: var(--ink); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); }
+.account-tabs { margin-bottom: 1.5rem; }
+.account-page h2 { font-size: 1.25rem; }
+.account-page h3 { font-size: 1.1rem; line-height: 1.5; }
+.account-page h4 { margin: 1rem 0 .5rem; }
+.account-page .family-check { align-items: flex-start; line-height: 1.6; margin: 1rem 0; }
+.account-page .family-check input { flex-shrink: 0; margin-top: .35rem; }
+.account-notice { padding: 1rem; border: 1px solid var(--good); background: var(--good-soft); border-radius: var(--radius); }
+.account-interview { max-width: 720px; margin: 1rem auto; }
+.account-skip { display: block; margin-top: 1.5rem; }
+.account-results, .account-calls { margin: 2rem 0; }
+.account-page details summary { cursor: pointer; line-height: 1.6; }
+.account-evidence blockquote { margin: .75rem 0 .35rem; padding-left: .8rem; border-left: 3px solid var(--line-strong); font-size: .9rem; white-space: pre-line; overflow-wrap: anywhere; }
+.account-evidence a { font-size: .8rem; }
+.account-review-note { background: var(--seal-soft); color: var(--seal); padding: .7rem; font-size: .85rem; border-radius: var(--radius-sm); }
+.account-answers > div { padding: .8rem 0; border-bottom: 1px solid var(--line); }
+.account-answers dt { color: var(--ink-soft); }
+.account-answers dd { margin: .3rem 0 0; display: flex; flex-wrap: wrap; gap: .8rem; align-items: baseline; }
+.account-answers small { width: 100%; color: var(--ink-faint); }
+.account-transcript { padding-left: 1.3rem; line-height: 1.7; overflow-wrap: anywhere; }
+.account-transcript li { padding: .4rem 0; }
+.account-anonymous { margin-top: 2rem; text-align: center; }
+.account-page button:focus-visible, .account-page summary:focus-visible, .account-page a:focus-visible { outline: 2px solid var(--good); outline-offset: 3px; }
