@@ -601,3 +601,14 @@ def test_call_detail_shows_transcript_and_extraction(client):
 def test_call_detail_needs_the_secret(client):
     with patch.dict("os.environ", {"VOICE_WEBHOOK_SECRET": SECRET}):
         assert client.get("/voice/calls/abcdefgh12?token=no").status_code == 401
+
+
+def test_the_agent_never_hangs_up_on_silence():
+    """The first real call ended after one unanswered age question, with the
+    agent deciding the line was bad. Silence skips a question; it never ends
+    the call."""
+    hindi = script.build_task("pmsby", "hi")
+    assert "कॉल कभी ख़ुद से ख़त्म न करें" in hindi
+    assert "आप मुझे सुन पा रहे हैं?" in hindi
+    english = script.build_task("pmsby", "en")
+    assert "Never end the call yourself because of silence" in english
