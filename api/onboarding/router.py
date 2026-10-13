@@ -102,7 +102,7 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
         from api.voice.hinglish import QUESTIONS
         questions = {a: QUESTIONS.get(a, ask) for a, ask in questions.items()}
     try:
-        max_minutes = int(os.environ.get("BLAND_INTERVIEW_MAX_MINUTES", "10"))
+        max_minutes = int(os.environ.get("BLAND_INTERVIEW_MAX_MINUTES", "3"))
         if not 1 <= max_minutes <= 30:
             raise ValueError
     except ValueError as exc:

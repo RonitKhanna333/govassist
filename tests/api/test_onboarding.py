@@ -98,7 +98,7 @@ def test_callback_requires_consent_uses_account_phone_and_attaches_result_tool(s
     assert result.status_code == 200
     assert sent[0]["phone"] == "+919876543210"
     assert sent[0]["scheme"] == "all"
-    assert sent[0]["max_minutes"] == 10
+    assert sent[0]["max_minutes"] == 3   # short interview, about a minute
     assert sent[0]["extra_tools"][0]["url"] == "https://api.example/voice/eligibility?token=test-secret"
     assert "Never add or remove a scheme" in sent[0]["task"]
     with sessions() as session:
@@ -288,3 +288,33 @@ def test_tool_definitions_for_hindi_are_ascii(locale):
     assert json.dumps(tool, ensure_ascii=False).isascii()
     elig = bland.eligibility_tool_definition("https://x/voice/eligibility", locale, {"age": "Aapki umar?"})
     assert json.dumps(elig, ensure_ascii=False).isascii()
+
+
+def test_the_call_interview_is_short_by_default(monkeypatch):
+    """About a minute on the phone: age plus one settling question per
+    scheme. The rest is asked on the dashboard."""
+    from api.voice import script
+    monkeypatch.delenv("INTERVIEW_LENGTH", raising=False)
+    short = interview.screening_order()
+    assert short[0] == "age"
+    assert len(short) <= 8
+    for scheme in interview.schemes():
+        # every scheme can still be settled from the short call
+        assert set(short) & {a for a in interview.order() if scheme in
+                             interview._catalogue()[0][a].schemes}
+    task = script.build_interview_task("hi", "Asha")
+    assert "9. " not in task                        # at most 8 questions
+    assert "बस एक मिनट" in task
+    monkeypatch.setenv("INTERVIEW_LENGTH", "full")
+    assert "31. " in script.build_interview_task("hi", "Asha")
+
+
+def test_skip_notes_never_point_at_questions_not_in_the_short_script(monkeypatch):
+    from api.voice import script
+    monkeypatch.delenv("INTERVIEW_LENGTH", raising=False)
+    task = script.build_interview_task("en", "Asha")
+    assert "skip questions 1" not in task.replace("skip questions 1-", "")
+    import re
+    for numbers in re.findall(r"skip questions ([\d, -]+)\.", task):
+        for n in re.findall(r"\d+", numbers):
+            assert int(n) <= len(interview.screening_order())

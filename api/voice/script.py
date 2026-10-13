@@ -9,6 +9,8 @@ so adding a scheme adds a working call script with no new prose.
 
 from __future__ import annotations
 
+import os
+
 from api.language.registry import get as get_locale
 from api.rules.engine import load_rules
 from api.rules.forms import derive_fields
@@ -204,7 +206,7 @@ _INTERVIEW_OPEN = {
 सरकारी योजनाएँ उनके काम आ सकती हैं।
 
 शुरुआत (अपने शब्दों में): नमस्ते कहें, नाम लेकर बात करें ({name} जी), बताएँ कि \
-आप GovAssist से बोल रहे हैं और उन्होंने कॉल माँगी थी, कुछ मिनट लगेंगे, और \
+आप GovAssist से बोल रहे हैं और उन्होंने कॉल माँगी थी, बस एक मिनट लगेगा, और \
 पूछें कि क्या अभी बात करना ठीक रहेगा।
 """,
     "en": """You are calling from the GovAssist helpline. This person asked for \
@@ -212,7 +214,7 @@ the call themselves. Your job is to ask a few simple questions to find out which
 government schemes could help them.
 
 Opening (in your own words): greet them by name ({name}), say you're calling from \
-GovAssist because they asked for a call, it takes a few minutes, and ask if \
+GovAssist because they asked for a call, it takes about a minute, and ask if \
 now is a good time.
 """,
 }
@@ -249,7 +251,11 @@ def _shared_style(code: str) -> str:
     return text[start:end].rstrip() + "\n"
 
 
-def build_interview_task(locale: str = "hi", name: str = "") -> str:
+def build_interview_task(locale: str = "hi", name: str = "", short: bool | None = None) -> str:
+    """The interview call script. Short by default (about a minute: the
+    screening questions only); INTERVIEW_LENGTH=full asks everything."""
+    if short is None:
+        short = os.environ.get("INTERVIEW_LENGTH", "short") != "full"
     if locale == "hi-Latn":
         from api.voice.hinglish import build_task
         return build_task(name)
@@ -259,9 +265,14 @@ def build_interview_task(locale: str = "hi", name: str = "") -> str:
     if code not in CALL_LOCALES:
         raise ValueError(f"calls aren't available in {code} yet")
 
-    sequence = interview.order()
+    sequence = interview.screening_order() if short else interview.order()
     number = {attr: i for i, attr in enumerate(sequence, start=1)}
-    skips = interview.skip_rules(code)
+    # Skip notes only about questions that are actually in this script.
+    skips = {}
+    for attr, rule in interview.skip_rules(code).items():
+        later = [a for a in rule["skip"] if a in number]
+        if attr in number and later:
+            skips[attr] = {**rule, "skip": later}
 
     lines = []
     for attr in sequence:

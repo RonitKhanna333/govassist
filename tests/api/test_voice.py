@@ -473,7 +473,9 @@ def test_hinglish_interview_covers_current_questions_and_preserves_conditional_f
     from api.onboarding import service
     from api.voice.hinglish import QUESTIONS
     assert set(QUESTIONS) == set(service.fields("en"))
-    task = script.build_interview_task("hi-Latn", "आशा")
+    # The full interview; the default call is the short screening version.
+    with patch.dict("os.environ", {"INTERVIEW_LENGTH": "full"}):
+        task = script.build_interview_task("hi-Latn", "आशा")
     for question in QUESTIONS.values():
         assert question in task
     assert "skip questions" in task

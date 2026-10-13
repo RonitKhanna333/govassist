@@ -219,3 +219,27 @@ def number_limits(scheme: str, attribute: str = "age") -> tuple[float | None, fl
             elif isinstance(op, (ast.LtE, ast.Lt)):
                 high = right.value if high is None else min(high, right.value)
     return low, high
+
+
+@lru_cache(maxsize=1)
+def screening_order() -> list[str]:
+    """The short version for a phone call (about a minute): the first
+    question in the full order (age), plus for each scheme the one question
+    that can settle it -- its opener, or for a scheme with no question of its
+    own, the earliest shared question that can rule it out (the bank
+    account, for the insurance schemes). Everything else is left for the
+    dashboard, which carries on from these answers.
+
+    Derived from the rules like `order()`; the result keeps `order()`'s
+    sequence, so its skip and age conditions still read naturally.
+    """
+    full = order()
+    _, per_scheme = _catalogue()
+    chosen = {full[0]}
+    for scheme in schemes():
+        opener = gate(scheme)
+        if opener is None:
+            opener = next((a for a in per_scheme[scheme] if _settles_on(scheme, a)), None)
+        if opener is not None:
+            chosen.add(opener)
+    return [a for a in full if a in chosen]
