@@ -17,18 +17,28 @@ export function Citations({
   citations: Citation[];
   t: (key: string, values?: Record<string, string | number>) => string;
 }) {
-  if (citations.length === 0) return null;
+  // The API can cite one clause for several conditions (APY, PMJJBY). The
+  // quote is the same either way, so show it once.
+  const unique = citations.filter(
+    (citation, index) =>
+      citations.findIndex((other) => other.clause_id === citation.clause_id) === index,
+  );
+  if (unique.length === 0) return null;
 
   return (
     <section className="citations">
       <h2>{t("citations.heading")}</h2>
       <p className="sub">{t("citations.note")}</p>
 
-      {citations.map((citation) => (
+      {unique.map((citation, index) => (
         <article key={citation.clause_id} className="citation">
-          <blockquote lang="en">{citation.quote.trim()}</blockquote>
+          <span className="citeno" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+          {/* PDF extraction leaves hard line breaks and double spaces;
+              collapsing whitespace changes the layout, not the words. */}
+          <blockquote lang="en" title={citation.clause_id}>
+            {citation.quote.replace(/\s+/g, " ").trim()}
+          </blockquote>
           <div className="meta">
-            <span>{citation.clause_id}</span>
             {citation.page !== null && (
               <span>{t("citations.page", { page: citation.page })}</span>
             )}

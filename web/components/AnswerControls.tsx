@@ -86,7 +86,8 @@ export function AnswerControls({
             aria-expanded={helpOpen}
             onClick={() => setOpenHelp(helpOpen ? null : current.attribute)}
           >
-            {helpOpen ? "−" : "?"} {t("help.what")}
+            <span className="helpicon" aria-hidden="true">{helpOpen ? "−" : "?"}</span>
+            {t("help.what")}
           </button>
           {helpOpen && <p className="help">{current.help}</p>}
         </>

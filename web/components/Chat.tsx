@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ApiError,
@@ -26,6 +27,37 @@ import { NextSteps } from "./NextSteps";
 import { SiteNav } from "./SiteNav";
 
 const DEFAULT_SCHEME = "pmfme";
+
+const ICONS = {
+  arrowUp: "M12 19V5M5 12l7-7 7 7",
+  arrowRight: "M5 12h14M13 5l7 7-7 7",
+  mic: "M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM19 11a7 7 0 0 1-14 0M12 18v3",
+  stop: "M7 7h10v10H7z",
+  speaker: "M11 5 6 9H3v6h3l5 4V5zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13",
+  restart: "M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5",
+  check: "M5 12.5l4.5 4.5L19 7.5",
+  cross: "M7 7l10 10M17 7 7 17",
+  dots: "M6 12h.01M12 12h.01M18 12h.01",
+} as const;
+
+function Icon({ name, size = 16 }: { name: keyof typeof ICONS; size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={name === "dots" ? 3 : 1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="icon"
+    >
+      <path d={ICONS[name]} />
+    </svg>
+  );
+}
 const STORAGE_KEY = "govassist.language";
 
 interface Turn {
@@ -330,21 +362,22 @@ export function Chat() {
 
   return (
     <div className="shell">
-      <SiteNav
-        labels={{
-          presentation: t("nav.presentation"),
-          live: t("nav.live"),
-          evidence: t("nav.evidence"),
-        }}
-        active="live"
-      />
+      <div className="topbar">
+        <Link className="brand" href="/" lang={uiLocale}>
+          <span className="brand-mark" aria-hidden="true">G</span>
+          {t("app.title")}
+        </Link>
+        <SiteNav
+          labels={{
+            presentation: t("nav.presentation"),
+            live: t("nav.live"),
+            evidence: t("nav.evidence"),
+          }}
+          active="live"
+        />
+      </div>
       <header className="masthead">
-        <div>
-          <h1 lang={uiLocale}>{t("app.title")}</h1>
-          <p className="tagline" lang={uiLocale}>
-            {t("app.tagline")}
-          </p>
-        </div>
+        <h1 lang={uiLocale}>{t("app.tagline")}</h1>
         <LanguageSwitcher
           uiLocale={uiLocale}
           contentLocale={contentLocale}
@@ -370,7 +403,10 @@ export function Chat() {
                       checked={item.id === scheme}
                       onChange={() => setScheme(item.id)}
                     />
-                    <span lang={contentLocale}>{item.name}</span>
+                    <span className="schemetext">
+                      <span lang={contentLocale}>{item.name}</span>
+                      {item.authority && <span className="schemeauth">{item.authority}</span>}
+                    </span>
                     {!item.reviewed && <em className="tag">{t("scheme.unreviewed")}</em>}
                   </label>
                 ))}
@@ -379,17 +415,46 @@ export function Chat() {
             {selectedReviewed !== true && (
               <p className="note" role="note">{t("scheme.unreviewed_note")}</p>
             )}
-            <button type="button" className="btn" onClick={start} disabled={busy}>
+            <button type="button" className="btn startbtn" onClick={start} disabled={busy}>
               {t("chat.start")}
+              <Icon name="arrowRight" />
             </button>
           </div>
         ) : (
           <>
-            <p className="schemename" lang={contentLocale}>
-              {schemes.find((item) => item.id === scheme)?.name ?? scheme}
-            </p>
-            {latest?.verdict && (
-              <div className={`verdict ${verdictClass}`}>{verdictLabel}</div>
+            <div className="panelhead">
+              <p className="schemename" lang={contentLocale}>
+                {schemes.find((item) => item.id === scheme)?.name ?? scheme}
+              </p>
+              <div className="headactions">
+                {/* Disabled with a reason beats a button that silently does
+                    nothing -- Punjabi and Tamil voices are often absent. */}
+                <button
+                  type="button"
+                  className="btn quiet"
+                  onClick={() => (speaking ? stop() : void speakText(lastBotText, latest?.speech ?? null))}
+                  disabled={!speechAvailable || !latest || audioLoading}
+                  title={!speechAvailable ? t("speak.unavailable") : undefined}
+                >
+                  <Icon name={speaking ? "stop" : "speaker"} size={14} />
+                  {audioLoading ? t("speak.loading") : speaking ? t("speak.stop") : t("speak.play")}
+                </button>
+                <button type="button" className="btn quiet" onClick={restart}>
+                  <Icon name="restart" size={14} />
+                  {t("chat.restart")}
+                </button>
+              </div>
+            </div>
+            {latest?.verdict && (latest.verdict !== "INSUFFICIENT_INFO" || !latest.pending) && (
+              <div className={`verdict ${verdictClass}`} key={latest.verdict}>
+                <span className="verdict-icon">
+                  <Icon
+                    name={verdictClass === "eligible" ? "check" : verdictClass === "not_eligible" ? "cross" : "dots"}
+                    size={14}
+                  />
+                </span>
+                {verdictLabel}
+              </div>
             )}
             {/* The result carries the same warning as the scheme list: a
                 verdict from rules no person has checked is a first guide. */}
@@ -400,16 +465,32 @@ export function Chat() {
             )}
 
             <div className="thread" aria-live="polite">
-              {turns.map((turn, index) => (
-                <div
-                  key={index}
-                  className={`bubble ${turn.role}`}
-                  lang={turn.role === "bot" ? contentLocale : undefined}
-                >
-                  {turn.text}
+              {turns.map((turn, index) => {
+                const firstOfGroup = turns[index - 1]?.role !== turn.role;
+                return (
+                  <div key={index} className={`turn ${turn.role}${firstOfGroup ? " first" : ""}`}>
+                    {turn.role === "bot" && (
+                      <span className="avatar" aria-hidden="true">{firstOfGroup ? "G" : ""}</span>
+                    )}
+                    <div
+                      className={`bubble ${turn.role}`}
+                      lang={turn.role === "bot" ? contentLocale : undefined}
+                    >
+                      {turn.text}
+                    </div>
+                  </div>
+                );
+              })}
+              {busy && (
+                <div className={`turn bot${turns[turns.length - 1]?.role !== "bot" ? " first" : ""}`}>
+                  <span className="avatar" aria-hidden="true">
+                    {turns[turns.length - 1]?.role !== "bot" ? "G" : ""}
+                  </span>
+                  <div className="bubble bot pending">
+                    {t("chat.thinking").replace(/(…|\.\.\.)$/, "")}
+                  </div>
                 </div>
-              ))}
-              {busy && <div className="bubble bot">{t("chat.thinking")}</div>}
+              )}
               <div ref={threadEnd} />
             </div>
 
@@ -441,42 +522,36 @@ export function Chat() {
               {voiceInput && recorder.state !== "unsupported" && (
                 <button
                   type="button"
-                  className={`btn ghost${recorder.state === "recording" ? " recording" : ""}`}
+                  className={`btn ghost micbtn${recorder.state === "recording" ? " recording" : ""}`}
                   onClick={() => void toggleMic()}
                   disabled={busy || transcribing}
                   aria-pressed={recorder.state === "recording"}
+                  aria-label={
+                    transcribing
+                      ? t("mic.transcribing")
+                      : recorder.state === "recording"
+                        ? t("mic.stop")
+                        : t("mic.start")
+                  }
+                  title={recorder.state === "idle" ? t("mic.start") : undefined}
                 >
-                  {transcribing
-                    ? t("mic.transcribing")
-                    : recorder.state === "recording"
-                      ? t("mic.stop")
-                      : t("mic.start")}
+                  <Icon name={recorder.state === "recording" ? "stop" : "mic"} />
+                  {transcribing ? (
+                    <span>{t("mic.transcribing")}</span>
+                  ) : recorder.state === "recording" ? (
+                    <span>{t("mic.stop")}</span>
+                  ) : null}
                 </button>
               )}
               <button
                 type="button"
-                className="btn"
+                className="btn sendbtn"
                 onClick={() => void send(draft)}
                 disabled={busy || !draft.trim()}
+                aria-label={t("chat.send")}
+                title={t("chat.send")}
               >
-                {t("chat.send")}
-              </button>
-            </div>
-
-            <div className="quickrow">
-              {/* Disabled with a reason beats a button that silently does
-                  nothing -- Punjabi and Tamil voices are often absent. */}
-              <button
-                type="button"
-                className="btn ghost"
-                onClick={() => (speaking ? stop() : void speakText(lastBotText, latest?.speech ?? null))}
-                disabled={!speechAvailable || !latest || audioLoading}
-                title={!speechAvailable ? t("speak.unavailable") : undefined}
-              >
-                {audioLoading ? t("speak.loading") : speaking ? t("speak.stop") : t("speak.play")}
-              </button>
-              <button type="button" className="btn ghost" onClick={restart}>
-                {t("chat.restart")}
+                <Icon name="arrowUp" />
               </button>
             </div>
 

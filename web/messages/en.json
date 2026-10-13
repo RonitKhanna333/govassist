@@ -1,6 +1,6 @@
 {
   "app.title": "GovAssist",
-  "app.tagline": "Check government scheme eligibility — with the exact rule quoted.",
+  "app.tagline": "Check whether you qualify for a government scheme, with the exact rule quoted.",
   "nav.presentation": "Presentation",
   "nav.live": "Live prototype",
   "nav.evidence": "Evidence / repository",
@@ -23,7 +23,7 @@
   "speak.play": "Listen",
   "speak.stop": "Stop",
   "speak.unavailable": "Voice isn't available in this language on this device.",
-  "speak.browser": "Using your device's built-in voice — quality varies.",
+  "speak.browser": "Using your device's built-in voice. Quality varies.",
   "mic.start": "Speak",
   "mic.listening": "Listening… just stop talking when you're done.",
   "mic.unsupported": "Your browser doesn't support voice input.",
@@ -72,5 +72,6 @@
   "next.gap.apply": "The checked official text I have doesn't say where to apply. Ask {authority} or see the official document below.",
   "next.official_wording": "Official wording",
   "next.official_document": "Open the official document",
-  "next.the_scheme_office": "the scheme office"
+  "next.the_scheme_office": "the scheme office",
+  "next.documents.tick": "Tick each one off as you gather it."
 }
