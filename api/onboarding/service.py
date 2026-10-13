@@ -10,6 +10,9 @@ from api.onboarding.models import CallRecord
 from api.rules.engine import decide
 from api.rules.forms import OTHER, Field
 from api.rules.spoken import parse_number, parse_yes_no
+from api.rules.values import check_values, specs_for
+from api.rules.engine import load_rules
+from parse_scheme import repo_root
 
 
 def fields(locale: str = "en") -> dict[str, Field]:
@@ -53,7 +56,12 @@ def read_answers(heard: dict) -> tuple[dict, list[str]]:
             profile[attribute] = f.satisfied_by if said_yes else OTHER
         else:
             profile[attribute] = said_yes
-    return profile, unparsed
+    specs = {}
+    for slug in interview.schemes():
+        specs.update(specs_for(load_rules(slug, repo_root())))
+    checked = check_values(specs, profile)
+    unparsed.extend(e.attribute for e in checked.errors)
+    return checked.values, unparsed
 
 
 def coerce_answers(raw) -> dict:

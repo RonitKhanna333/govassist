@@ -472,15 +472,25 @@ def _interview_webhook(body: dict, metadata: dict, llm: LLMProvider) -> dict:
 
     sessions = get_sessions()
     with sessions() as session:
-        record = session.scalar(select(CallRecord).where(CallRecord.call_id == call_id))
+        if not call_id:
+            raise HTTPException(422, "call_id is required")
+        record = session.scalar(select(CallRecord).where(CallRecord.call_id == call_id)
+                                .with_for_update())
         if record is None:
-            record = CallRecord(call_id=call_id or None, locale=locale,
-                                user_id=metadata.get("user_id"))
-            session.add(record)
+            record_id = metadata.get("record_id")
+            if isinstance(record_id, int) and not isinstance(record_id, bool):
+                record = session.scalar(select(CallRecord).where(CallRecord.id == record_id)
+                                        .with_for_update())
+            if record is None or record.call_id not in (None, call_id):
+                raise HTTPException(404, "No requested interview matches this call")
+            record.call_id = call_id
+        if record.completed_at is not None:
+            # Provider retries must never overwrite a more recent web answer.
+            return {"kind": "interview", "duplicate": True}
         service.complete_record(record, "completed" if answered else "not_answered",
                                 body.get("transcripts"), heard, values)
         if values and record.user_id:
-            user = session.get(User, record.user_id)
+            user = session.scalar(select(User).where(User.id == record.user_id).with_for_update())
             if user is not None:
                 user.profile_json = service.merge_profile(user.profile_json, values)
         session.commit()

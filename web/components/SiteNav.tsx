@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface NavLabels {
   presentation: string;
   live: string;
@@ -16,7 +18,7 @@ export function SiteNav({
   active,
   labels = DEFAULT_LABELS,
 }: {
-  active?: "presentation" | "live" | "evidence" | "family";
+  active?: "presentation" | "live" | "evidence" | "family" | "account";
   labels?: NavLabels;
 }) {
   const link = (key: keyof NavLabels, href: string) => (
@@ -31,8 +33,9 @@ export function SiteNav({
 
   return (
     <nav className="site-nav" aria-label="Primary navigation">
+      <Link href="/" className={active === "account" ? "active" : undefined} aria-current={active === "account" ? "page" : undefined}>My account</Link>
       {link("presentation", "/presentation")}
-      {link("live", "/")}
+      {link("live", "/schemes")}
       {link("family", "/family")}
       {link("evidence", "/evidence")}
     </nav>

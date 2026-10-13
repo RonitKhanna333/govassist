@@ -313,8 +313,10 @@ def _numbers(text: str) -> list[float]:
             + _hindi_numbers(tokens))
 
 
-def _as_number(value: float) -> int | float:
-    return int(value) if value.is_integer() else value
+def _as_number(value: int | float) -> int | float:
+    # Spoken multipliers such as Hindi "sau" can already be integers.
+    # int.is_integer() only exists on Python 3.12+, while CI uses 3.11.
+    return int(value) if isinstance(value, int) or value.is_integer() else value
 
 
 def read_number(text: str) -> Reading:

@@ -204,7 +204,7 @@ _INTERVIEW_OPEN = {
 सरकारी योजनाएँ उनके काम आ सकती हैं।
 
 शुरुआत (अपने शब्दों में): नमस्ते कहें, नाम लेकर बात करें ({name} जी), बताएँ कि \
-आप GovAssist से बोल रहे हैं और उन्होंने कॉल माँगी थी, चार-पाँच मिनट लगेंगे, और \
+आप GovAssist से बोल रहे हैं और उन्होंने कॉल माँगी थी, कुछ मिनट लगेंगे, और \
 पूछें कि क्या अभी बात करना ठीक रहेगा।
 """,
     "en": """You are calling from the GovAssist helpline. This person asked for \
@@ -212,7 +212,7 @@ the call themselves. Your job is to ask a few simple questions to find out which
 government schemes could help them.
 
 Opening (in your own words): greet them by name ({name}), say you're calling from \
-GovAssist because they asked for a call, it takes four or five minutes, and ask if \
+GovAssist because they asked for a call, it takes a few minutes, and ask if \
 now is a good time.
 """,
 }
