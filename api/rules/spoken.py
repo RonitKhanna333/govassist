@@ -55,6 +55,31 @@ NO = {
     "illai", "illa", "illeenga",
 }
 
+# "I don't know" is not "no". Every one of these CONTAINS a no-word
+# ("पता नहीं", "nahi pata"), so without this they were recorded as a
+# definite No -- and a No on an eligibility question can deny someone the
+# scheme. Not knowing leaves the attribute unknown, and the question is
+# asked again.
+DONT_KNOW = (
+    # Hindi
+    "पता नहीं", "नहीं पता", "मालूम नहीं", "नहीं मालूम", "याद नहीं", "नहीं याद",
+    "pata nahi", "nahi pata", "pata nahin", "malum nahi", "maloom nahi",
+    "yaad nahi",
+    # Punjabi
+    "ਪਤਾ ਨਹੀਂ", "ਨਹੀਂ ਪਤਾ", "ਪਤਾ ਨਹੀ",
+    # Tamil
+    "தெரியாது", "தெரியவில்லை", "theriyadhu", "teriyathu",
+    # English
+    "don't know", "dont know", "do not know", "no idea", "not sure",
+    "can't say", "cant say",
+)
+
+
+def says_dont_know(text: str) -> bool:
+    normalized = unicodedata.normalize("NFC", text).lower()
+    return any(phrase in normalized for phrase in DONT_KNOW)
+
+
 # Native-script digits -> ASCII, so "२५", "੨੫" and "௨௫" all read as 25.
 _DIGITS = {}
 for _start in (0x0966, 0x0A66, 0x0BE6):          # Devanagari, Gurmukhi, Tamil
@@ -92,8 +117,11 @@ def parse_yes_no(text: str) -> bool | None:
 
     "haan, nahi liya" contains both, and guessing which one the person meant
     is exactly the kind of error this app must not make on an eligibility
-    question. Ambiguity goes back to the person.
+    question. Ambiguity goes back to the person -- as does "पता नहीं",
+    which contains a no-word but means the person does not know.
     """
+    if says_dont_know(text):
+        return None
     tokens = set(_tokens(text))
     said_yes = bool(tokens & YES)
     said_no = bool(tokens & NO)

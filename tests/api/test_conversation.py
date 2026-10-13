@@ -368,3 +368,13 @@ def test_an_unsafe_scheme_name_is_rejected():
 def test_new_scheme_boundaries(scheme, profile, verdict):
     body = _client().post("/chat", json={"scheme": scheme, "profile": profile}).json()
     assert body["verdict"] == verdict
+
+
+@pytest.mark.parametrize("text", [
+    "पता नहीं", "मुझे नहीं पता", "pata nahi", "मालूम नहीं", "याद नहीं",
+    "ਪਤਾ ਨਹੀਂ", "தெரியாது", "I don't know", "no idea",
+])
+def test_dont_know_is_not_a_no(text):
+    """Each of these contains a no-word. Recorded as a definite No, a "don't
+    know" can deny someone a scheme they qualify for."""
+    assert parse_yes_no(text) is None

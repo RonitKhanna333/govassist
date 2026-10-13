@@ -125,11 +125,11 @@ def detect_locale(request: Request) -> dict:
 
 # The fixture scheme exists for tests, not for applicants.
 _HIDDEN_SCHEMES = {"demo-scheme"}
-_SLUG = re.compile(r"[a-z0-9][a-z0-9-]{0,63}")
+SCHEME_SLUG = re.compile(r"[a-z0-9][a-z0-9-]{0,63}")
 
 # Names people actually use, per language. The official English name stays
 # in `name_en`.
-_SCHEME_NAMES = {
+SCHEME_NAMES = {
     "pmfme": {"en": "Food processing business support (PMFME)",
               "hi": "खाद्य प्रसंस्करण उद्यम सहायता (PMFME)",
               "pa": "ਖ਼ੁਰਾਕ ਪ੍ਰੋਸੈਸਿੰਗ ਕਾਰੋਬਾਰ ਸਹਾਇਤਾ (PMFME)",
@@ -179,7 +179,7 @@ def schemes(locale: str | None = None) -> dict:
             rules = load_rules(slug, repo_root())
         except FileNotFoundError:
             continue
-        names = _SCHEME_NAMES.get(slug, {})
+        names = SCHEME_NAMES.get(slug, {})
         out.append({
             "id": slug,
             "name": names.get(code) or names.get("en") or rules.get("name_en", slug),
@@ -287,7 +287,7 @@ def chat(body: dict,
 
     if not scheme:
         raise HTTPException(422, "scheme is required")
-    if not _SLUG.fullmatch(str(scheme)):
+    if not SCHEME_SLUG.fullmatch(str(scheme)):
         raise HTTPException(404, f"unknown scheme '{scheme}'")
 
     try:

@@ -16,17 +16,19 @@ checked automatically rather than trusted.
 | Graph store (`api/graph/`) | 5 retrieval patterns, hop-capped, typed |
 | Agents (`api/agents/`) | Groq: NLU, composer, verifier, recompose loop |
 | Language (`api/language/`) | Bhashini, entity protection, fallback ladder |
+| Voice (`api/voice/`) | phone calls: script from the rules, verdict from the engine |
 | Auth (`api/auth/`) | optional accounts, scrypt + JWT |
 | Frontend (`web/`) | Next.js, four languages, voice, citation panel |
 | Deployment | two Vercel projects, auto-deploy on push |
 
-**295 tests, no network calls, no API keys needed to run them.**
+**434 tests, no network calls, no API keys needed to run them.**
 
 The single most important property: **the verdict and its citations need no
 API key at all.** The rule engine is deterministic and the corpus is committed
 JSON, so a zero-secret deployment still answers correctly — it just can't
 phrase the explanation or speak it. Every missing credential degrades visibly
-rather than silently. See [docs/deploy.md](docs/deploy.md).
+rather than silently. See [docs/deploy.md](docs/deploy.md), and
+[docs/voice.md](docs/voice.md) for the phone channel.
 
 ```bash
 pip install -e ".[dev,serve]" && pytest -q

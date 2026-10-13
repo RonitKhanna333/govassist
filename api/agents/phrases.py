@@ -54,6 +54,33 @@ PHRASES: dict[str, dict[str, str]] = {
         "pa": "ਮਦਦ ਕਰਕੇ ਖ਼ੁਸ਼ੀ ਹੋਵੇਗੀ। ਜਦੋਂ ਤੁਸੀਂ ਤਿਆਰ ਹੋਵੋ, ਅੱਗੇ ਵਧਦੇ ਹਾਂ।",
         "ta": "உதவுவதில் மகிழ்ச்சி. நீங்கள் தயாரானதும் தொடரலாம்.",
     },
+    # -- the SMS a phone call ends with. A call cannot show the quoted rule,
+    # and the quote is the point, so the message carries the reason and the
+    # official link. "appear" is load-bearing: this is guidance, not a decision.
+    "sms_eligible": {
+        "en": "GovAssist: based on your answers you APPEAR ELIGIBLE for {scheme}. "
+              "Reason: {reason} Official document: {url} This is guidance, not a "
+              "decision. Please confirm at your block or district office.",
+        "hi": "GovAssist: आपके जवाबों के हिसाब से आप {scheme} के लिए पात्र लगते हैं। "
+              "कारण: {reason} सरकारी दस्तावेज़: {url} यह सिर्फ़ जानकारी है, कोई फ़ैसला "
+              "नहीं। कृपया ब्लॉक या ज़िला दफ़्तर में पुष्टि कर लें।",
+    },
+    "sms_not_eligible": {
+        "en": "GovAssist: based on your answers you do NOT appear eligible for "
+              "{scheme}. Reason: {reason} Official document: {url} This is guidance, "
+              "not a decision. Your block or district office can check your case.",
+        "hi": "GovAssist: आपके जवाबों के हिसाब से आप {scheme} के लिए पात्र नहीं लगते। "
+              "कारण: {reason} सरकारी दस्तावेज़: {url} यह सिर्फ़ जानकारी है, कोई फ़ैसला "
+              "नहीं। आपका ब्लॉक या ज़िला दफ़्तर आपका मामला देख सकता है।",
+    },
+    "sms_incomplete": {
+        "en": "GovAssist: thank you for your time. Some answers for {scheme} were "
+              "missing, so no result could be worked out. You can finish on the "
+              "website or at your block office.",
+        "hi": "GovAssist: आपके समय के लिए धन्यवाद। {scheme} के कुछ जवाब नहीं मिल सके, "
+              "इसलिए नतीजा नहीं निकाला जा सका। आप वेबसाइट पर या ब्लॉक दफ़्तर में "
+              "पूरा कर सकते हैं।",
+    },
 }
 
 
