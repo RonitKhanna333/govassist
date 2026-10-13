@@ -132,6 +132,83 @@ def test_provider_denial_returns_diagnostic_code_and_saves_failed_call(setup, mo
     assert history[0]["status"] == "failed"
 
 
+def test_hinglish_callback_uses_latin_script_and_keeps_account_identity(setup, monkeypatch):
+    client, headers, sessions = setup
+    sent = []
+    monkeypatch.setattr(bland, "start_call", lambda **kwargs: sent.append(kwargs) or "call-hinglish")
+    response = client.post("/account/callback", headers=headers,
+                           json={"consent": True, "locale": "hi", "call_language": "hi-Latn"})
+    assert response.status_code == 200
+    call = sent[0]
+    assert call["locale"] == "hi-Latn"
+    assert call["phone"] == "+919876543210"
+    assert "Aapki umar kitni hai?" in call["task"]
+    assert "Never add or remove a scheme" in call["task"]
+    assert not any("\u0900" <= char <= "\u097f" for char in call["task"])
+    assert call["metadata"]["call_language"] == "hi-Latn"
+    assert call["metadata"]["locale"] == "en"
+    tool = call["extra_tools"][0]
+    assert tool["body"]["locale"] == "hi-Latn"
+    assert tool["input_schema"]["properties"]["age"]["description"] == "Aapki umar kitni hai?"
+    with sessions() as session:
+        assert session.get(CallRecord, response.json()["id"]).locale == "hi-Latn"
+
+
+def test_callback_rejects_unknown_call_language_before_contacting_provider(setup, monkeypatch):
+    client, headers, _ = setup
+    sent = []
+    monkeypatch.setattr(bland, "start_call", lambda **kwargs: sent.append(kwargs))
+    assert client.post("/account/callback", headers=headers,
+                       json={"consent": True, "call_language": "made-up"}).status_code == 422
+    assert sent == []
+
+
+def test_hinglish_eligibility_result_is_server_text_and_uncertainty_stays_unknown(setup):
+    client, _, _ = setup
+    result = client.post("/voice/eligibility?token=test-secret", json={
+        "locale": "hi-Latn", "answers": {"age": "tees", "is_street_vendor": "haan ji",
+                                         "has_bank_or_post_office_account": "pata nahi"},
+    })
+    assert result.status_code == 200
+    text = result.json()["result"]
+    assert "Aapke jawaabon" in text
+    assert "sarkari faisla nahi" in text
+    assert not any("\u0900" <= c <= "\u097f" for c in text)
+    profile, unparsed = service.read_answers({"age": "tees", "is_street_vendor": "haan ji",
+                                            "has_bank_or_post_office_account": "pata nahi"})
+    assert profile == {"age": 30, "is_street_vendor": True}
+    assert unparsed == ["has_bank_or_post_office_account"]
+
+
+def test_hinglish_webhook_preserves_transcript_and_only_saves_verified_values(setup, monkeypatch):
+    client, headers, _ = setup
+    sent = []
+    monkeypatch.setattr(bland, "start_call", lambda **kwargs: sent.append(kwargs) or "call-hinglish-saved")
+    client.post("/account/callback", headers=headers,
+                json={"consent": True, "call_language": "hi-Latn"})
+    class QuotingHinglishLLM:
+        def complete(self, *args):
+            return json.dumps({"age": "tees", "is_street_vendor": "haan ji",
+                               "has_bank_or_post_office_account": "pata nahi", "worker_count": "99"})
+    app.dependency_overrides[get_llm] = lambda: QuotingHinglishLLM()
+    result = client.post("/voice/webhook?token=test-secret", json={
+        "call_id": "call-hinglish-saved", "metadata": sent[0]["metadata"],
+        "status": "completed", "answered_by": "human", "transcripts": [
+            {"user": "assistant", "text": "Aapki umar kitni hai?"}, {"user": "user", "text": "tees"},
+            {"user": "assistant", "text": "Kya aap sadak par bechte hain?"}, {"user": "user", "text": "haan ji"},
+            {"user": "assistant", "text": "Kya aapka bank account hai?"}, {"user": "user", "text": "pata nahi"},
+        ],
+    })
+    assert result.status_code == 200
+    data = client.get("/account/dashboard", headers=headers).json()
+    assert data["profile"] == {"age": 30, "is_street_vendor": True}
+    call = data["calls"][0]
+    assert call["locale"] == "hi-Latn"
+    assert call["transcript"][1]["text"] == "tees"
+    assert call["heard"]["has_bank_or_post_office_account"] == "pata nahi"
+    assert "worker_count" not in call["answers"]
+
+
 class QuotingLLM:
     def complete(self, *args):
         return json.dumps({"age": "30", "has_bank_or_post_office_account": "not sure",

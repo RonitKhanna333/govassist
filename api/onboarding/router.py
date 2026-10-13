@@ -5,6 +5,7 @@ import json
 import logging
 import os
 from urllib.parse import urlsplit, urlunsplit
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
@@ -36,6 +37,7 @@ class InterviewBody(BaseModel):
 class CallbackBody(BaseModel):
     consent: bool
     locale: str = Field(default="en", pattern="^(en|hi)$")
+    call_language: Literal["en", "hi", "hi-Latn"] | None = None
 
 
 def clean_answers(values: dict) -> dict:
@@ -82,12 +84,17 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
         raise HTTPException(422, "Please agree to receive the callback first.")
     if not user.phone:
         raise HTTPException(422, "A phone account is needed for a callback.")
+    call_language = body.call_language or body.locale
+    profile_locale = "en" if call_language == "hi-Latn" else call_language
     webhook, ask_url = _callback_urls()
     if not webhook or not ask_url or urlsplit(webhook).scheme != "https":
         raise HTTPException(503, "Callbacks need an HTTPS webhook and VOICE_WEBHOOK_SECRET.")
     parts = urlsplit(webhook)
     eligibility_url = urlunsplit(parts._replace(path=parts.path.rsplit("/", 1)[0] + "/eligibility"))
-    questions = {a: f.ask or a for a, f in service.fields(body.locale).items()}
+    questions = {a: f.ask or a for a, f in service.fields(profile_locale).items()}
+    if call_language == "hi-Latn":
+        from api.voice.hinglish import QUESTIONS
+        questions = {a: QUESTIONS.get(a, ask) for a, ask in questions.items()}
     try:
         max_minutes = int(os.environ.get("BLAND_INTERVIEW_MAX_MINUTES", "10"))
         if not 1 <= max_minutes <= 30:
@@ -101,21 +108,22 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
             CallRecord.user_id == user.id, CallRecord.status == "requested"))
         if pending:
             raise HTTPException(409, "You already have a callback in progress. Refresh your call history.")
-        record = CallRecord(user_id=user.id, locale=body.locale)
+        record = CallRecord(user_id=user.id, locale=call_language)
         session.add(record)
         session.commit()
         record_id = record.id
     try:
         call_id = bland.start_call(
-            phone=user.phone, task=script.build_interview_task(body.locale, user.display_name or ""),
-            webhook=webhook, locale=body.locale, scheme="all", ask_url=ask_url,
-            metadata={"kind": "interview", "record_id": record_id, "locale": body.locale},
-            extra_tools=[bland.eligibility_tool_definition(eligibility_url, body.locale, questions)],
+            phone=user.phone, task=script.build_interview_task(call_language, user.display_name or ""),
+            webhook=webhook, locale=call_language, scheme="all", ask_url=ask_url,
+            metadata={"kind": "interview", "record_id": record_id, "locale": profile_locale,
+                      "call_language": call_language},
+            extra_tools=[bland.eligibility_tool_definition(eligibility_url, call_language, questions)],
             max_minutes=max_minutes,
         )
     except bland.VoiceError as exc:
         log.warning("Callback failed: locale=%s operation=%s provider_status=%s",
-                    body.locale, exc.operation, exc.status_code)
+                    call_language, exc.operation, exc.status_code)
         with sessions() as session:
             record = session.get(CallRecord, record_id)
             service.complete_record(record, "failed", [], {}, {})
@@ -125,7 +133,7 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
                                       "message": str(exc),
                                       "provider_status": exc.status_code,
                                       "provider_operation": exc.operation,
-                                      "locale": body.locale}) from exc
+                                      "locale": call_language}) from exc
         raise HTTPException(503, str(exc)) from exc
     with sessions() as session:
         record = session.get(CallRecord, record_id)

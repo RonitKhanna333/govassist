@@ -80,6 +80,16 @@ def summary_text(profile: dict, locale: str = "hi") -> str:
     from api.voice.script import scheme_name
 
     verdicts = interview.verdicts(profile)
+    if locale == "hi-Latn":
+        eligible = [scheme_name(s, "en") for s, v in verdicts.items() if v == "ELIGIBLE"]
+        missing = [scheme_name(s, "en") for s, v in verdicts.items() if v == "INSUFFICIENT_INFO"]
+        parts = ["Aapke jawaabon ke hisaab se aap in schemes ke liye eligible lagte hain: "
+                 + ", ".join(eligible) + "." if eligible else
+                 "Aapke jawaabon se abhi kisi scheme ki eligibility pakki nahi ho paayi."]
+        if missing:
+            parts.append("In schemes ke liye kuch jawaab abhi baaki hain: " + ", ".join(missing) + ".")
+        parts.append("Yeh sirf jaankaari hai, sarkari faisla nahi. Zaroori documents ki list aapke dashboard par hai.")
+        return " ".join(parts)
     eligible = [scheme_name(s, locale) for s, v in verdicts.items() if v == "ELIGIBLE"]
     open_ = [scheme_name(s, locale) for s, v in verdicts.items() if v == "INSUFFICIENT_INFO"]
     hi = locale == "hi"

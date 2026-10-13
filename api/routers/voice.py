@@ -288,7 +288,7 @@ def eligibility(body: dict, request: Request) -> dict:
     _check_webhook_token(request)
     from api.onboarding import service
 
-    locale = get_locale(body.get("locale") or "hi").code
+    locale = "hi-Latn" if body.get("locale") == "hi-Latn" else get_locale(body.get("locale") or "hi").code
     profile, _ = service.read_answers(service.coerce_answers(body.get("answers")))
     return {"result": service.summary_text(profile, locale)}
 

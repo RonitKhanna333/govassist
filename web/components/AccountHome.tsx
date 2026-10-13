@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AnswerControls } from "./AnswerControls";
 import { SiteNav } from "./SiteNav";
 import { AccountDashboard } from "./AccountDashboard";
-import { account, AccountError, type AccountLocale, type Dashboard, type InterviewState } from "@/lib/account";
+import { account, AccountError, type AccountLocale, type CallLanguage, type Dashboard, type InterviewState } from "@/lib/account";
 import { setToken, useToken } from "@/lib/family";
 import { makeTranslator } from "@/lib/i18n";
 
@@ -14,6 +14,7 @@ const COPY = {
     create: "Create account", login: "Log in", name: "Your name", phone: "Phone number", password: "Password", passwordHint: "Use at least 10 characters.",
     haveAccount: "Already have an account? Log in", newAccount: "New here? Create an account", out: "Sign out", choose: "How would you like to fill your profile?",
     call: "Call me back", callInfo: "Our automated assistant asks the questions by phone and reads the result from our server.",
+    callLanguage: "Call language", sameLanguage: "Same as website", hinglish: "Hinglish (Romanized Hindi)",
     self: "Fill it myself", selfInfo: "Answer a few questions here. Your answers are saved as you go.",
     consent: "I agree to receive an automated GovAssist call on my account phone number and have its questions and answers saved to my account.",
     callSent: "Your callback was requested. Watch your phone. Refresh the dashboard after the call to see your saved answers.",
@@ -27,6 +28,7 @@ const COPY = {
     create: "खाता बनाएँ", login: "लॉग इन", name: "आपका नाम", phone: "फ़ोन नंबर", password: "पासवर्ड", passwordHint: "कम से कम 10 अक्षर रखें।",
     haveAccount: "पहले से खाता है? लॉग इन करें", newAccount: "नए हैं? खाता बनाएँ", out: "साइन आउट", choose: "प्रोफ़ाइल कैसे भरना चाहेंगे?",
     call: "मुझे कॉल करें", callInfo: "हमारा स्वचालित सहायक फ़ोन पर सवाल पूछेगा और सर्वर का नतीजा सुनाएगा।",
+    callLanguage: "कॉल की भाषा", sameLanguage: "वेबसाइट की भाषा", hinglish: "हिंग्लिश (रोमन हिंदी)",
     self: "मैं ख़ुद भरूँगा", selfInfo: "यहाँ कुछ सवालों के जवाब दें। जवाब साथ-साथ सेव होंगे।",
     consent: "मैं अपने खाते के फ़ोन नंबर पर GovAssist की स्वचालित कॉल पाने और उसके सवाल-जवाब अपने खाते में सेव करने के लिए सहमत हूँ।",
     callSent: "कॉल का अनुरोध भेज दिया गया है। फ़ोन पर ध्यान रखें। कॉल के बाद सेव किए गए जवाब देखने के लिए डैशबोर्ड रीफ़्रेश करें।",
@@ -47,6 +49,7 @@ export function AccountHome() {
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [skipped, setSkipped] = useState<string[]>([]);
   const [consent, setConsent] = useState(false);
+  const [callLanguage, setCallLanguage] = useState<CallLanguage | "">("");
   const [notice, setNotice] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -87,7 +90,7 @@ export function AccountHome() {
         <div><p className="account-eyebrow">GovAssist</p><h1>{t.title}</h1><p className="hero-deck">{t.intro}</p></div>
         <div className="family-actions">
           <label className="account-language">Language / भाषा <select value={locale} disabled={busy} onChange={e => { setLocale(e.target.value as AccountLocale); setSkipped([]); }}><option value="en">English</option><option value="hi">हिन्दी</option></select></label>
-          {token && <button className="btn" disabled={busy} onClick={() => { setToken(null); setInterview(null); setDashboard(null); setView("choose"); setNotice(false); setSkipped([]); setConsent(false); }}>{t.out}</button>}
+          {token && <button className="btn" disabled={busy} onClick={() => { setToken(null); setInterview(null); setDashboard(null); setView("choose"); setNotice(false); setSkipped([]); setConsent(false); setCallLanguage(""); }}>{t.out}</button>}
         </div>
       </header>
       {error && <div className="note error" role="alert"><p>{error}</p>{token && <button className="btn" disabled={busy} onClick={() => { setError(null); setLoadVersion(v => v + 1); }}>{t.retry}</button>}</div>}
@@ -117,10 +120,13 @@ export function AccountHome() {
         {view === "choose" && <section>
           <h2>{t.choose}</h2><div className="family-grid">
             <article className="family-card"><h3>{t.call}</h3><p>{t.callInfo}</p>
+              <label className="account-language">{t.callLanguage}<select value={callLanguage} disabled={busy} onChange={e => setCallLanguage(e.target.value as CallLanguage | "")}>
+                <option value="">{t.sameLanguage}</option><option value="en">English</option><option value="hi">हिन्दी</option><option value="hi-Latn">{t.hinglish}</option>
+              </select></label>
               <label className="family-check"><input type="checkbox" checked={consent} disabled={busy} onChange={e => setConsent(e.target.checked)} />{t.consent}</label>
               <button className="btn primary" disabled={busy || !consent} onClick={() => void run(async () => {
                 setNotice(false);
-                await account.callback(consent, locale); setNotice(true);
+                await account.callback(consent, locale, callLanguage || undefined); setNotice(true);
               })}>{busy ? t.working : t.call}</button>
             </article>
             <article className="family-card"><h3>{t.self}</h3><p>{t.selfInfo}</p><button className="btn primary" disabled={busy} onClick={() => void run(async () => {

@@ -2,6 +2,7 @@ import { API_BASE, type AnswerField, type Citation, type Verdict } from "./api";
 import { getToken } from "./family";
 
 export type AccountLocale = "en" | "hi";
+export type CallLanguage = AccountLocale | "hi-Latn";
 export interface InterviewState {
   profile: Record<string, unknown>;
   question: AnswerField | null;
@@ -72,7 +73,7 @@ export const account = {
   interview: (locale: AccountLocale, signal?: AbortSignal) => request<InterviewState>(`/account/interview?locale=${locale}`, undefined, signal),
   answer: (answers: Record<string, unknown>, skipped: string[], locale: AccountLocale) =>
     request<InterviewState>("/account/interview", { answers, skipped, locale }),
-  callback: (consent: boolean, locale: AccountLocale) =>
-    request<{ id: number; status: string }>("/account/callback", { consent, locale }),
+  callback: (consent: boolean, locale: AccountLocale, call_language?: CallLanguage) =>
+    request<{ id: number; status: string }>("/account/callback", { consent, locale, call_language }),
   dashboard: (locale: AccountLocale, signal?: AbortSignal) => request<Dashboard>(`/account/dashboard?locale=${locale}`, undefined, signal),
 };

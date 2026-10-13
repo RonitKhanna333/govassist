@@ -27,7 +27,7 @@ import requests
 
 BASE_URL = os.environ.get("BLAND_BASE_URL", "https://api.bland.ai/v1")
 
-LANGUAGE = {"hi": "hi", "en": "en-IN"}
+LANGUAGE = {"hi": "hi", "en": "en-IN", "hi-Latn": "hi-Latn"}
 
 # Optional: a Bland voice id. Unset means Bland's default voice, which the
 # `language` setting makes speak Hindi; /voice/check lists Hindi-tagged
@@ -187,7 +187,8 @@ def tool_definition(url: str, scheme: str, locale: str) -> dict:
             "such questions from your own knowledge. Say the returned answer "
             "to the caller naturally, without adding anything."
         ),
-        "speech": "एक सेकंड जी, देख रहा हूँ।" if locale == "hi" else "One second, let me check.",
+        "speech": "एक सेकंड जी, देख रहा हूँ।" if locale == "hi" else
+                  "Ek second ji, dekh raha hoon." if locale == "hi-Latn" else "One second, let me check.",
         "url": url,
         "method": "POST",
         "headers": {"Content-Type": "application/json"},
@@ -259,6 +260,7 @@ def eligibility_tool_definition(url: str, locale: str, questions: dict[str, str]
             "say the returned result to the caller, without changing it."
         ),
         "speech": "एक सेकंड जी, आपका नतीजा देख रहा हूँ।" if locale == "hi"
+                  else "Ek second ji, aapka nateeja dekh raha hoon." if locale == "hi-Latn"
                   else "One moment, let me check your result.",
         "url": url,
         "method": "POST",

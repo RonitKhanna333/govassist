@@ -469,6 +469,27 @@ def test_provider_get_requests_do_not_send_a_json_body():
     assert request.call_args.kwargs["data"] is None
 
 
+def test_hinglish_interview_covers_current_questions_and_preserves_conditional_flow():
+    from api.onboarding import service
+    from api.voice.hinglish import QUESTIONS
+    assert set(QUESTIONS) == set(service.fields("en"))
+    task = script.build_interview_task("hi-Latn", "आशा")
+    for question in QUESTIONS.values():
+        assert question in task
+    assert "skip questions" in task
+    assert "Never ask for an OTP" in task
+    assert "GovAssist eligibility" in task
+    assert not any("\u0900" <= char <= "\u097f" for char in task)
+
+
+def test_hinglish_provider_payload_sets_documented_latin_hindi_language():
+    with patch.dict("os.environ", CALL_ENV):
+        payload = bland.call_payload(MY_NUMBER, script.build_interview_task("hi-Latn"),
+                                     None, "hi-Latn", {}, [])
+    assert payload["language"] == "hi-Latn"
+    assert "Aapki umar kitni hai?" in payload["task"]
+
+
 def _place(client, fake, env=CALL_ENV):
     bland._tool_ids.clear()
     with patch.dict("os.environ", env), \
