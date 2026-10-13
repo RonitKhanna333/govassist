@@ -1,0 +1,27 @@
+%% Human-only gates: data/scripts/ingest.py, segment.py, review.py, validate.py
+usecaseDiagram
+  actor Maintainer
+  actor "Human reviewer" as Reviewer
+  actor CI
+  rectangle "Corpus workflow" {
+    (Ingest official source) as ingest
+    (Confirm identity and extraction) as identity
+    (Confirm segment boundaries) as segment
+    (Review every clause) as clauses
+    (Review every condition and boundary) as conditions
+    (Validate corpus) as validate
+    (Build generated projections) as build
+  }
+  Maintainer --> ingest
+  Reviewer --> identity
+  Reviewer --> segment
+  Reviewer --> clauses
+  Reviewer --> conditions
+  CI --> validate
+  CI --> build
+  ingest ..> identity : <<gate 0-2>>
+  identity ..> segment : <<gate 3>>
+  segment ..> clauses : <<gate 4>>
+  clauses ..> conditions : <<gate 5>>
+  conditions ..> validate : <<pre-commit>>
+  validate ..> build : <<freshness>>

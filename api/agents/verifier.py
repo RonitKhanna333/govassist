@@ -49,30 +49,61 @@ def verify(llm: LLMProvider, draft: str, citations: list[Citation],
         return VerificationResult(ok=False, unsupported_claims=[], checked=False,
                                   busy=getattr(exc, "rate_limited", False))
 
-    parsed = extract_json(raw)
+    unsupported = _unsupported_claims(extract_json(raw), factual=bool(draft.strip()))
+    if unsupported is None:
+        # Anything malformed means the check did not happen. Never "fine by
+        # default": `[]`, `{"claims_checked": 0}` and `[{"status": "UNKNOWN"}]`
+        # each used to come back as checked-and-fine for a factual draft.
+        return VerificationResult(ok=False, unsupported_claims=[], checked=False)
+    return VerificationResult(
+        ok=not unsupported, unsupported_claims=unsupported, checked=True,
+    )
 
-    # v2 asks for {"claims_checked": n, "unsupported": [...]} rather than an
-    # entry per claim. The old shape echoed every claim in full, which blew
-    # the output budget on a long answer and came back truncated -- parsed as
-    # "couldn't check", withholding a correct explanation. `claims_checked`
-    # is what distinguishes "ran, found nothing" from "never ran", which an
-    # empty list alone cannot express.
-    if isinstance(parsed, dict) and "claims_checked" in parsed:
-        raw_unsupported = parsed.get("unsupported") or []
-        unsupported = [str(c) for c in raw_unsupported if str(c).strip()]
-        return VerificationResult(
-            ok=not unsupported, unsupported_claims=unsupported, checked=True,
-        )
 
-    # Tolerate the v1 per-claim list so an older prompt still verifies.
+_V1_STATUSES = {"SUPPORTED", "UNSUPPORTED"}
+
+
+def _unsupported_claims(parsed: object, factual: bool) -> list[str] | None:
+    """The unsupported claims from a well-formed result, or None if the
+    result does not prove a check actually ran.
+
+    v2 asks for {"claims_checked": n, "unsupported": [...]} rather than an
+    entry per claim. The old shape echoed every claim in full, which blew the
+    output budget on a long answer and came back truncated. `claims_checked`
+    is what distinguishes "ran, found nothing" from "never ran", which an
+    empty list alone cannot express -- so it must be a real count, and a
+    factual draft must have had at least one claim checked.
+    """
+    if isinstance(parsed, dict):
+        count = parsed.get("claims_checked")
+        listed = parsed.get("unsupported")
+        # bool is an int in Python; `true` is not a count.
+        if isinstance(count, bool) or not isinstance(count, int) or count < 0:
+            return None
+        if factual and count < 1:
+            return None
+        if not isinstance(listed, list):
+            return None  # must be present, even when empty
+        if not all(isinstance(c, str) and c.strip() for c in listed):
+            return None
+        if len(listed) > count:
+            return None  # more failures than claims checked: incoherent
+        return [c.strip() for c in listed]
+
+    # The v1 per-claim list, so an older prompt still verifies -- but only
+    # when every entry is a claim with a status this code knows.
     if isinstance(parsed, list):
-        unsupported = [
-            item.get("claim", "") for item in parsed
-            if isinstance(item, dict) and item.get("status") == "UNSUPPORTED"
-        ]
-        return VerificationResult(
-            ok=not unsupported, unsupported_claims=unsupported, checked=True,
-        )
+        if factual and not parsed:
+            return None
+        claims: list[str] = []
+        for item in parsed:
+            if not isinstance(item, dict) or item.get("status") not in _V1_STATUSES:
+                return None
+            claim = item.get("claim")
+            if not isinstance(claim, str) or not claim.strip():
+                return None
+            if item["status"] == "UNSUPPORTED":
+                claims.append(claim.strip())
+        return claims
 
-    # Anything else means the check did not happen. Never "fine by default".
-    return VerificationResult(ok=False, unsupported_claims=[], checked=False)
+    return None

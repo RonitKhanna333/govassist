@@ -34,8 +34,8 @@ from api.deps import get_language
 from api.language.providers.base import LanguageError
 from api.language.registry import get as get_locale
 from api.language.service import LanguageService
-from api.routers.chat import SCHEME_SLUG
-from api.rules.engine import Citation, decide, load_rules
+from api.routers.chat import SCHEME_NAMES  # noqa: F401 -- re-exported for script.py
+from api.rules.engine import SCHEME_SLUG, Citation, decide, load_rules
 from api.rules.forms import OTHER, derive_fields
 from api.rules.spoken import parse_number, parse_yes_no
 from api.voice import bland, script

@@ -9,10 +9,13 @@ answers you already gave.
 from __future__ import annotations
 
 import json
+import math
 import re
 
 from fastapi import APIRouter, Depends, Header, HTTPException
+from pydantic import BaseModel, Field
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from api.auth.models import User
 from api.auth.security import (
@@ -20,14 +23,36 @@ from api.auth.security import (
     create_token,
     decode_token,
     hash_password,
+    jwt_secret,
     verify_password,
 )
 from api.db import DatabaseConfigError, get_session_factory, init_db
+from api.rate_limit import auth_rate_limiter, enforce
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 MIN_PASSWORD_LENGTH = 10
+# scrypt cost scales with input length only slightly, but there is no reason
+# to hash a megabyte "password".
+MAX_PASSWORD_LENGTH = 256
+
+
+class RegisterBody(BaseModel):
+    email: str = Field(max_length=320)
+    password: str = Field(max_length=MAX_PASSWORD_LENGTH)
+    display_name: str | None = Field(default=None, max_length=120)
+    locale: str | None = Field(default=None, max_length=16)
+
+
+class LoginBody(BaseModel):
+    email: str = Field(max_length=320)
+    password: str = Field(max_length=MAX_PASSWORD_LENGTH)
+
+
+class ProfileBody(BaseModel):
+    profile: dict = Field(max_length=64)
+    locale: str | None = Field(default=None, max_length=16)
 
 
 def get_sessions():
@@ -73,10 +98,26 @@ def current_user(
     return user
 
 
-@router.post("/register")
-def register(body: dict, sessions=Depends(get_sessions)) -> dict:
-    email = str(body.get("email", "")).strip().lower()
-    password = str(body.get("password", ""))
+def _require_signing_config() -> None:
+    """Fail before any write or hash if tokens can't be issued.
+
+    Registration used to commit the account and only then try to sign a
+    token: with JWT_SECRET missing it answered 500 but kept the user, and the
+    retry after fixing the config hit 409 for an account nobody could use.
+    """
+    try:
+        jwt_secret()
+    except AuthConfigError as exc:
+        raise HTTPException(500, str(exc)) from exc
+
+
+_DUPLICATE = "That email can't be registered."
+
+
+@router.post("/register", dependencies=[Depends(enforce(auth_rate_limiter))])
+def register(body: RegisterBody, sessions=Depends(get_sessions)) -> dict:
+    email = body.email.strip().lower()
+    password = body.password
 
     if not _EMAIL_RE.match(email):
         raise HTTPException(422, "That doesn't look like an email address.")
@@ -84,34 +125,46 @@ def register(body: dict, sessions=Depends(get_sessions)) -> dict:
         raise HTTPException(
             422, f"Use at least {MIN_PASSWORD_LENGTH} characters for your password.",
         )
+    _require_signing_config()
 
-    try:
-        with sessions() as session:
-            if session.scalar(select(User).where(User.email == email)):
-                # Same wording as a wrong password on login, and a 409 rather
-                # than a distinct message, so this endpoint isn't a way to
-                # enumerate who has an account.
-                raise HTTPException(409, "That email can't be registered.")
+    with sessions() as session:
+        if session.scalar(select(User).where(User.email == email)):
+            # Same wording as a wrong password on login, and a 409 rather
+            # than a distinct message, so this endpoint isn't a way to
+            # enumerate who has an account.
+            raise HTTPException(409, _DUPLICATE)
 
-            user = User(
-                email=email,
-                password_hash=hash_password(password),
-                display_name=(str(body.get("display_name") or "").strip() or None),
-                locale=str(body.get("locale") or "en")[:8],
-            )
+        user = User(
+            email=email,
+            password_hash=hash_password(password),
+            display_name=((body.display_name or "").strip() or None),
+            locale=(body.locale or "en")[:8],
+        )
+        try:
             session.add(user)
-            session.commit()
-            session.refresh(user)
+            session.flush()  # assigns the id without committing
             token = create_token(user.id, user.email)
-            return {"token": token, "user": _public(user)}
-    except AuthConfigError as exc:
-        raise HTTPException(500, str(exc)) from exc
+            session.commit()
+        except IntegrityError as exc:
+            # Two registrations for one email raced past the check above;
+            # the unique index decides, and the loser gets the same 409.
+            session.rollback()
+            raise HTTPException(409, _DUPLICATE) from exc
+        except AuthConfigError as exc:
+            session.rollback()
+            raise HTTPException(500, str(exc)) from exc
+        except BaseException:
+            session.rollback()
+            raise
+        session.refresh(user)
+        return {"token": token, "user": _public(user)}
 
 
-@router.post("/login")
-def login(body: dict, sessions=Depends(get_sessions)) -> dict:
-    email = str(body.get("email", "")).strip().lower()
-    password = str(body.get("password", ""))
+@router.post("/login", dependencies=[Depends(enforce(auth_rate_limiter))])
+def login(body: LoginBody, sessions=Depends(get_sessions)) -> dict:
+    email = body.email.strip().lower()
+    password = body.password
+    _require_signing_config()
 
     try:
         with sessions() as session:
@@ -131,19 +184,21 @@ def me(user: User = Depends(current_user)) -> dict:
 
 
 @router.put("/profile")
-def save_profile(body: dict, user: User = Depends(current_user),
+def save_profile(body: ProfileBody, user: User = Depends(current_user),
                  sessions=Depends(get_sessions)) -> dict:
     """Persist the attributes someone already answered, so a return visit
     doesn't start from zero. Values only -- never a document."""
-    profile = body.get("profile")
-    if not isinstance(profile, dict):
-        raise HTTPException(422, "profile must be an object")
+    profile = body.profile
+    if not all(v is None or isinstance(v, (bool, int, str))
+               or (isinstance(v, float) and math.isfinite(v))
+               for v in profile.values()):
+        raise HTTPException(422, "profile values must be plain answers")
 
     with sessions() as session:
         stored = session.get(User, user.id)
         stored.profile_json = json.dumps(profile)
-        if body.get("locale"):
-            stored.locale = str(body["locale"])[:8]
+        if body.locale:
+            stored.locale = body.locale[:8]
         session.commit()
         session.refresh(stored)
         return _public(stored)

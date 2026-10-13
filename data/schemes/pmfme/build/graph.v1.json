@@ -935,8 +935,8 @@
       "version": 1
     },
     {
-      "asks": "Are you at least 18 years old and at least VIII standard pass?",
-      "expr": "profile.age >= 18 and profile.passed_class_8 == true",
+      "asks": "Are you above 18 years old and at least VIII standard pass?",
+      "expr": "profile.age > 18 and profile.passed_class_8 == true",
       "id": "condition:applicant_age_and_education",
       "type": "Condition"
     },

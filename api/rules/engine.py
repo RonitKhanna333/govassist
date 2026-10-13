@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -24,6 +25,12 @@ import api._corpus_bridge  # noqa: F401 -- must run before importing grammar
 import grammar  # noqa: E402
 from api.rules.forms import unresolved_fields  # noqa: E402
 from parse_scheme import repo_root  # noqa: E402
+
+# A scheme slug reaches the filesystem (data/schemes/<slug>/...), so every
+# entry point checks it against this before loading anything. Here rather
+# than in a router because more than one channel now takes a scheme name
+# from a request: /chat, /schemes and /voice.
+SCHEME_SLUG = re.compile(r"[a-z0-9][a-z0-9-]{0,63}")
 
 
 @dataclass

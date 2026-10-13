@@ -349,8 +349,11 @@ def test_schemes_lists_the_new_schemes_and_hides_the_fixture():
     assert {"pmsby", "pmjjby", "apy", "pm-kmy"} <= set(ids)
     assert "demo-scheme" not in ids
     reviewed = {s["id"]: s["reviewed"] for s in body["schemes"]}
-    # Review gates are never assumed: only the scheme a person approved.
-    assert reviewed["pmfme"] is True
+    # Review gates are never assumed. PMFME's Gate 4 is recorded as "Codex"
+    # and its Gate 5 predates the corrected `age > 18` expression, so until a
+    # named human re-reviews it (docs/human-review-remediation.md) it is
+    # pending -- exactly like the schemes nobody has reviewed.
+    assert reviewed["pmfme"] is False
     assert reviewed["apy"] is False
 
 

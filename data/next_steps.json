@@ -1,0 +1,66 @@
+{
+  "_README": [
+    "Which committed clauses answer 'What should I do next?' for each scheme.",
+    "",
+    "This file holds NO facts. Every entry is the id of a clause already in",
+    "data/schemes/<slug>/scheme.md, so whatever a person is shown -- the plain",
+    "gloss, the verbatim quote, the page and the official source link -- comes",
+    "from the span-validated corpus. tests/api/test_next_steps.py fails if an id",
+    "does not exist or has the wrong clause type for its section.",
+    "",
+    "Sections and the clause types they may hold:",
+    "  benefits      benefit                -- what the person could receive",
+    "  documents     document               -- what to keep ready",
+    "  apply         procedure              -- where and how to apply",
+    "  after         procedure, benefit     -- what happens once enrolled",
+    "  good_to_know  exclusion, procedure   -- limits worth knowing first",
+    "",
+    "An empty list is an honest gap: the checklist then says the reviewed",
+    "official text does not cover it, and points to the official source and",
+    "the authority named in the scheme's frontmatter. Do not fill a gap here by",
+    "naming a clause that does not actually say it; add the missing clause",
+    "through the gated workflow (draft -> import_draft.py -> review.py) and",
+    "list it here afterwards. Proposed clauses for the current gaps are in",
+    "docs/next-steps-clause-proposals.md.",
+    "",
+    "Choosing which clauses belong to a scheme's applicant route is an",
+    "editorial judgement (PMFME's FPO, SHG and branding clauses do not apply",
+    "to an individual applicant). Review edits here with the same care as",
+    "data/attributes.json."
+  ],
+  "pmfme": {
+    "benefits": ["individual-capital-subsidy"],
+    "documents": ["loan-documents-required"],
+    "apply": [],
+    "after": ["grant-adjustment-after-three-years"],
+    "good_to_know": ["individual-land-cost-exclusion"]
+  },
+  "apy": {
+    "benefits": ["apy-pension-amount", "apy-spouse-pension", "apy-nominee"],
+    "documents": [],
+    "apply": [],
+    "after": ["apy-contribution"],
+    "good_to_know": []
+  },
+  "pm-kmy": {
+    "benefits": ["pmkmy-pension", "pmkmy-government-match"],
+    "documents": [],
+    "apply": [],
+    "after": ["pmkmy-contribution"],
+    "good_to_know": []
+  },
+  "pmjjby": {
+    "benefits": ["pmjjby-benefit"],
+    "documents": [],
+    "apply": [],
+    "after": ["pmjjby-premium"],
+    "good_to_know": ["pmjjby-lien-period", "pmjjby-termination-age"]
+  },
+  "pmsby": {
+    "benefits": ["pmsby-benefits"],
+    "documents": [],
+    "apply": [],
+    "after": ["pmsby-premium"],
+    "good_to_know": ["pmsby-termination"]
+  }
+}

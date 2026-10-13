@@ -1,0 +1,17 @@
+%% Answer path: AnswerControls -> /chat -> forms.py + engine.py
+sequenceDiagram
+  actor Citizen
+  participant Controls as AnswerControls
+  participant API as POST /chat
+  participant Forms as answer_yes_no / _record
+  participant Rules as decide()
+  Citizen->>Controls: Select Yes, No, choice or number
+  Controls->>API: answers or answer payload
+  API->>Rules: Find current pending condition
+  Rules-->>API: Pending expression
+  API->>Forms: Store value for pending field
+  Forms-->>API: Updated profile
+  API->>Rules: Evaluate updated profile
+  Rules-->>API: Next pending condition or verdict
+  API-->>Controls: Acknowledgement + next question
+  Controls-->>Citizen: Render the next deterministic control

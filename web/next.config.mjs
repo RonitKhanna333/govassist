@@ -8,8 +8,8 @@ const nextConfig = {
   // The generated AGENTS.md/CLAUDE.md would collide with the real ones at
   // the repo root, which are hand-written and carry the corpus gate rules.
   agentRules: false,
-  // The API base is read at runtime on the client, so the same build can be
-  // promoted from local to staging to prod without a rebuild.
+  // Vercel injects this public value at build time per environment. The
+  // client module also carries the safe local default for development.
   env: {
     NEXT_PUBLIC_API_BASE: process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:8000",
   },

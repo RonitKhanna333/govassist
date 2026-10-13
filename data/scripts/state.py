@@ -73,10 +73,11 @@ class State:
         return self.gate_status(name) == APPROVED
 
     def set_gate(self, name: str, status: str, by: str | None = None,
-                 note: str = "") -> None:
+                 note: str = "", extra: dict | None = None) -> None:
         entry = {"status": status, "by": by or default_reviewer(), "at": now()}
         if note:
             entry["note"] = note
+        entry.update(extra or {})
         self.data.setdefault("gates", {})[name] = entry
         self.save()
 
@@ -97,7 +98,8 @@ class State:
         return self.clause(clause_id).get("status", PENDING)
 
     def set_clause(self, clause_id: str, status: str, by: str | None = None,
-                   edited: bool = False, note: str = "") -> None:
+                   edited: bool = False, note: str = "",
+                   extra: dict | None = None) -> None:
         entry: dict[str, Any] = {
             "status": status, "by": by or default_reviewer(), "at": now(),
         }
@@ -105,6 +107,7 @@ class State:
             entry["edited"] = True
         if note:
             entry["note"] = note
+        entry.update(extra or {})
         self.data.setdefault("clauses", {})[clause_id] = entry
         self.save()
 
@@ -120,12 +123,13 @@ class State:
         return self.data.get("conditions", {}).get(condition_id, {}).get("status", PENDING)
 
     def set_condition(self, condition_id: str, status: str, by: str | None = None,
-                      note: str = "") -> None:
+                      note: str = "", extra: dict | None = None) -> None:
         entry: dict[str, Any] = {
             "status": status, "by": by or default_reviewer(), "at": now(),
         }
         if note:
             entry["note"] = note
+        entry.update(extra or {})
         self.data.setdefault("conditions", {})[condition_id] = entry
         self.save()
 

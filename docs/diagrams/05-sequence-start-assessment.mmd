@@ -1,0 +1,15 @@
+%% Start path from web/components/Chat.tsx and api/routers/chat.py
+sequenceDiagram
+  actor Citizen
+  participant Chat as Web Chat
+  participant API as POST /chat
+  participant Rules as decide()
+  participant Speech as LanguageService
+  Citizen->>Chat: Select Start
+  Chat->>API: {scheme: pmfme, profile: {}}
+  API->>Rules: load rules and evaluate empty profile
+  Rules-->>API: INSUFFICIENT_INFO + pending field
+  API->>Speech: plan_speech(question, locale)
+  Speech-->>API: browser/provider/text-only plan
+  API-->>Chat: greeting + next question
+  Chat-->>Citizen: Show first question and controls

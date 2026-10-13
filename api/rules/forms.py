@@ -12,7 +12,7 @@ So this reads the condition's own AST and reports what would satisfy it:
 
     profile.is_unincorporated == true        -> boolean, satisfied by True
     profile.applicant_type == "individual"   -> choice, satisfied by "individual"
-    profile.age >= 18                        -> number, >= 18
+    profile.age > 18                         -> number, > 18 (exclusive)
     profile.category in ["sc", "st"]         -> choice of two
 
 A compound condition yields one field per attribute, which is also better
@@ -70,6 +70,11 @@ class Field:
     help: str | None = None
     unit: str | None = None
     warn_if_yes: bool = False
+    # Input domain of a number (data/attributes.json `value`), so the UI can
+    # refuse "-5" or "2.5 people" before sending. Never a threshold.
+    integer: bool = False
+    minimum: float | None = None
+    maximum: float | None = None
 
     def to_dict(self) -> dict:
         return {
@@ -78,6 +83,8 @@ class Field:
             "comparator": self.comparator, "bound": self.bound,
             "ask": self.ask, "help": self.help, "unit": self.unit,
             "warn_if_yes": self.warn_if_yes,
+            "integer": self.integer, "minimum": self.minimum,
+            "maximum": self.maximum,
         }
 
 
@@ -163,6 +170,11 @@ def derive_fields(expr: str, locale: str = "en") -> list[Field]:
         found.help = entry.get("help")
         found.unit = entry.get("unit")
         found.warn_if_yes = bool(entry.get("warn_if_yes"))
+        if found.kind == "number":
+            domain = entry.get("value") or {}
+            found.integer = bool(domain.get("integer"))
+            found.minimum = domain.get("min")
+            found.maximum = domain.get("max")
 
         seen.add(attribute)
         fields.append(found)

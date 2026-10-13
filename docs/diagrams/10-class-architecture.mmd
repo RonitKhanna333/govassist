@@ -1,0 +1,141 @@
+%% Classes verified against api/, web/components/Chat.tsx and web/lib/api.ts
+classDiagram
+  class Chat {
+    <<frontend component>>
+    +send(message)
+    +answerValues(values)
+    +toggleMic()
+  }
+  class ApiClient {
+    <<module>>
+    +sendChat(input) ChatResponse
+    +transcribe(audio, locale) string
+  }
+  class ChatRouter {
+    <<module>>
+    +chat(body) dict
+    +health() dict
+    +transcribe(request) dict
+  }
+  class RuleEngine {
+    <<module>>
+    +load_rules(scheme, root) dict
+    +load_clauses(scheme, root) dict
+    +decide(scheme, profile) EngineResult
+  }
+  class EngineResult {
+    +scheme
+    +version
+    +verdict
+    +citations
+    +pending
+  }
+  class Citation {
+    +clause_id
+    +quote
+    +source_url
+    +page
+  }
+  class CorpusLoaders {
+    <<module>>
+    +load_scheme(path)
+    +build.py projections
+  }
+  class LanguageService {
+    +translate(text, target)
+    +plan_speech(text, locale)
+    +transcribe(audio, locale)
+  }
+  class GroqLanguageProvider {
+    +translate()
+    +transcribe()
+    +synthesize()
+  }
+  class BhashiniProvider {
+    +translate()
+    +synthesize()
+    +transcribe()
+  }
+  class LLMProvider {
+    <<interface>>
+    +complete(system, user, tier)
+  }
+  class Composer {
+    <<module>>
+    +draft_answer()
+  }
+  class Verifier {
+    <<module>>
+    +verify()
+  }
+  class GraphNode {
+    <<SQLAlchemy model>>
+    +scheme
+    +version
+    +id
+    +type
+    +name
+    +props
+  }
+  class GraphEdge {
+    <<SQLAlchemy model>>
+    +row_id
+    +scheme
+    +version
+    +from_id
+    +predicate
+    +to_id
+  }
+  class Evidence {
+    +query_class
+    +nodes
+    +edges
+    +clause_ids()
+    +clauses()
+  }
+  class GraphSync {
+    <<module>>
+    +load_graph_json()
+    +sync_scheme()
+  }
+  class GraphTraversal {
+    <<module>>
+    +eligibility_evidence()
+    +required_documents()
+    +benefits()
+    +exclusions()
+    +reverse_by_attributes()
+    +latest_versions()
+  }
+  class AuthRoutes {
+    <<optional module; not enabled in deployed demo>>
+    +register()
+    +login()
+    +save_profile()
+  }
+  class Database {
+    <<optional module; not enabled in deployed demo>>
+    +get_engine()
+    +get_session_factory()
+    +init_db()
+  }
+  Chat --> ApiClient
+  ApiClient --> ChatRouter
+  ChatRouter --> RuleEngine
+  RuleEngine --> EngineResult
+  EngineResult "1" o-- "many" Citation
+  RuleEngine --> CorpusLoaders
+  ChatRouter --> LanguageService
+  LanguageService ..> GroqLanguageProvider : configured fallback
+  LanguageService ..> BhashiniProvider : optional credentials
+  ChatRouter --> LLMProvider
+  LLMProvider ..> Composer
+  LLMProvider ..> Verifier
+  GraphSync --> GraphNode
+  GraphSync --> GraphEdge
+  GraphTraversal --> GraphNode
+  GraphTraversal --> GraphEdge
+  GraphTraversal --> Evidence
+  ChatRouter ..> GraphTraversal : other retrieval paths
+  ChatRouter ..> AuthRoutes : optional routes
+  AuthRoutes ..> Database : optional persistence

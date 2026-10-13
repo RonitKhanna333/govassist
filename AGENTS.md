@@ -1,12 +1,17 @@
-# AGENTS.md — GovAssist corpus toolchain (Phase 1)
+# AGENTS.md — GovAssist grounded corpus and full-stack prototype
 
-You are building a **grounded** knowledge corpus of government schemes. Read
-this whole file before touching anything — it covers the one rule that governs
-every action here, the sandbox settings this repo needs, and exactly where you
-must stop and hand control to the human operating you.
+You are maintaining a **grounded** knowledge corpus and the full-stack GovAssist
+prototype. Read this whole file before touching anything — it covers the one
+rule that governs every action here, the sandbox settings this repo needs, and
+exactly where you must stop and hand control to the human operating you.
 
-This repo is corpus tooling only (Phase 1). There is no web app, no database,
-no API keys required. Everything runs locally with `pip install -e ".[dev]"`.
+The repository contains the corpus toolchain under `data/`, a FastAPI service
+under `api/`, and a Next.js frontend under `web/`. The PMFME flow is the only
+demonstrated production scheme. Optional database, authentication, Bhashini
+and Groq integrations are present in code but are configuration-dependent; the
+corpus, deterministic verdict, citations and automated tests run without
+production secrets. The full local setup is `pip install -e ".[dev,serve]"`,
+`cd web`, then `npm ci`.
 
 ## The one rule
 
@@ -76,15 +81,21 @@ downloads a PDF from a `.gov.in` source. Two options:
 `.git/`, `.codex/`, and `.agents/` stay read-only regardless of the network
 setting — don't attempt to write to them.
 
-### No other environment setup
+### Runtime scope and environment setup
 
-No database, no Docker, no external services, no API keys. If a task ever
-seems to need one, stop — you have drifted out of Phase 1 scope. Phase 1 is
-corpus files on disk plus Python scripts that read and write them.
+The corpus workflow and CI need no database, Docker, external service or API
+key. The application has optional runtime integrations: Groq can compose and
+translate, Bhashini can provide configured language services, and a pooled
+Postgres database can back the optional account/graph routes. Do not present a
+capability as deployed merely because its module exists or an environment
+variable is supported. Check the configured flags and document the limitation.
+The deterministic PMFME verdict and its citations must remain functional when
+Groq is absent.
 
 ```bash
-pip install -e ".[dev]"
+pip install -e ".[dev,serve]"
 pytest -q
+cd web; npm ci; npm test; npm run build
 ```
 
 If `pytest -q` isn't green before you start, fix that first and report it —
@@ -150,6 +161,21 @@ semantics explicitly when you hand it to review (inclusive vs exclusive,
    python data/scripts/build.py --scheme <slug>
 9. commit scheme.md + source/ + build/, open a PR                 [Gate 6 — human]
 ```
+
+For a full-stack change, also run the repository checks from the root:
+
+```bash
+python -m pytest -q
+python data/scripts/validate.py --all
+python data/scripts/build.py --all --check
+cd web && npm ci && npm test && npm run build
+```
+
+These checks prove source/build consistency and local behavior. They do not
+prove that a Vercel deployment, microphone capture, browser speech voice,
+multiplayer path, persistence, authentication or a named human review exists.
+The hosted presentation route is `/presentation`; the live PMFME flow is `/`;
+the evidence/remediation handoff is `/evidence`.
 
 ### Step 4 — drafting clauses
 

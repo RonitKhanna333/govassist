@@ -37,9 +37,9 @@ conditions:
   clause: individual-ownership-right
   asks: Do you have ownership rights over the enterprise?
 - id: applicant_age_and_education
-  expr: profile.age >= 18 and profile.passed_class_8 == true
+  expr: profile.age > 18 and profile.passed_class_8 == true
   clause: individual-age-and-education
-  asks: Are you at least 18 years old and at least VIII standard pass?
+  asks: Are you above 18 years old and at least VIII standard pass?
 - id: one_person_per_family_only
   expr: profile.family_member_already_received_assistance == false
   clause: individual-one-person-per-family

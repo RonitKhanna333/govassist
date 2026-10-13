@@ -1,0 +1,25 @@
+%% Final path: deterministic verdict, cited evidence, optional grounded explanation
+sequenceDiagram
+  actor Citizen
+  participant Chat as Web Chat
+  participant API as POST /chat
+  participant Rules as decide()
+  participant Composer
+  participant Verifier
+  participant Language as LanguageService
+  Citizen->>Chat: Submit final answer
+  Chat->>API: Complete profile
+  API->>Rules: Evaluate restricted expressions
+  Rules-->>API: ELIGIBLE or NOT_ELIGIBLE + citations
+  API->>Composer: Draft from the deciding citations
+  Composer->>Verifier: Verify draft against same citations
+  alt Unsupported claim
+    Verifier-->>Composer: Recompose once or withhold answer
+    Composer-->>API: Verified draft or honest fallback
+  else Grounded
+    Verifier-->>API: Verified draft
+  end
+  API->>Language: Localize explanation and plan speech
+  Language-->>API: Localized text; verbatim citations remain unchanged
+  API-->>Chat: Verdict, answer, citations
+  Chat-->>Citizen: Show result and official evidence

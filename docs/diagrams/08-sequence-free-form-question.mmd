@@ -1,0 +1,20 @@
+%% Free-form question path: route -> conversation -> verifier
+sequenceDiagram
+  actor Citizen
+  participant Chat as Web Chat
+  participant API as POST /chat
+  participant Router as route()
+  participant Conversation as classify / answer_question
+  participant Clauses as Committed clauses
+  participant Verifier
+  Citizen->>Chat: Ask “What documents do I need?”
+  Chat->>API: English or localized message
+  API->>Router: Route canonical query
+  Router-->>API: Supported scheme domain
+  API->>Conversation: Classify message intent
+  Conversation->>Clauses: Pass all PMFME clause facts
+  Clauses-->>Conversation: Plain facts + clause ids
+  Conversation->>Verifier: Check answer against selected citations
+  Verifier-->>Conversation: Verified answer or unknown
+  Conversation-->>API: Reply + reply_citations
+  API-->>Chat: Reply then next question if needed

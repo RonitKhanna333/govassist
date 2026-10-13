@@ -18,15 +18,37 @@ Polarity follows the same rule as the buttons: "yes" means the attribute is
 true. "Has anyone in your family already taken money?" -- "haan" -> true ->
 disqualified. The questions are phrased so that holds; see
 data/attributes.json.
+
+The deterministic layer only records an answer when the message can mean
+exactly one thing. "Do I need to be over 18?" contains a number but is a
+question; "I am not 25, I am 17" contains two numbers and a negation; "Is
+passing class 8 necessary or not?" contains "not". Each of those used to be
+recorded as an answer -- 18, 25 and false -- and the second one returned
+ELIGIBLE for a 17-year-old. `read_answer` now says which of four things a
+message is, and only VALUE is ever recorded without a person confirming it.
 """
 
 from __future__ import annotations
 
+import math
 import re
 import unicodedata
+from dataclasses import dataclass
 
 from api.agents.llm import LLMError, LLMProvider, Tier
 from api.rules.forms import OTHER
+
+# What a message is, relative to the question on screen.
+VALUE = "value"          # an unambiguous answer: record it
+NONE = "none"            # no deterministic signal: a model may classify it
+AMBIGUOUS = "ambiguous"  # conflicting or hedged: ask the person, never guess
+QUESTION = "question"    # they asked something: answer it, record nothing
+
+
+@dataclass(frozen=True)
+class Reading:
+    status: str
+    value: object = None
 
 YES = {
     # English
@@ -55,31 +77,6 @@ NO = {
     "illai", "illa", "illeenga",
 }
 
-# "I don't know" is not "no". Every one of these CONTAINS a no-word
-# ("पता नहीं", "nahi pata"), so without this they were recorded as a
-# definite No -- and a No on an eligibility question can deny someone the
-# scheme. Not knowing leaves the attribute unknown, and the question is
-# asked again.
-DONT_KNOW = (
-    # Hindi
-    "पता नहीं", "नहीं पता", "मालूम नहीं", "नहीं मालूम", "याद नहीं", "नहीं याद",
-    "pata nahi", "nahi pata", "pata nahin", "malum nahi", "maloom nahi",
-    "yaad nahi",
-    # Punjabi
-    "ਪਤਾ ਨਹੀਂ", "ਨਹੀਂ ਪਤਾ", "ਪਤਾ ਨਹੀ",
-    # Tamil
-    "தெரியாது", "தெரியவில்லை", "theriyadhu", "teriyathu",
-    # English
-    "don't know", "dont know", "do not know", "no idea", "not sure",
-    "can't say", "cant say",
-)
-
-
-def says_dont_know(text: str) -> bool:
-    normalized = unicodedata.normalize("NFC", text).lower()
-    return any(phrase in normalized for phrase in DONT_KNOW)
-
-
 # Native-script digits -> ASCII, so "२५", "੨੫" and "௨௫" all read as 25.
 _DIGITS = {}
 for _start in (0x0966, 0x0A66, 0x0BE6):          # Devanagari, Gurmukhi, Tamil
@@ -105,6 +102,37 @@ _EN_TENS = {
 # Punjabi or Tamil would silently fall through to "unclear".
 _SEPARATORS = re.compile(r"[\s,.!?;:।॥\"()\[\]{}\-–—]+")
 
+# "I don't know" contains "don't", which is a NO word. Hedges are checked as
+# phrases first so uncertainty is never recorded as an answer.
+_UNSURE = (
+    "not sure", "unsure", "don't know", "dont know", "do not know", "no idea",
+    "not certain", "maybe", "perhaps", "i think", "pata nahi", "pata nahin",
+    "maloom nahi", "पता नहीं", "पता नही", "मालूम नहीं", "ਪਤਾ ਨਹੀਂ", "ਪਤਾ ਨਹੀ",
+    # Word order moves in speech ("मुझे नहीं पता"), and each of these
+    # contains a no-word, so without them a "don't know" is recorded as a
+    # definite No -- which can deny someone a scheme they qualify for.
+    "नहीं पता", "नहीं मालूम", "याद नहीं", "नहीं याद", "nahi pata", "nahi maloom",
+    "yaad nahi", "ਨਹੀਂ ਪਤਾ", "ਨਹੀਂ ਮਾਲੂਮ", "can't say", "cant say", "theriyala",
+    "தெரியாது", "தெரியல", "theriyadhu", "theriyala",
+)
+
+# A question starts with one of these (after a filler like "ok" or "so")...
+_QUESTION_STARTS = {
+    "do", "does", "did", "is", "are", "can", "could", "should", "would",
+    "will", "shall", "must", "may", "what", "why", "how", "when", "where",
+    "which", "who", "whom", "whose",
+}
+_FILLERS = {"ok", "okay", "so", "and", "but", "then", "please", "sir", "madam",
+            "um", "uh", "hmm", "well"}
+# ...or contains one of these interrogatives anywhere. Romanized Punjabi "ki"
+# is left out on purpose: it is also the everyday Hindi "of".
+_QUESTION_WORDS = {
+    "क्या", "क्यों", "क्यूँ", "कैसे", "कब", "कितना", "कितने", "कितनी",
+    "kya", "kyaa", "kyon", "kyun", "kaise", "kitna", "kitne", "kitni",
+    "ਕੀ", "ਕਿਉਂ", "ਕਿਵੇਂ", "ਕਦੋਂ", "ਕਿੰਨਾ", "ਕਿੰਨੇ", "ਕਿੰਨੀ",
+    "என்ன", "ஏன்", "எப்படி", "எப்போது", "எவ்வளவு", "எத்தனை",
+}
+
 
 def _tokens(text: str) -> list[str]:
     # NFC so the several ways of encoding "हाँ" compare equal.
@@ -112,29 +140,69 @@ def _tokens(text: str) -> list[str]:
     return [t.strip("'") for t in _SEPARATORS.split(normalized) if t.strip("'")]
 
 
-def parse_yes_no(text: str) -> bool | None:
-    """True / False, or None when there's no signal -- or conflicting ones.
+def is_question(text: str) -> bool:
+    """A question of their own, not an answer to ours.
 
-    "haan, nahi liya" contains both, and guessing which one the person meant
-    is exactly the kind of error this app must not make on an eligibility
-    question. Ambiguity goes back to the person -- as does "पता नहीं",
-    which contains a no-word but means the person does not know.
+    Deliberately simple and one-directional: it can only stop a value from
+    being recorded, never cause one to be.
     """
-    if says_dont_know(text):
-        return None
+    if any(mark in text for mark in ("?", "？")):
+        return True
+    tokens = _tokens(text)
+    if set(tokens) & _QUESTION_WORDS:
+        return True
+    leading = [t for t in tokens if t not in _FILLERS]
+    return bool(leading) and leading[0] in _QUESTION_STARTS
+
+
+def _is_hedged(text: str) -> bool:
+    lowered = " ".join(_tokens(text))
+    return any(phrase in lowered for phrase in _UNSURE)
+
+
+def _negated(tokens: list[str]) -> bool:
+    return bool(set(tokens) & NO)
+
+
+def read_yes_no(text: str) -> Reading:
+    if is_question(text):
+        return Reading(QUESTION)
+    if _is_hedged(text):
+        return Reading(AMBIGUOUS)
     tokens = set(_tokens(text))
     said_yes = bool(tokens & YES)
     said_no = bool(tokens & NO)
-    if said_yes and not said_no:
-        return True
-    if said_no and not said_yes:
-        return False
-    return None
+    if said_yes and said_no:
+        # "haan, nahi liya" -- guessing which one they meant is exactly the
+        # error this app must not make on an eligibility question.
+        return Reading(AMBIGUOUS)
+    if said_yes or said_no:
+        return Reading(VALUE, said_yes)
+    return Reading(NONE)
 
 
-def _english_number_words(tokens: list[str]) -> int | None:
+def parse_yes_no(text: str) -> bool | None:
+    """True / False, or None when there's no signal -- or conflicting ones,
+    a hedge, or a question."""
+    reading = read_yes_no(text)
+    return reading.value if reading.status == VALUE else None
+
+
+# A number, with the sign kept: "-25" is a negative number, not 25. Thousands
+# separators ("1,000") are allowed only in their exact three-digit form, so
+# "25,17" stays two numbers instead of becoming 2517.
+_NUMBER = re.compile(r"(?<![\d.])([-−]\s*)?(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?(?![\d])")
+
+
+def _number_word_groups(tokens: list[str]) -> list[int]:
+    """Each run of consecutive English number words, as one number.
+
+    "twenty five" is one number; "one son and twenty workers" is two, and
+    must not be summed into 21.
+    """
+    groups: list[int] = []
     total, found = 0, False
-    for token in tokens:
+    for token in tokens + [""]:
         if token in _EN_TENS:
             total += _EN_TENS[token]
             found = True
@@ -143,16 +211,70 @@ def _english_number_words(tokens: list[str]) -> int | None:
             found = True
         elif token == "hundred" and found:
             total *= 100
-    return total if found else None
+        elif found:
+            groups.append(total)
+            total, found = 0, False
+    return groups
+
+
+def _numbers(text: str) -> list[float]:
+    ascii_text = unicodedata.normalize("NFC", text).translate(_DIGIT_TABLE)
+    found: list[float] = []
+    for sign, digits, fraction in _NUMBER.findall(ascii_text):
+        value = float(digits.replace(",", "") + (fraction or ""))
+        found.append(-value if sign else value)
+    remainder = _NUMBER.sub(" ", ascii_text)
+    if re.search(r"\bminus\b", remainder.lower()):
+        groups = _number_word_groups(_tokens(remainder))
+        return found + [-g for g in groups]
+    return found + [float(g) for g in _number_word_groups(_tokens(remainder))]
+
+
+def _as_number(value: float) -> int | float:
+    return int(value) if value.is_integer() else value
+
+
+def read_number(text: str) -> Reading:
+    if is_question(text):
+        return Reading(QUESTION)
+    if _is_hedged(text):
+        return Reading(AMBIGUOUS)
+    numbers = _numbers(text)
+    # "I am not 25, I am 17", "nahi, 17", "25... no, 26": a correction or a
+    # negation around a number is for the person to settle, not for us.
+    if _negated(_tokens(text)):
+        return Reading(AMBIGUOUS)
+    if len(numbers) > 1:
+        return Reading(AMBIGUOUS)
+    if len(numbers) == 1:
+        return Reading(VALUE, _as_number(numbers[0]))
+    return Reading(NONE)
 
 
 def parse_number(text: str) -> float | None:
-    ascii_text = unicodedata.normalize("NFC", text).translate(_DIGIT_TABLE)
-    match = re.search(r"\d+(?:\.\d+)?", ascii_text.replace(",", ""))
-    if match:
-        value = float(match.group(0))
-        return int(value) if value.is_integer() else value
-    return _english_number_words(_tokens(ascii_text))
+    """The single number in an unambiguous answer, sign included; else None."""
+    reading = read_number(text)
+    return reading.value if reading.status == VALUE else None
+
+
+def read_answer(text: str, field: dict) -> Reading:
+    """What `text` says about `field`, using no model at all."""
+    text = (text or "").strip()
+    if not text:
+        return Reading(NONE)
+    kind = field.get("kind")
+    if kind == "number":
+        return read_number(text)
+    reading = read_yes_no(text)
+    if reading.status != VALUE:
+        return reading
+    if kind == "choice":
+        options = field.get("options") or []
+        if len(options) != 1:
+            # A multi-option choice can't be answered by yes/no.
+            return Reading(AMBIGUOUS)
+        return Reading(VALUE, field.get("satisfied_by") if reading.value else OTHER)
+    return reading
 
 
 _CLASSIFY = """A person was asked a yes/no question and answered in their own \
@@ -165,7 +287,7 @@ Did they answer YES or NO to exactly that question? If the answer is unclear, \
 off-topic, or could mean either, say UNCLEAR. Do not guess.
 Reply with one word only: YES, NO, or UNCLEAR."""
 
-_NUMBER = """A person was asked: {question}
+_NUMBER_PROMPT = """A person was asked: {question}
 They answered, possibly in Hindi, Punjabi, Tamil or English: {answer}
 
 What single number did they give? Number words count ("pachchees" is 25).
@@ -175,38 +297,39 @@ Reply with the number in digits only. If they gave no number, reply NONE."""
 def interpret(text: str, field: dict, llm: LLMProvider | None = None) -> object | None:
     """The value to record for `field`, or None if the answer can't be placed.
 
-    `field` is a dict as produced by Field.to_dict().
+    `field` is a dict as produced by Field.to_dict(). A model is consulted
+    only when the deterministic reading found no signal at all -- never to
+    resolve a question, a hedge, or a contradiction.
     """
-    text = (text or "").strip()
-    if not text:
+    reading = read_answer(text, field)
+    if reading.status == VALUE:
+        return reading.value
+    if reading.status != NONE or llm is None:
         return None
 
+    text = text.strip()
     kind = field.get("kind")
     question = field.get("ask") or field.get("attribute", "")
 
     if kind == "number":
-        value = parse_number(text)
-        if value is None and llm is not None:
-            try:
-                raw = llm.complete(
-                    "You extract numbers. Reply with digits only, or NONE.",
-                    _NUMBER.format(question=question, answer=text), Tier.FAST,
-                ).strip()
-                value = parse_number(raw) if raw.upper() != "NONE" else None
-            except LLMError:
-                value = None
-        return value
-
-    yes = parse_yes_no(text)
-    if yes is None and llm is not None:
         try:
             raw = llm.complete(
-                "You classify answers. Reply YES, NO, or UNCLEAR.",
-                _CLASSIFY.format(question=question, answer=text), Tier.FAST,
-            ).strip().upper()
-            yes = {"YES": True, "NO": False}.get(raw.split()[0] if raw else "")
+                "You extract numbers. Reply with digits only, or NONE.",
+                _NUMBER_PROMPT.format(question=question, answer=text), Tier.FAST,
+            ).strip()
         except LLMError:
-            yes = None
+            return None
+        value = parse_number(raw) if raw.upper() != "NONE" else None
+        return value if value is None or math.isfinite(value) else None
+
+    try:
+        raw = llm.complete(
+            "You classify answers. Reply YES, NO, or UNCLEAR.",
+            _CLASSIFY.format(question=question, answer=text), Tier.FAST,
+        ).strip().upper()
+    except LLMError:
+        return None
+    yes = {"YES": True, "NO": False}.get(raw.split()[0] if raw else "")
     if yes is None:
         return None
 

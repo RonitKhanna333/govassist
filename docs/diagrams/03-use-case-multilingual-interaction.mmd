@@ -1,0 +1,19 @@
+%% Current locale support: api/language + web/lib/registry.ts + useRecorder.ts
+usecaseDiagram
+  actor Citizen
+  actor Browser
+  rectangle GovAssist {
+    (Choose English, Hindi, Punjabi or Tamil) as choose
+    (Type a message) as type
+    (Record English/Hindi voice input) as record
+    (Translate to canonical English when configured) as translate
+    (Read localized text and optional browser speech) as output
+  }
+  Citizen --> choose
+  Citizen --> type
+  Citizen --> record
+  Browser --> record
+  type ..> translate : <<may use>>
+  record ..> translate : <<uses Whisper path>>
+  translate ..> output : <<returns>>
+  Citizen --> output
