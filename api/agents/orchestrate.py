@@ -18,9 +18,8 @@ from api.agents.llm import LLMProvider
 from api.rules.engine import Citation
 
 FALLBACK_UNVERIFIED = (
-    "I can't confidently answer that from what I have -- rather than guess, "
-    "I'd rather say so plainly. Please check the official portal or a "
-    "professional for this one."
+    "I can't answer that reliably from the official document. Please check "
+    "the official portal or ask the scheme office."
 )
 
 

@@ -26,9 +26,9 @@ _SYSTEM = load_prompt("composer")
 FALLBACK_BUSY = "__busy__"
 
 FALLBACK_NO_EVIDENCE = (
-    "I reached a decision but don't have grounded facts to explain it with. "
-    "Rather than guess, I'll say so plainly: please check the official portal "
-    "or a professional for this one."
+    "Your result is shown above. A written explanation isn't available right "
+    "now, so the official rules it is based on are quoted below. Please check "
+    "the official portal or ask the scheme office before you apply."
 )
 
 
