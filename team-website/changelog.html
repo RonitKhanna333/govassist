@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Change log for the GovAssist UCS503 project: website, app, report and presentations.">
+  <title>Change log · GovAssist</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="wordmark" href="index.html" aria-label="GovAssist home">
+        <span class="wordmark-mark">GA</span>
+        <span class="wordmark-copy"><strong>GovAssist</strong><small>UCS503 project website</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a href="index.html">Overview</a>
+        <a href="planning-presentation.html">Planning v1</a>
+        <a href="planning-v2.html">Planning v2</a>
+        <a href="prototype-presentation.html">Prototype</a>
+        <a href="final-presentation.html">Final</a>
+        <a href="presentations.html">Archive</a>
+        <a class="active" href="changelog.html">Change log</a>
+        <a class="admin-link" href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="planning-hero">
+      <div class="container planning-hero-inner">
+        <div>
+          <p class="eyebrow light">UCS503 · Project record</p>
+          <h1 class="page-title">Change log</h1>
+          <p class="page-lead">What changed in the app, this website, the report and the presentations, newest first. App entries come from the commit history of the GovAssist repository.</p>
+        </div>
+        <aside>
+          <ul class="page-meta planning-meta">
+            <li><span>Last update</span><strong>20 November 2026</strong></li>
+            <li><span>App commits</span><strong>73</strong></li>
+            <li><span>Merged PRs</span><strong>14</strong></li>
+                      </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <div id="changelog-list" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand"><h2>GovAssist</h2><p>UCS503 software engineering project</p></div>
+      <div class="footer-meta">
+        <div><span>Course</span><strong>UCS503</strong></div>
+        <div><span>Page</span><strong>Change log</strong></div>
+        <div><span>Team</span><strong>Ronit · Bhavneet · Shreyas</strong></div>
+      </div>
+    </div>
+    <div class="container footer-bottom"><span>© 2026 GovAssist team</span><span>Change log</span></div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/site.js"></script>
+  <script>renderChangelog();</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Every GovAssist presentation, demonstration and version, kept permanently.">
+  <title>Presentations archive · GovAssist</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="wordmark" href="index.html" aria-label="GovAssist home">
+        <span class="wordmark-mark">GA</span>
+        <span class="wordmark-copy"><strong>GovAssist</strong><small>UCS503 project website</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a href="index.html">Overview</a>
+        <a href="planning-presentation.html">Planning v1</a>
+        <a href="planning-v2.html">Planning v2</a>
+        <a href="prototype-presentation.html">Prototype</a>
+        <a href="final-presentation.html">Final</a>
+        <a class="active" href="presentations.html">Archive</a>
+        <a href="changelog.html">Change log</a>
+        <a class="admin-link" href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="planning-hero">
+      <div class="container planning-hero-inner">
+        <div>
+          <p class="eyebrow light">UCS503 · Project record</p>
+          <h1 class="page-title">Presentations archive</h1>
+          <p class="page-lead">Every presentation and demonstration we have published, with its version, date and authors. Older versions are never replaced or removed. A new version always gets its own page.</p>
+        </div>
+        <aside>
+          <ul class="page-meta planning-meta">
+            <li><span>Course</span><strong>UCS503</strong></li>
+            <li><span>Team</span><strong>Ronit · Bhavneet · Shreyas</strong></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">01 · Course deliverables</span>
+          <div><h2 class="section-title">Presentations</h2><p class="section-intro">The deliverables presented in class, oldest first.</p></div>
+        </header>
+        <div class="archive-list">
+          <article class="archive-row">
+            <span class="archive-date">5 Aug 2026</span>
+            <div><h3><a href="projects/project1.html">Project proposals</a></h3><p>Four proposals compared. GovAssist was selected. <a href="projects/project2.html">Lost and Found</a>, <a href="projects/project3.html">Placement Readiness</a> and <a href="projects/project4.html">Workload Balancer</a> are kept too.</p></div>
+            <span class="archive-version">Initial proposal</span>
+            <span class="archive-authors">Ronit · Bhavneet · Shreyas</span>
+          </article>
+          <article class="archive-row">
+            <span class="archive-date">11 Aug 2026</span>
+            <div><h3><a href="planning-presentation.html">Planning Presentation v1</a></h3><p>The August plan. v1.0 was presented on 5 August and revised to v1.1 on 11 August.</p></div>
+            <span class="archive-version">v1.0, v1.1</span>
+            <span class="archive-authors">Ronit · Bhavneet · Shreyas</span>
+          </article>
+          <article class="archive-row">
+            <span class="archive-date">17 Sep 2026</span>
+            <div><h3><a href="prototype-presentation.html">Prototype Presentation</a></h3><p>The working PMFME prototype, its deck and the UML diagrams at that stage.</p></div>
+            <span class="archive-version">Final Rev 3</span>
+            <span class="archive-authors">Ronit · Bhavneet · Shreyas</span>
+          </article>
+          <article class="archive-row">
+            <span class="archive-date">20 Nov 2026</span>
+            <div><h3><a href="planning-v2.html">Planning Presentation v2</a></h3><p>The plan updated to match the delivered system, on its own page.</p></div>
+            <span class="archive-version">v2.0</span>
+            <span class="archive-authors">Ronit · Bhavneet · Shreyas</span>
+          </article>
+          <article class="archive-row">
+            <span class="archive-date">20 Nov 2026</span>
+            <div><h3><a href="final-presentation.html">Final Presentation</a></h3><p>Final evaluation deck, test results and the live demo.</p></div>
+            <span class="archive-version">v1.0</span>
+            <span class="archive-authors">Ronit · Bhavneet · Shreyas</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">02 · Published uploads</span>
+          <div><h2 class="section-title">Published through the admin page</h2><p class="section-intro">Material uploaded and published from the admin interface. Each version has its own permanent page.</p></div>
+        </header>
+        <div class="archive-list" id="published-list" aria-live="polite"><p class="archive-empty">Loading published material…</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand"><h2>GovAssist</h2><p>UCS503 software engineering project</p></div>
+      <div class="footer-meta">
+        <div><span>Course</span><strong>UCS503</strong></div>
+        <div><span>Page</span><strong>Presentations archive</strong></div>
+        <div><span>Team</span><strong>Ronit · Bhavneet · Shreyas</strong></div>
+      </div>
+    </div>
+    <div class="container footer-bottom"><span>© 2026 GovAssist team</span><span>Presentations archive</span></div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/site.js"></script>
+  <script>renderPublishedArchive();</script>
+</body>
+</html>

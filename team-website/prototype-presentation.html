@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GovAssist UCS503 prototype presentation, live application, and repository evidence.">
+  <title>Prototype Presentation · GovAssist</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="wordmark" href="index.html" aria-label="GovAssist home">
+        <span class="wordmark-mark">GA</span>
+        <span class="wordmark-copy"><strong>GovAssist</strong><small>UCS503 project website</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a href="index.html">Overview</a>
+        <a href="planning-presentation.html">Planning v1</a>
+        <a href="planning-v2.html">Planning v2</a>
+        <a class="active" href="prototype-presentation.html">Prototype</a>
+        <a href="final-presentation.html">Final</a>
+        <a href="presentations.html">Archive</a>
+        <a href="changelog.html">Change log</a>
+        <a class="admin-link" href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="planning-hero">
+      <div class="container planning-hero-inner">
+        <div>
+          <p class="eyebrow light">UCS503 · Prototype Presentation</p>
+          <h1 class="page-title">GovAssist Prototype</h1>
+          <p class="page-lead">A working eligibility check that takes real answers, applies the scheme rules and shows the result with the official source.</p>
+          <div class="plan-tags" aria-label="Presentation coverage">
+            <span>Working prototype</span>
+            <span>15-slide deck</span>
+            <span>4 use-case diagrams</span>
+            <span>5 sequence diagrams</span>
+            <span>1 detailed class diagram</span>
+          </div>
+          <div class="hero-actions">
+            <a class="button button-light" href="https://govassist-web-ronit-khannas-projects.vercel.app/" target="_blank" rel="noopener">Launch live prototype <span>↗</span></a>
+            <a class="button button-light" href="https://github.com/RonitKhanna333/govassist" target="_blank" rel="noopener">Open repository <span>↗</span></a>
+          </div>
+        </div>
+        <aside>
+          <ul class="page-meta planning-meta">
+            <li><span>Version</span><strong>Final Rev 3</strong></li>
+            <li><span>Date</span><strong>17 September 2026</strong></li>
+            <li><span>Status</span><strong>Published</strong></li>
+            <li><span>Slides</span><strong>15</strong></li>
+            <li><span>Authors</span><strong>Ronit · Bhavneet · Shreyas</strong></li>
+          </ul>
+          <div class="plan-change"><span>Demonstration focus</span><p>Real answers, fixed rules, cited results and the limits of the prototype.</p></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="container plan-summary">
+      <div class="plan-selected">
+        <span>Complete flow</span>
+        <h2>PMFME eligibility</h2>
+        <p>Start the assessment, answer the guided questions, inspect the verdict and open the supporting clauses.</p>
+      </div>
+      <div class="plan-scope">
+        <h2>Presentation coverage</h2>
+        <p>The deck covers the problem, the users, the working flow, the current scope, team contributions, the UML diagrams, the demo plan and the next steps.</p>
+      </div>
+    </section>
+
+    <section class="selected-band">
+      <div class="container selected-band-inner">
+        <div><p class="eyebrow light">Embedded artifact</p><h2>Prototype pitch deck</h2></div>
+        <p>The submitted PPTX is embedded below. Use the direct link if the online viewer is unavailable.</p>
+        <a class="button button-light" href="GovAssist_UCS503_Prototype_Pitch_Final_Rev3.pptx" target="_blank" rel="noopener">Download PPTX <span>↓</span></a>
+      </div>
+    </section>
+
+    <section class="container presentation-section">
+      <div class="presentation-heading">
+        <div><p class="eyebrow">Embedded presentation</p><h2>GovAssist UCS503 Prototype Pitch</h2></div>
+      </div>
+      <div class="embed-wrapper" id="embed-wrapper"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand"><h2>GovAssist</h2><p>UCS503 software engineering project</p></div>
+      <div class="footer-meta">
+        <div><span>Course</span><strong>UCS503</strong></div>
+        <div><span>Deliverable</span><strong>Prototype Presentation</strong></div>
+        <div><span>Team</span><strong>Ronit · Bhavneet · Shreyas</strong></div>
+      </div>
+    </div>
+    <div class="container footer-bottom"><span>© 2026 GovAssist team</span><span>Prototype Presentation</span></div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/site.js"></script>
+  <script>
+    renderPresentationEmbed({
+      title: "GovAssist UCS503 Prototype Presentation",
+      pptxUrl: "GovAssist_UCS503_Prototype_Pitch_Final_Rev3.pptx"
+    });
+  </script>
+</body>
+</html>

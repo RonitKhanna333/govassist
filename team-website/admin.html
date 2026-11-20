@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GovAssist admin: upload and publish presentations.">
+  <meta name="robots" content="noindex">
+  <title>Admin · GovAssist</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="wordmark" href="index.html"><span class="wordmark-mark">GA</span><span class="wordmark-copy"><strong>GovAssist</strong><small>UCS503 project website</small></span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation"><a href="index.html">Overview</a><a href="planning-presentation.html">Planning v1</a><a href="planning-v2.html">Planning v2</a><a href="prototype-presentation.html">Prototype</a><a href="final-presentation.html">Final</a><a href="presentations.html">Archive</a><a href="changelog.html">Change log</a><a class="admin-link active" href="admin.html">Admin</a></nav>
+    </div>
+  </header>
+
+  <main class="container admin-shell">
+    <header class="admin-header">
+      <p class="eyebrow">Instructor and team admin</p>
+      <h1>Upload and publish</h1>
+      <p>Sign in, drop a presentation file or a whole folder, fill in the title, version, date and change summary, and publish it to its own permanent page.</p>
+    </header>
+
+    <div class="admin-status" id="admin-status" role="status" aria-live="polite" hidden></div>
+
+    <!-- Sign in -->
+    <section class="admin-card admin-login" id="login-panel">
+      <h3>Sign in</h3>
+      <form id="login-form" autocomplete="on">
+        <label for="login-username">Username</label>
+        <input class="admin-input" id="login-username" name="username" autocomplete="username" required value="admin">
+        <label for="login-password">Password</label>
+        <input class="admin-input" id="login-password" name="password" type="password" autocomplete="current-password" required>
+        <div class="button-row"><button class="button" type="submit" id="login-button">Sign in <span>→</span></button></div>
+      </form>
+    </section>
+
+    <!-- Signed in -->
+    <div id="work-panel" hidden>
+      <div class="admin-notice">
+        <strong id="signed-in-as">Signed in</strong>
+        <p>Files go straight to Amazon S3 through short-lived upload links. Publishing never replaces an older version: every version gets its own permanent page. <button class="link-button" type="button" id="sign-out">Sign out</button></p>
+      </div>
+
+      <form id="publish-form">
+        <h2 class="admin-section-title">1 · Files</h2>
+        <div class="drop-zone" id="drop-zone" tabindex="0">
+          <strong>Drag files or a folder here</strong>
+          <p>PPTX, PDF, images, video or any other files. Folders keep their structure.</p>
+          <div class="button-row">
+            <button class="button button-secondary" type="button" id="pick-files">Choose files</button>
+            <button class="button button-secondary" type="button" id="pick-folder">Choose a folder</button>
+          </div>
+          <input type="file" id="file-input" multiple hidden>
+          <input type="file" id="folder-input" webkitdirectory multiple hidden>
+        </div>
+        <div class="upload-list" id="upload-list"></div>
+        <div class="button-row" id="clear-row" hidden><button class="link-button" type="button" id="clear-files">Remove all files</button></div>
+
+        <h2 class="admin-section-title">2 · Details</h2>
+        <div class="admin-card admin-grid">
+          <div class="admin-wide">
+            <label for="target">Publish as</label>
+            <select class="admin-input" id="target">
+              <option value="">A new deliverable</option>
+            </select>
+          </div>
+          <div class="admin-wide">
+            <label for="title">Title</label>
+            <input class="admin-input" id="title" maxlength="120" required placeholder="Final Presentation">
+          </div>
+          <div>
+            <label for="kind">Type</label>
+            <select class="admin-input" id="kind">
+              <option>Presentation</option>
+              <option>Demonstration</option>
+              <option>Report</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="version">Presentation version</label>
+            <input class="admin-input" id="version" maxlength="20" required placeholder="v1.0" pattern="[A-Za-z0-9 ._\-]+">
+          </div>
+          <div>
+            <label for="date">Date</label>
+            <input class="admin-input" id="date" type="date" required>
+          </div>
+          <div>
+            <label for="authors">Authors</label>
+            <input class="admin-input" id="authors" value="Ronit, Bhavneet, Shreyas" required>
+          </div>
+          <div class="admin-wide">
+            <label for="summary">Change summary</label>
+            <textarea class="admin-input" id="summary" rows="4" maxlength="2000" required placeholder="What is new in this version?"></textarea>
+          </div>
+          <div class="admin-wide">
+            <label for="primary">Main file to show on the page</label>
+            <select class="admin-input" id="primary"><option value="">Choose automatically</option></select>
+          </div>
+        </div>
+
+        <h2 class="admin-section-title">3 · Publish</h2>
+        <div class="button-row">
+          <button class="button" type="submit" id="publish-button">Upload and publish <span>→</span></button>
+        </div>
+        <div class="publish-result" id="publish-result" hidden></div>
+      </form>
+
+      <h2 class="admin-section-title">Published so far</h2>
+      <div class="archive-list" id="admin-published"><p class="archive-empty">Loading…</p></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand"><h2>GovAssist</h2><p>UCS503 software engineering project</p></div>
+      <div class="footer-meta">
+        <div><span>Course</span><strong>UCS503</strong></div>
+        <div><span>Page</span><strong>Admin</strong></div>
+        <div><span>Team</span><strong>Ronit · Bhavneet · Shreyas</strong></div>
+      </div>
+    </div>
+    <div class="container footer-bottom"><span>© 2026 GovAssist team</span><span>Admin</span></div>
+  </footer>
+
+  <script src="js/site.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

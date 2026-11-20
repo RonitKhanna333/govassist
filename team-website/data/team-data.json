@@ -1,0 +1,711 @@
+{
+  "site": {
+    "name": "GovAssist",
+    "course": "UCS503 · Software Engineering",
+    "tagline": "Check a government scheme and see the rule behind the answer.",
+    "description": "GovAssist asks only the questions a scheme needs, decides with fixed rules, and shows the official clause, page and PDF link for every result.",
+    "term": "Final evaluation · 2026"
+  },
+  "members": [
+    {
+      "id": 1,
+      "name": "Ronit",
+      "role": "Algorithms and rules: corpus scripts, rule engine, LLM agents and voice",
+      "bio": "Works on the corpus scripts, the rule engine, the chat agents and the voice features.",
+      "strength": "Algorithms, AI/ML, retrieval and evaluation",
+      "learningGoal": "Full-stack integration and web deployment",
+      "skills": [
+        {
+          "name": "Algorithms",
+          "level": 90
+        },
+        {
+          "name": "AI/ML and Retrieval",
+          "level": 85
+        },
+        {
+          "name": "Evaluation",
+          "level": 85
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Bhavneet",
+      "role": "Team lead, backend and cloud",
+      "bio": "Team lead. Coordinates the team and the course submissions, and holds the backend and cloud role in our plan.",
+      "strength": "Backend engineering, databases and APIs",
+      "learningGoal": "Cloud deployment, CI/CD and monitoring",
+      "skills": [
+        {
+          "name": "Backend Engineering",
+          "level": 90
+        },
+        {
+          "name": "Databases and APIs",
+          "level": 88
+        },
+        {
+          "name": "Cloud and CI/CD",
+          "level": 75
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Shreyas",
+      "role": "Frontend and integration: UI, next-steps list, audit fixes and presentation pages",
+      "bio": "Works on the frontend and integration: the web interface, the next-steps checklist, the audit fixes and the presentation pages.",
+      "strength": "Frontend engineering, UI/UX and requirements",
+      "learningGoal": "Document extraction, evaluation and system integration",
+      "skills": [
+        {
+          "name": "Frontend Engineering",
+          "level": 90
+        },
+        {
+          "name": "UI/UX and Requirements",
+          "level": 88
+        },
+        {
+          "name": "System Integration",
+          "level": 78
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "number": "01",
+      "title": "GovAssist",
+      "status": "Selected project",
+      "version": "Final",
+      "date": "5 August 2026",
+      "authors": [
+        "Ronit",
+        "Bhavneet",
+        "Shreyas"
+      ],
+      "description": "A scheme screening app that asks only the questions a scheme needs, decides with a deterministic rule engine and quotes the official guideline behind every result.",
+      "decision": "We selected GovAssist because it gives each team member a clear technical responsibility and supports a complete source-to-answer demonstration.",
+      "pptxUrl": "GovAssist.pptx"
+    },
+    {
+      "id": 2,
+      "number": "02",
+      "title": "Lost and Found Portal",
+      "status": "Not selected",
+      "version": "Initial proposal",
+      "date": "5 August 2026",
+      "authors": [
+        "Ronit",
+        "Bhavneet",
+        "Shreyas"
+      ],
+      "description": "A lost-and-found portal for the campus. People report lost or found items, the system suggests likely matches, checks each claim and records the handover.",
+      "decision": "We did not select this proposal because similar campus reporting methods already exist and adoption would be difficult to prove.",
+      "pptxUrl": "LostAndFoundPortal.pptx"
+    },
+    {
+      "id": 3,
+      "number": "03",
+      "title": "Placement Readiness Platform",
+      "status": "Not selected",
+      "version": "Initial proposal",
+      "date": "5 August 2026",
+      "authors": [
+        "Ronit",
+        "Bhavneet",
+        "Shreyas"
+      ],
+      "description": "A tool that compares a student's skills with company eligibility criteria, shows the gaps and suggests a plan to close them.",
+      "decision": "We did not select this proposal because access to reliable company criteria and placement data is uncertain.",
+      "pptxUrl": "PlacementReadinessPlatform.pptx"
+    },
+    {
+      "id": 4,
+      "number": "04",
+      "title": "Semester Workload Balancer",
+      "status": "Not selected",
+      "version": "Initial proposal",
+      "date": "5 August 2026",
+      "authors": [
+        "Ronit",
+        "Bhavneet",
+        "Shreyas"
+      ],
+      "description": "A planner that predicts the heavy weeks in a semester and suggests moving work that can be finished earlier.",
+      "decision": "We did not select this proposal because the workload forecast depends on historical effort data that we would first need to collect.",
+      "pptxUrl": "SemesterWorkloadBalancer.pptx"
+    }
+  ],
+  "planningPresentation": {
+    "title": "Planning Presentation v1",
+    "eyebrow": "UCS503 · Planning Presentation",
+    "version": "v1.1",
+    "date": "11 August 2026",
+    "status": "Superseded by v2",
+    "authors": [
+      "Ronit",
+      "Bhavneet",
+      "Shreyas"
+    ],
+    "changeSummary": "Revised with the full development plan: build the corpus first, use an LLM only to help draft rules that people then review, add a multilingual voice layer and keep the knowledge graph in Postgres. The MVP covers scheme eligibility only. ITR and GST are left for later, but the pipeline is kept general enough to add them.",
+    "description": "GovAssist answers questions about government schemes and cites the exact rule clause behind each answer. The app works in English internally and translates only at the edges, so a citizen can read the interface, ask a question and hear the answer in their own language, while every claim still traces back to a quote from an official document.",
+    "pptxUrl": "GovAssist_UCS503_Planning_v1_2.pptx",
+    "selectedProjectId": 1,
+    "teamMemberIds": [
+      1,
+      2,
+      3
+    ],
+    "constraints": [
+      "Three members",
+      "One semester (~14 weeks)",
+      "No dedicated GPU",
+      "No paid API budget"
+    ],
+    "scope": "The MVP covers scheme eligibility only. ITR and GST are left for later, but the router, rule engine and verifier are written so they can be added without a rewrite. Multiple languages are a core requirement: the app speaks regional languages and accepts voice input, because the people most likely to miss a scheme are often the least likely to read a long English PDF. The first build sessions focus only on the tools that build the corpus, run locally with no cloud, database or API keys, because every later part depends on the corpus.",
+    "objectives": [
+      "Answer with the exact clause cited and never guess. A deterministic rule engine decides eligibility; the LLM only extracts facts and explains.",
+      "Every fact that can affect a verdict must match a quote in a committed source document. A validation check in CI enforces this.",
+      "Support voice and four languages (Hindi, Punjabi, Tamil, English) from the start, not as a later add-on.",
+      "Keep translation out of the decision. Checks run in English against English clauses, and a round-trip translation check guards the translated answer.",
+      "Never fail silently. Voice, translation and low-confidence answers each fall back to a clear message."
+    ],
+    "functions": [
+      "Corpus pipeline with human review: ingest, segment, LLM-assisted draft, quote validation, review, build (rules.json, graph.json, clauses.jsonl)",
+      "Deterministic rule engine over a restricted expression grammar (no eval()), returning ELIGIBLE, NOT_ELIGIBLE or INSUFFICIENT_INFO with the missing attributes",
+      "Verification step that splits each answer into claims and removes anything not backed by a rule or a retrieved clause",
+      "Translate, speak and transcribe through Bhashini/ULCA behind one provider interface, with amounts, dates and scheme names protected during translation",
+      "Knowledge graph built from the same rule packs (Postgres with recursive queries, no separate graph service) for reverse and cross-scheme questions",
+      "Document extraction with fields the user confirms, personal data removed before any text reaches an LLM or a log, and no stored uploads"
+    ],
+    "intendedUsers": [
+      "Citizens checking scheme eligibility, especially those more comfortable in a regional language than in English",
+      "A family member using voice in their own language to check on someone else's behalf",
+      "Administrators writing and reviewing scheme rule packs",
+      "Future ITR and GST users, once those parts are built (not in the MVP)"
+    ],
+    "externalInterfaces": [
+      "Bhashini / ULCA for speech recognition, translation and text-to-speech in the four languages",
+      "A free-tier LLM provider (Gemini or Groq), used only to draft and explain, never to decide",
+      "Tesseract or PaddleOCR for reading documents, with manual entry as a fallback",
+      "Official ministry guideline PDFs, stored in the repository with a checksum and never fetched live"
+    ],
+    "architecture": [
+      {
+        "label": "01",
+        "title": "Web (Next.js)",
+        "description": "Routes per language, the voice controls (mic button, playback, language switcher) and text for every supported language."
+      },
+      {
+        "label": "02",
+        "title": "API, language and agents",
+        "description": "FastAPI routes for chat, voice, documents and schemes; one language service for translate, speak and transcribe; the domain router, scheme agent and verifier."
+      },
+      {
+        "label": "03",
+        "title": "Rules and graph",
+        "description": "A deterministic rule engine over a restricted grammar, and a knowledge graph built from the same rule packs so the two can never disagree."
+      },
+      {
+        "label": "04",
+        "title": "Corpus and scripts",
+        "description": "One scheme.md per scheme holding the source, clauses and rule conditions, built through ingest, segment, draft, validate and build scripts with a review step at each stage."
+      }
+    ],
+    "qualityGoals": [
+      {
+        "title": "Performance",
+        "items": [
+          "First spoken audio in about 3 seconds",
+          "Rule evaluation does not depend on the network",
+          "Translations and audio for the demo prepared and cached in advance"
+        ]
+      },
+      {
+        "title": "Security & privacy",
+        "items": [
+          "Uploaded documents processed in memory and never stored",
+          "Personal data removed before any text reaches an LLM provider or a log",
+          "Extracted fields kept only for the session"
+        ]
+      },
+      {
+        "title": "Reliability",
+        "items": [
+          "A fallback for voice, translation and low-confidence answers, so nothing fails silently",
+          "A circuit breaker on the translation provider so an outage cannot hang a request",
+          "Unsupported claims are removed, and repeated failures give a clear 'not confident' reply"
+        ]
+      },
+      {
+        "title": "Maintainability",
+        "items": [
+          "Every rule condition and graph edge must point to a source clause, checked in CI",
+          "Rule packs are versioned and never edited in place, with a script to compare versions",
+          "One scheme.md per scheme builds the rules, graph and embeddings"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "risk": "The translation provider slows down or fails during the demo",
+        "response": "A provider interface with a Web Speech API fallback, a circuit breaker, and translations and audio cached the night before."
+      },
+      {
+        "risk": "Machine translation changes an amount, date or scheme name",
+        "response": "Those values are replaced with placeholders before translation and restored afterwards, with a test that checks they come back unchanged."
+      },
+      {
+        "risk": "Facts drafted by the LLM end up in the knowledge base",
+        "response": "Every fact must point to a source clause and match its quote, and a person reviews it. A test with a made-up fact must fail in CI."
+      },
+      {
+        "risk": "The knowledge graph and the rule engine disagree",
+        "response": "The graph is built from the same rule packs by build.py and is never written by hand. An out-of-date graph fails the build."
+      },
+      {
+        "risk": "Work drifts back to ITR and GST before scheme eligibility is done",
+        "response": "The router, engine and verifier stay general, but ITR and GST only return 'not yet supported' for now."
+      }
+    ],
+    "milestones": [
+      {
+        "period": "Sprint 1",
+        "title": "Repository setup, provider interfaces, language list and SRS draft",
+        "owner": "All"
+      },
+      {
+        "period": "Sprint 2",
+        "title": "Corpus tools, first hand-written scheme.md and the rule engine",
+        "owner": "Ronit"
+      },
+      {
+        "period": "Sprint 3",
+        "title": "Draft, validate and build pipeline, protected translation and design document",
+        "owner": "Ronit · Bhavneet"
+      },
+      {
+        "period": "Sprint 4",
+        "title": "Graph queries, first verifier and audio playback. Mid-semester demo in all four languages",
+        "owner": "All"
+      },
+      {
+        "period": "Sprint 5",
+        "title": "Full voice round trip, translation checks and a translation review",
+        "owner": "All"
+      },
+      {
+        "period": "Sprint 6",
+        "title": "Document upload with personal data removed, multi-step questions and a results table",
+        "owner": "Bhavneet · Ronit"
+      },
+      {
+        "period": "Sprint 7",
+        "title": "Deployment, demo caches, polish and accessibility. Final demo and report",
+        "owner": "All"
+      }
+    ],
+    "versions": [
+      {
+        "version": "v2.0",
+        "date": "20 November 2026",
+        "status": "Separate page",
+        "summary": "Published as Planning Presentation v2 on its own page. This v1 page is kept unchanged as the record of the August plan."
+      },
+      {
+        "version": "v1.1",
+        "date": "11 August 2026",
+        "status": "Final v1",
+        "summary": "Full development plan added: corpus-first build order, human-gated provenance workflow, multilingual voice layer, and Postgres-based knowledge graph. Scope narrowed to scheme eligibility for the MVP."
+      },
+      {
+        "version": "v1.0",
+        "date": "5 August 2026",
+        "status": "Superseded",
+        "summary": "First planning presentation and project selection."
+      }
+    ]
+  },
+  "planningPresentationV2": {
+    "title": "Planning Presentation v2",
+    "eyebrow": "UCS503 · Planning Presentation",
+    "version": "v2.0",
+    "date": "20 November 2026",
+    "status": "Current",
+    "authors": [
+      "Ronit",
+      "Bhavneet",
+      "Shreyas"
+    ],
+    "changeSummary": "Updated at the end of the semester so the plan matches what we actually built and tested. The scope is scheme screening only. Document upload, ITR and GST are out. Accounts, phone callbacks and household records were added during development. The v1 page is kept unchanged as the record of the August plan.",
+    "description": "GovAssist asks only the questions a scheme needs, decides eligibility with fixed rules and shows the official clause behind every result. A language model can help word the reply, but it never decides the verdict.",
+    "pptxUrl": "GovAssist_UCS503_Planning_v1_2.pptx",
+    "selectedProjectId": 1,
+    "teamMemberIds": [
+      1,
+      2,
+      3
+    ],
+    "constraints": [
+      "Three members",
+      "One semester",
+      "No paid API budget",
+      "Free-tier hosting on Vercel"
+    ],
+    "scope": "We narrowed the project to preliminary screening for government schemes. Eight schemes are live in the picker: PMFME, Atal Pension Yojana, NSAP old-age pension, PM-KMY, PM SVANidhi, PMJJBY, PMSBY and Ujjwala. PMFME is the one we tested end to end. The app does not file applications, upload documents, process payments or check facts against government records. The scheme office still makes the official decision.",
+    "objectives": [
+      "Screen an applicant from structured answers and return ELIGIBLE, NOT_ELIGIBLE or INSUFFICIENT_INFO.",
+      "Keep a missing answer separate from a failed condition, so the app asks the next question instead of guessing.",
+      "Show the official wording, page number and PDF link for the clause that decided the result.",
+      "Help people who prefer another language or a phone call, without letting the language layer change the verdict.",
+      "Tie every rule to a quote that matches the official guideline exactly."
+    ],
+    "functions": [
+      "FR-01 Scheme picker and a public assessment that needs no account",
+      "FR-02 Guided questions with validated answers. A skipped fact stays unknown",
+      "FR-03 Rule engine over a versioned rule pack",
+      "FR-04 Official wording, page and source link, plus a next-steps checklist",
+      "FR-05 Interface in English, Hindi, Punjabi and Tamil, with listen and mic controls",
+      "FR-06 Phone and password accounts with one reusable interview and a dashboard",
+      "FR-07 Phone callback with consent, in English, Hindi or Hinglish",
+      "FR-08 Household records and invite codes, used only as reminders",
+      "FR-09 Corpus tools that check every quote against the source PDF"
+    ],
+    "intendedUsers": [
+      "Citizens checking a scheme from a phone or desktop browser",
+      "Signed-in applicants who want to save a profile and come back later",
+      "People who would rather answer by phone, including in Hindi or Hinglish",
+      "Corpus reviewers who check quotes and rule logic against the official PDF"
+    ],
+    "externalInterfaces": [
+      "Official scheme guideline PDFs, committed to the repository with a checksum",
+      "Groq for the language model and Whisper speech input (optional)",
+      "Bhashini / ULCA for translation (optional, switched off on the hosted app)",
+      "Bland for phone callbacks",
+      "PostgreSQL for hosted accounts, SQLite for local runs"
+    ],
+    "architecture": [
+      {
+        "label": "01",
+        "title": "Web (Next.js 16, React 19)",
+        "description": "Scheme picker, guided questions, result cards with the official wording, account pages and the family page. Deployed on Vercel from the web/ folder."
+      },
+      {
+        "label": "02",
+        "title": "API (FastAPI)",
+        "description": "Routers for /chat, /auth, /account, /family and /voice. It validates input, runs the rule engine and returns the verdict with its citations."
+      },
+      {
+        "label": "03",
+        "title": "Rule engine and graph",
+        "description": "decide() checks the conditions in a rule pack. One failed condition gives NOT_ELIGIBLE and an unknown one keeps the result open. Graph tables support lookups across schemes."
+      },
+      {
+        "label": "04",
+        "title": "Language and voice",
+        "description": "Free-text understanding, reply writing and checking, translation and the Bland phone flow. All of it is optional. Without it the structured flow still decides correctly."
+      },
+      {
+        "label": "05",
+        "title": "Corpus tools",
+        "description": "ingest.py, validate.py and build.py turn an official PDF and a hand-written scheme.md into rules, graph and clause files. Every quote is matched character by character."
+      }
+    ],
+    "qualityGoals": [
+      {
+        "title": "Performance",
+        "items": [
+          "Target: 95th-percentile turn under 2 s without a provider and under 8 s with one",
+          "One hosted run measured 0.66 s, 0.59 s and 6.07 s for three answers",
+          "Load test with 20 concurrent sessions is still to do"
+        ]
+      },
+      {
+        "title": "Security & privacy",
+        "items": [
+          "Passwords hashed with scrypt, sessions use signed JWTs",
+          "Private routes need a session and cannot read another account",
+          "Rate limits and request size limits on the API",
+          "No credentials in the repository or the report"
+        ]
+      },
+      {
+        "title": "Reliability",
+        "items": [
+          "The structured flow works with every model key unset",
+          "A provider failure leaves the dashboard usable and shows a status",
+          "A failed callback is recorded and can be retried"
+        ]
+      },
+      {
+        "title": "Maintainability",
+        "items": [
+          "Every rule condition stores the ID of the clause it cites",
+          "Generated rule files rebuild byte for byte and CI checks they are current",
+          "GitHub Actions runs backend tests, corpus validation, lint, frontend tests and the build on every PR"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "risk": "PDF text had odd line breaks and hyphens, so correct quotes failed validation",
+        "response": "We normalised the extracted text instead of loosening the quote check."
+      },
+      {
+        "risk": "The PMFME age rule was written as >= 18, but the guideline says above 18",
+        "response": "Changed to > 18, added boundary tests for 18, 19 and a missing age, and now review rule logic separately from the quote."
+      },
+      {
+        "risk": "Sign-up failed on Vercel because the file system is read-only",
+        "response": "Moved hosted accounts to PostgreSQL. Local runs still use SQLite."
+      },
+      {
+        "risk": "The phone provider blocked call requests that carried a webhook URL",
+        "response": "Callbacks now go out without a webhook, and finished calls are fetched when the dashboard opens."
+      },
+      {
+        "risk": "A generated explanation mentioned proof of operations that the app never asked for",
+        "response": "Found in the hosted test (TC-12). The verdict and citation were right. We will add a regression test that checks explanations against the facts collected."
+      },
+      {
+        "risk": "The rule packs have not had a full independent review",
+        "response": "PMFME results carry a review warning, and the strict review check keeps failing until the review is done."
+      }
+    ],
+    "milestones": [
+      {
+        "period": "5 to 11 August",
+        "title": "Compared four proposals, picked GovAssist, planning v1.1 cut ITR and GST",
+        "owner": "Planning v1.0 and v1.1"
+      },
+      {
+        "period": "16 to 20 August",
+        "title": "Corpus scripts, PMFME rule pack, rule engine, graph store and chat agents",
+        "owner": "PRs #1 to #4"
+      },
+      {
+        "period": "16 to 17 September",
+        "title": "Next.js app, languages, accounts, Hindi voice, four more schemes and the prototype presentation",
+        "owner": "PRs #4 and #5"
+      },
+      {
+        "period": "13 to 14 October",
+        "title": "Audit fixes, next-steps checklist, UI refresh, phone callbacks, family records, dashboard and three more schemes",
+        "owner": "PRs #6 to #14"
+      },
+      {
+        "period": "November",
+        "title": "Full test run on commit 2aeda54, hosted checks, final report and final presentation",
+        "owner": "Final evaluation"
+      }
+    ],
+    "changesFromPrevious": [
+      {
+        "label": "Kept",
+        "title": "Deterministic rule engine with cited clauses",
+        "description": "The core idea did not change. The engine decides, and every condition points to a clause in the official PDF."
+      },
+      {
+        "label": "Kept",
+        "title": "Corpus pipeline with review gates",
+        "description": "ingest, validate and build scripts with manual review gates, and a fake scheme in the tests that the validator must reject."
+      },
+      {
+        "label": "Changed",
+        "title": "Knowledge graph",
+        "description": "Planned as Postgres with recursive queries. Built as versioned graph tables compiled from the same rule packs, used for lookups only."
+      },
+      {
+        "label": "Changed",
+        "title": "Voice",
+        "description": "Planned as Bhashini speech for four languages. Built with Groq Whisper for English and Hindi mic input, server text-to-speech, and a separate phone callback."
+      },
+      {
+        "label": "Dropped",
+        "title": "Document upload and OCR",
+        "description": "Removed from scope. The app collects answers through questions only and never stores documents or government IDs."
+      },
+      {
+        "label": "Dropped",
+        "title": "ITR and GST",
+        "description": "Still out of scope. The router and engine stay generic, so they could be added later."
+      },
+      {
+        "label": "Added",
+        "title": "Accounts, dashboard, phone callbacks and family records",
+        "description": "Not in v1.1. Added in October so a returning user can answer once and see results for every scheme."
+      },
+      {
+        "label": "Added",
+        "title": "Seven more schemes",
+        "description": "Atal Pension Yojana, NSAP old-age pension, PM-KMY, PM SVANidhi, PMJJBY, PMSBY and Ujjwala joined PMFME in the picker."
+      }
+    ],
+    "versions": [
+      {
+        "version": "v2.0",
+        "date": "20 November 2026",
+        "status": "Current",
+        "summary": "Plan updated to match the delivered system: final scope, requirements FR-01 to FR-09, architecture, measured quality targets, risks we actually hit and the real timeline."
+      },
+      {
+        "version": "v1.1",
+        "date": "11 August 2026",
+        "status": "Superseded",
+        "summary": "The August plan. Kept unchanged on the Planning Presentation v1 page."
+      },
+      {
+        "version": "v1.0",
+        "date": "5 August 2026",
+        "status": "Superseded",
+        "summary": "First planning presentation and project selection."
+      }
+    ]
+  },
+  "changelog": [
+    {
+      "month": "November 2026",
+      "entries": [
+        {
+          "date": "20 Nov",
+          "area": "Website",
+          "text": "Moved the site to AWS (S3, CloudFront, Lambda and DynamoDB) and added the admin page for uploading and publishing presentations. Each published version gets its own permanent page."
+        },
+        {
+          "date": "20 Nov",
+          "area": "Website",
+          "text": "Added a separate Planning Presentation v2 page, the final presentation page, a presentations archive and this change log. The Planning Presentation v1 page stays as it was."
+        },
+        {
+          "date": "20 Nov",
+          "area": "Report",
+          "text": "Final project report completed."
+        },
+        {
+          "date": "20 Nov",
+          "area": "Testing",
+          "text": "Full test run on commit 2aeda54: 886 backend and corpus tests and 64 frontend tests passed."
+        },
+        {
+          "date": "17 Nov",
+          "area": "Presentation",
+          "text": "Final presentation prepared: 12 slides covering the problem, architecture, rule pipeline, live demo, testing and what is left."
+        }
+      ]
+    },
+    {
+      "month": "October 2026",
+      "entries": [
+        {
+          "date": "14 Oct",
+          "area": "App",
+          "text": "Callbacks are sent without a webhook. Finished calls are fetched from the provider when the dashboard opens (commit 2aeda54)."
+        },
+        {
+          "date": "13 Oct",
+          "area": "App",
+          "text": "Hinglish callback language added and Hindi voice requests sent as UTF-8 (PRs #13 and #14). Clearer callback failure notices (PRs #11 and #12)."
+        },
+        {
+          "date": "13 Oct",
+          "area": "App",
+          "text": "Phone accounts, one general interview and an eligibility dashboard for every scheme (PR #9). Hosted frontend fixed to find the API when the Vercel setting is missing (PR #10)."
+        },
+        {
+          "date": "13 Oct",
+          "area": "App",
+          "text": "Family page: link household members with an invite code, private by default, used only as a reminder."
+        },
+        {
+          "date": "13 Oct",
+          "area": "App",
+          "text": "Hindi phone agent that collects answers while the rule engine makes the decision. Hindi number words are now understood."
+        },
+        {
+          "date": "13 Oct",
+          "area": "App",
+          "text": "Added PM SVANidhi, NSAP old-age pension and Ujjwala. PostgreSQL connection fixes and clearer database errors."
+        },
+        {
+          "date": "13 Oct",
+          "area": "App",
+          "text": "UI refresh of the live prototype (PR #8) and a \"What should I do next?\" checklist built from cited clauses (PR #7)."
+        },
+        {
+          "date": "13 Oct",
+          "area": "App",
+          "text": "Audit fixes, including the PMFME age rule changed from >= 18 to > 18 with boundary tests (PR #6)."
+        }
+      ]
+    },
+    {
+      "month": "September 2026",
+      "entries": [
+        {
+          "date": "17 Sep",
+          "area": "Website",
+          "text": "Prototype presentation page added with the deck embedded."
+        },
+        {
+          "date": "17 Sep",
+          "area": "App",
+          "text": "Added PMSBY, PMJJBY, Atal Pension Yojana and PM-KMY with a scheme picker. Prototype presentation work merged (PR #5)."
+        },
+        {
+          "date": "17 Sep",
+          "area": "App",
+          "text": "Hindi voice: server text-to-speech with a fallback, auto-stopping mic and a filter for silent recordings."
+        },
+        {
+          "date": "16 Sep",
+          "area": "App",
+          "text": "Next.js frontend with Vercel config and Postgres support. Multilingual layer with entity protection and a fallback ladder. Optional accounts with scrypt passwords and JWT sessions."
+        },
+        {
+          "date": "16 Sep",
+          "area": "Fix",
+          "text": "Fixed sign-up on Vercel, a question that repeated, and an answer that could be read the wrong way. Updated the Groq models."
+        }
+      ]
+    },
+    {
+      "month": "August 2026",
+      "entries": [
+        {
+          "date": "20 Aug",
+          "area": "App",
+          "text": "Chat endpoint and the first Groq-backed agents (PR #4)."
+        },
+        {
+          "date": "18 Aug",
+          "area": "App",
+          "text": "Rule engine and graph store (PR #2) and the phase 2 design notes (PR #1)."
+        },
+        {
+          "date": "16 Aug",
+          "area": "App",
+          "text": "First commit: corpus toolchain and the PMFME rule pack with its review gates."
+        },
+        {
+          "date": "12 Aug",
+          "area": "Website",
+          "text": "Planning page switched to the revised v1.1 deck."
+        },
+        {
+          "date": "11 Aug",
+          "area": "Website",
+          "text": "Planning presentation v1.1 with the full development plan. The site was redesigned and the planning page now reads from one JSON file."
+        },
+        {
+          "date": "4 Aug",
+          "area": "Website",
+          "text": "Project website created with the team pages, four proposals and an embedded PPTX viewer. The team was set at three members."
+        }
+      ]
+    }
+  ]
+}

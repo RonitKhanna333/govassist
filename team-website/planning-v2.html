@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GovAssist planning presentation for UCS503, updated to match the delivered system.">
+  <title>Planning Presentation v2 · GovAssist</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="wordmark" href="index.html" aria-label="GovAssist home">
+        <span class="wordmark-mark">GA</span>
+        <span class="wordmark-copy"><strong>GovAssist</strong><small>UCS503 project website</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a href="index.html">Overview</a>
+        <a href="planning-presentation.html">Planning v1</a>
+        <a class="active" href="planning-v2.html">Planning v2</a>
+        <a href="prototype-presentation.html">Prototype</a>
+        <a href="final-presentation.html">Final</a>
+        <a href="presentations.html">Archive</a>
+        <a href="changelog.html">Change log</a>
+        <a class="admin-link" href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="planning-hero">
+      <div class="container planning-hero-inner">
+        <div>
+          <p class="eyebrow light" id="planning-eyebrow">UCS503 · Planning Presentation</p>
+          <h1 class="page-title" id="planning-title">Planning Presentation v2</h1>
+          <p class="page-lead" id="planning-description"></p>
+          <div class="plan-tags" id="planning-constraints"></div>
+        </div>
+        <aside>
+          <ul class="page-meta planning-meta">
+            <li><span>Version</span><strong id="planning-version"></strong></li>
+            <li><span>Date</span><strong id="planning-date"></strong></li>
+            <li><span>Status</span><strong id="planning-status"></strong></li>
+            <li><span>Authors</span><strong id="planning-authors"></strong></li>
+          </ul>
+          <div class="plan-change"><span>Change summary</span><p id="planning-change-summary"></p></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="container plan-summary">
+      <div class="plan-selected">
+        <span>Selected project</span>
+        <h2 id="selected-project">GovAssist</h2>
+        <p id="selected-project-reason"></p>
+      </div>
+      <div class="plan-scope">
+        <h2>Project scope</h2>
+        <p id="planning-scope"></p>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">01 · Requirements</span>
+          <div><h2 class="section-title">Project requirements</h2></div>
+        </header>
+        <div class="requirements-grid">
+          <article class="requirement-block"><h3>Objectives</h3><ul class="plain-list" id="planning-objectives"></ul></article>
+          <article class="requirement-block"><h3>Core functions</h3><ul class="plain-list" id="planning-functions"></ul></article>
+          <article class="requirement-block"><h3>Intended users</h3><ul class="plain-list" id="planning-users"></ul></article>
+          <article class="requirement-block"><h3>External interfaces</h3><ul class="plain-list" id="planning-interfaces"></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">02 · Architecture</span>
+          <div>
+            <h2 class="section-title">System architecture</h2>
+            <p class="section-intro" data-plan-text="architecture">The delivered system keeps the web app, the API, the rule engine and the corpus tools separate. The corpus tools run offline and the app only reads what they build.</p>
+          </div>
+        </header>
+        <div class="architecture-list" id="architecture-grid"></div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">03 · Non-functional requirements</span>
+          <div><h2 class="section-title">Performance, security, reliability, and maintenance</h2><p class="section-intro" data-plan-text="quality">The targets from the report, with what we measured. Load and accessibility runs are still planned.</p></div>
+        </header>
+        <div class="quality-grid" id="quality-grid"></div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">04 · Risk</span>
+          <div><h2 class="section-title">Technical risks and responses</h2><p class="section-intro" data-plan-text="risks">The problems we ran into during the build and how we handled them.</p></div>
+        </header>
+        <div class="risk-list" id="risks-list"></div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">05 · Delivery</span>
+          <div><h2 class="section-title">Implementation timeline</h2><p class="section-intro" data-plan-text="timeline">How the work went, based on the repository history.</p></div>
+        </header>
+        <div class="milestone-list" id="milestone-list"></div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">06 · Changes</span>
+          <div><h2 class="section-title">What changed from v1.1</h2><p class="section-intro">What we kept, changed, dropped and added between the August plan and the final build. The <a class="text-link" href="planning-presentation.html">v1 page</a> is unchanged.</p></div>
+        </header>
+        <div class="risk-list" id="changes-list"></div>
+      </div>
+    </section>
+
+    <section class="selected-band">
+      <div class="container selected-band-inner">
+        <div><p class="eyebrow light">Source artifact</p><h2>Planning deck (v1.1)</h2></div>
+        <p>This is the deck we presented in August. The final deck is on the <a href="final-presentation.html">final presentation page</a>.</p>
+        <a class="button button-light" id="download-link" href="#" hidden target="_blank" rel="noopener">Download PPTX <span>↓</span></a>
+      </div>
+    </section>
+
+    <section class="container presentation-section">
+      <div class="presentation-heading"><div><p class="eyebrow">Embedded presentation</p><h2>Software project grid</h2></div></div>
+      <div class="embed-wrapper" id="embed-wrapper"></div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">07 · Ownership</span>
+          <div><h2 class="section-title">Team responsibilities</h2></div>
+        </header>
+        <div class="planning-team-grid" id="planning-team-grid"></div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">08 · History</span>
+          <div><h2 class="section-title">Version history</h2><p class="section-intro">Each version stays available. The August plan is on the <a class="text-link" href="planning-presentation.html">Planning Presentation v1</a> page.</p></div>
+        </header>
+        <div class="version-list" id="version-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand"><h2>GovAssist</h2><p>UCS503 software engineering project</p></div>
+      <div class="footer-meta">
+        <div><span>Course</span><strong>UCS503</strong></div>
+        <div><span>Deliverable</span><strong>Planning Presentation v2</strong></div>
+        <div><span>Authors</span><strong>Ronit · Bhavneet · Shreyas</strong></div>
+      </div>
+    </div>
+    <div class="container footer-bottom"><span>© 2026 GovAssist team</span><span>Planning Presentation v2</span></div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/site.js"></script>
+  <script>renderPlanningPresentation("planningPresentationV2");</script>
+</body>
+</html>

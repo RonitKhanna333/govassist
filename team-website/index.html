@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GovAssist UCS503 project website: planning, prototype and final presentations.">
+  <title>GovAssist · UCS503 Project</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="wordmark" href="index.html" aria-label="GovAssist home">
+        <span class="wordmark-mark">GA</span>
+        <span class="wordmark-copy"><strong>GovAssist</strong><small>UCS503 project website</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a class="active" href="index.html">Overview</a>
+        <a href="planning-presentation.html">Planning v1</a>
+        <a href="planning-v2.html">Planning v2</a>
+        <a href="prototype-presentation.html">Prototype</a>
+        <a href="final-presentation.html">Final</a>
+        <a href="presentations.html">Archive</a>
+        <a href="changelog.html">Change log</a>
+        <a class="admin-link" href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="container home-hero">
+      <div>
+        <p class="eyebrow" id="site-course">UCS503 · Software Engineering</p>
+        <h1 class="display-title" id="site-tagline">Check a government scheme and see the rule behind the answer.</h1>
+        <p class="hero-lead" id="site-description">GovAssist asks only the questions a scheme needs, decides with fixed rules, and shows the official clause, page and PDF link for every result.</p>
+        <div class="hero-actions">
+          <a class="button" href="final-presentation.html">Final Presentation <span>→</span></a>
+          <a class="button button-secondary" href="planning-v2.html">Planning v2</a>
+          <a class="button button-secondary" href="changelog.html">Change log</a>
+        </div>
+      </div>
+
+      <aside class="hero-brief" aria-label="Project brief">
+        <span class="hero-brief-label">Selected project</span>
+        <h2 id="selected-project-title">GovAssist</h2>
+        <p id="selected-project-description"></p>
+        <ul class="brief-meta">
+          <li><span>Stage</span><strong>Final evaluation</strong></li>
+          <li><span>Team</span><strong>3 members</strong></li>
+          <li><span>Delivery</span><strong>One semester</strong></li>
+          <li><span>Cycle</span><strong id="site-term">2026</strong></li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="system-strip" aria-label="GovAssist system flow">
+      <div class="container system-strip-inner">
+        <div class="system-strip-title">System at a glance</div>
+        <div class="system-step"><span>01</span> Pick a scheme</div>
+        <div class="system-step"><span>02</span> Answer questions</div>
+        <div class="system-step"><span>03</span> Apply rules</div>
+        <div class="system-step"><span>04</span> Check the quote</div>
+        <div class="system-step"><span>05</span> Show the clause</div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">01 · Product</span>
+          <div>
+            <h2 class="section-title">What we built</h2>
+            <p class="section-intro">Eight government schemes are live, with PMFME tested end to end. Every result shows the rule and the source it came from.</p>
+          </div>
+        </header>
+
+        <div class="build-grid">
+          <p class="build-statement">A user answers a few questions, the rule engine checks them against a versioned rule pack, and the result comes back with the official wording behind it.</p>
+          <ol class="build-list">
+            <li><div><strong>Rule engine</strong><p>Returns eligible, not eligible or need more info. A missing answer is never treated as a No.</p></div></li>
+            <li><div><strong>Citations</strong><p>The exact wording, page number and PDF link for the clause that decided the result.</p></div></li>
+            <li><div><strong>Languages and voice</strong><p>English, Hindi, Punjabi and Tamil, with a listen button and mic input.</p></div></li>
+            <li><div><strong>Accounts and callbacks</strong><p>Answer once and see results for every scheme, or take the interview over a phone call.</p></div></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="selected-band">
+      <div class="container selected-band-inner">
+        <div><p class="eyebrow light">Current deliverable</p><h2>Final Presentation</h2></div>
+        <p>The final deck, test results, the live demo steps and what is still left to do. Every earlier presentation stays available in the <a href="presentations.html">archive</a>.</p>
+        <a class="button button-light" href="final-presentation.html">Open final presentation <span>→</span></a>
+      </div>
+    </section>
+
+    <section class="section-block" id="team">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">02 · Team</span>
+          <div>
+            <h2 class="section-title">Team and responsibilities</h2>
+            <p class="section-intro">Each member has a main area of responsibility. Integration, testing, documentation, and the final demonstration are shared.</p>
+          </div>
+        </header>
+        <div class="people-list" id="home-team-grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section-block" id="presentations">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">03 · Archive</span>
+          <div>
+            <h2 class="section-title">Project proposals</h2>
+            <p class="section-intro">GovAssist was selected for implementation. The other three proposals remain available as part of the planning record.</p>
+          </div>
+        </header>
+        <div class="proposal-list" id="home-project-grid" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand"><h2>GovAssist</h2><p>UCS503 software engineering project</p></div>
+      <div class="footer-meta">
+        <div><span>Course</span><strong>UCS503</strong></div>
+        <div><span>Deliverable</span><strong>Final Presentation</strong></div>
+        <div><span>Team</span><strong>Ronit · Bhavneet · Shreyas</strong></div>
+      </div>
+    </div>
+    <div class="container footer-bottom"><span>© 2026 GovAssist team</span><span>Software Engineering course project</span></div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/site.js"></script>
+  <script>renderHome();</script>
+</body>
+</html>

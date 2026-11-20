@@ -76,6 +76,29 @@ remain a separate manual evidence step. See
 [`docs/human-review-remediation.md`](docs/human-review-remediation.md) and
 [`docs/deploy.md`](docs/deploy.md).
 
+## Team website
+
+Our UCS503 project website is in [`team-website/`](team-website/) and is live at
+**https://d3k6j25duyirsb.cloudfront.net**. It has the team and member roles,
+Planning Presentation v1, a separate Planning Presentation v2 page, the
+prototype and final presentations, an archive of every version and a change log.
+
+It is hosted on AWS:
+
+- the pages are in a private S3 bucket served by CloudFront over HTTPS;
+- the admin page (`/admin.html`) signs in through a small Python backend on
+  AWS Lambda, which only CloudFront can call;
+- uploaded presentations, PDFs, images and folders go straight to a versioned
+  S3 bucket, and the file details and version records are kept in DynamoDB;
+- publishing creates a new permanent page for each version, so older versions
+  are never replaced.
+
+Everything is defined in [`team-website/aws/template.yaml`](team-website/aws/template.yaml)
+(CloudFormation). To update the site, sign in with `aws login --profile govassist`
+and run `team-website/aws/deploy.ps1`. Admin passwords are set with
+`team-website/aws/set-admin-password.ps1`, which stores only a salted hash.
+[`team-website/DEPLOYMENT.md`](team-website/DEPLOYMENT.md) explains each part.
+
 ## The one rule
 
 > Every fact that can influence an eligibility verdict must trace to a character

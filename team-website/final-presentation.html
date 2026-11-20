@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GovAssist UCS503 final presentation, test results and live demo.">
+  <title>Final Presentation · GovAssist</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="wordmark" href="index.html" aria-label="GovAssist home">
+        <span class="wordmark-mark">GA</span>
+        <span class="wordmark-copy"><strong>GovAssist</strong><small>UCS503 project website</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a href="index.html">Overview</a>
+        <a href="planning-presentation.html">Planning v1</a>
+        <a href="planning-v2.html">Planning v2</a>
+        <a href="prototype-presentation.html">Prototype</a>
+        <a class="active" href="final-presentation.html">Final</a>
+        <a href="presentations.html">Archive</a>
+        <a href="changelog.html">Change log</a>
+        <a class="admin-link" href="admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="planning-hero">
+      <div class="container planning-hero-inner">
+        <div>
+          <p class="eyebrow light">UCS503 · Final Presentation</p>
+          <h1 class="page-title">GovAssist Final Presentation</h1>
+          <p class="page-lead">Checking eligibility for government schemes, with the official rule shown next to every answer.</p>
+          <div class="plan-tags" aria-label="Presentation coverage">
+            <span>12 slides</span>
+            <span>8 schemes live</span>
+            <span>950 automated tests passing</span>
+            <span>16 test cases</span>
+            <span>14 merged PRs</span>
+          </div>
+          <div class="hero-actions">
+            <a class="button button-light" href="https://govassist-web-git-main-ronit-khannas-projects.vercel.app/schemes" target="_blank" rel="noopener">Launch live app <span>↗</span></a>
+            <a class="button button-light" href="https://github.com/RonitKhanna333/govassist" target="_blank" rel="noopener">Open repository <span>↗</span></a>
+          </div>
+        </div>
+        <aside>
+          <ul class="page-meta planning-meta">
+            <li><span>Version</span><strong>v1.0</strong></li>
+            <li><span>Date</span><strong>20 November 2026</strong></li>
+            <li><span>Status</span><strong>Final evaluation</strong></li>
+            <li><span>Slides</span><strong>12</strong></li>
+            <li><span>Authors</span><strong>Ronit · Bhavneet · Shreyas</strong></li>
+          </ul>
+          <div class="plan-change"><span>Tested version</span><p>Commit 2aeda54 on main, tested on 20 November 2026.</p></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="container plan-summary">
+      <div class="plan-selected">
+        <span>What we built</span>
+        <h2>Scheme screening</h2>
+        <p>A web app and phone flow that asks only the questions a scheme needs, decides with fixed rules and quotes the guideline.</p>
+      </div>
+      <div class="plan-scope">
+        <h2>Presentation coverage</h2>
+        <p>The problem, what we built, the architecture, how a rule gets from the PDF into the app, a live PMFME demo, languages, accounts, phone and family records, the UML design, testing, the timeline and team, and the problems we hit along with what is left.</p>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">01 · Results</span>
+          <div><h2 class="section-title">Testing and results</h2><p class="section-intro">Run on commit 2aeda54 on 20 November 2026. CI runs the same checks on every pull request and push to main.</p></div>
+        </header>
+        <div class="stat-grid">
+          <div class="stat"><strong>886</strong><span>backend and corpus tests passed</span></div>
+          <div class="stat"><strong>64</strong><span>frontend tests passed, lint and build OK</span></div>
+          <div class="stat"><strong>9</strong><span>rule packs validated, 0 errors</span></div>
+          <div class="stat"><strong>12 / 16</strong><span>test cases passed</span></div>
+        </div>
+        <div class="result-list">
+          <article class="result-row"><h3>Backend and corpus test suite</h3><span class="result-status pass">Pass</span><p>886 tests passed.</p></article>
+          <article class="result-row"><h3>Frontend lint, tests and production build</h3><span class="result-status pass">Pass</span><p>64 tests passed. Lint and the production build passed.</p></article>
+          <article class="result-row"><h3>Rule pack validation</h3><span class="result-status pass">Pass</span><p>All nine rule packs validated with no errors, and the generated files were up to date.</p></article>
+          <article class="result-row"><h3>PMFME age boundary</h3><span class="result-status pass">Pass</span><p>Age 18 gives NOT_ELIGIBLE citing the page 7 clause, 19 gives ELIGIBLE, and a missing age gives INSUFFICIENT_INFO.</p></article>
+          <article class="result-row"><h3>Saved interview</h3><span class="result-status pass">Pass</span><p>A test account saved its answers, skipped a question and carried on after signing in again.</p></article>
+          <article class="result-row"><h3>Hosted PMFME walkthrough</h3><span class="result-status partial">Partial</span><p>The verdict and the page 7 citation were correct. The written explanation mentioned a document the app had not asked for.</p></article>
+          <article class="result-row"><h3>Independent rule review</h3><span class="result-status partial">Pending</span><p>The PMFME rules still need a second person to review them. The app shows a review notice until then.</p></article>
+          <article class="result-row"><h3>Hosted callback, load and accessibility</h3><span class="result-status open">Not run</span><p>Planned. The callback needs an approved test phone number.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">02 · Demo</span>
+          <div><h2 class="section-title">PMFME check on the live site</h2><p class="section-intro">The steps we follow in the demo, with a fictional applicant.</p></div>
+        </header>
+        <div class="milestone-list">
+          <article class="milestone-row"><div class="milestone-marker"><span>1</span></div><div><p>Start</p><h3>Pick PMFME and press Start</h3></div><span class="milestone-owner">Review notice shown</span></article>
+          <article class="milestone-row"><div class="milestone-marker"><span>2</span></div><div><p>Question</p><h3>Own business, on your own? Yes</h3></div><span class="milestone-owner">Individual unit</span></article>
+          <article class="milestone-row"><div class="milestone-marker"><span>3</span></div><div><p>Question</p><h3>Already making food to sell? Yes</h3></div><span class="milestone-owner">Existing unit</span></article>
+          <article class="milestone-row"><div class="milestone-marker"><span>4</span></div><div><p>Question</p><h3>Officer visited, added to district list? No</h3></div><span class="milestone-owner">Deciding answer</span></article>
+          <article class="milestone-row"><div class="milestone-marker"><span>5</span></div><div><p>Result</p><h3>Not eligible. Open Official wording</h3></div><span class="milestone-owner">Page 7 and PDF link</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-number">03 · Next</span>
+          <div><h2 class="section-title">What is left</h2></div>
+        </header>
+        <div class="requirements-grid">
+          <article class="requirement-block"><h3>Before wider use</h3><ul class="plain-list">
+            <li>Independent review of each rule pack. The app shows "not yet reviewed" until then</li>
+            <li>Split the PMFME district-list question into its two routes and add "not sure"</li>
+            <li>A regression test that checks explanations against the answers collected</li>
+            <li>A retention policy for call transcripts</li>
+          </ul></article>
+          <article class="requirement-block"><h3>Later</h3><ul class="plain-list">
+            <li>Mic input for Punjabi and Tamil</li>
+            <li>Testing with real applicants</li>
+            <li>Load and accessibility measurements</li>
+            <li>ITR and GST, document upload and state schemes</li>
+          </ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="selected-band">
+      <div class="container selected-band-inner">
+        <div><p class="eyebrow light">Embedded artifact</p><h2>Final presentation deck</h2></div>
+        <p>The deck we presented at the final evaluation. Use the download link if the online viewer does not load.</p>
+        <a class="button button-light" id="download-link" href="GovAssist_UCS503_Final_Presentation.pptx" target="_blank" rel="noopener">Download PPTX <span>↓</span></a>
+      </div>
+    </section>
+
+    <section class="container presentation-section">
+      <div class="presentation-heading">
+        <div><p class="eyebrow">Embedded presentation</p><h2>GovAssist UCS503 Final Presentation</h2></div>
+      </div>
+      <div class="embed-wrapper" id="embed-wrapper"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand"><h2>GovAssist</h2><p>UCS503 software engineering project</p></div>
+      <div class="footer-meta">
+        <div><span>Course</span><strong>UCS503</strong></div>
+        <div><span>Deliverable</span><strong>Final Presentation</strong></div>
+        <div><span>Team</span><strong>Ronit · Bhavneet · Shreyas</strong></div>
+      </div>
+    </div>
+    <div class="container footer-bottom"><span>© 2026 GovAssist team</span><span>Final Presentation</span></div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/site.js"></script>
+  <script>
+    renderPresentationEmbed({
+      title: "GovAssist UCS503 Final Presentation",
+      pptxUrl: "GovAssist_UCS503_Final_Presentation.pptx"
+    });
+  </script>
+</body>
+</html>
