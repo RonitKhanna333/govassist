@@ -8,8 +8,8 @@ from datetime import datetime, timezone
 from api.onboarding import interview
 from api.onboarding.models import CallRecord
 from api.rules.engine import decide
-from api.rules.forms import OTHER, Field
-from api.rules.spoken import parse_number, parse_yes_no
+from api.rules.forms import Field
+from api.rules.spoken import read_answer, VALUE
 from api.rules.values import check_values, specs_for
 from api.rules.engine import load_rules
 from parse_scheme import repo_root
@@ -32,33 +32,29 @@ def read_answers(heard: dict) -> tuple[dict, list[str]]:
     `unparsed`, so the dashboard can ask again rather than guess.
     """
     known = fields()
-    profile: dict = {}
-    unparsed: list[str] = []
-    for attribute, raw in (heard or {}).items():
-        f = known.get(attribute)
-        if f is None or raw is None:
-            continue
-        text = str(raw).strip()
-        if not text:
-            continue
-        if f.kind == "number":
-            number = raw if isinstance(raw, (int, float)) and not isinstance(raw, bool) \
-                else parse_number(text)
-            if number is None or number < 0:
-                unparsed.append(attribute)
-            else:
-                profile[attribute] = number
-            continue
-        said_yes = raw if isinstance(raw, bool) else parse_yes_no(text)
-        if said_yes is None:
-            unparsed.append(attribute)
-        elif f.kind == "choice":
-            profile[attribute] = f.satisfied_by if said_yes else OTHER
-        else:
-            profile[attribute] = said_yes
     specs = {}
     for slug in interview.schemes():
         specs.update(specs_for(load_rules(slug, repo_root())))
+    return parse_fields(heard, known, specs)
+
+
+def parse_fields(heard: dict, known: dict[str, Field], specs: dict) -> tuple[dict, list[str]]:
+    profile = {}
+    unparsed = []
+    for attribute, raw in heard.items():
+        field = known.get(attribute)
+        if field is None or raw is None or raw == "":
+            continue
+        if field.kind == "number" and isinstance(raw, (int, float)):
+            profile[attribute] = raw
+            continue
+        if isinstance(raw, bool):
+            raw = "yes" if raw else "no"
+        reading = read_answer(str(raw), field.to_dict())
+        if reading.status == VALUE:
+            profile[attribute] = reading.value
+        else:
+            unparsed.append(attribute)
     checked = check_values(specs, profile)
     unparsed.extend(e.attribute for e in checked.errors)
     return checked.values, unparsed
@@ -121,17 +117,24 @@ def transcript_lines(transcripts) -> list[dict]:
     return out
 
 
-def merge_profile(stored_json: str | None, new_values: dict) -> str:
-    """Latest answers win, attribute by attribute; nothing is ever erased by
-    a call that simply didn't cover it."""
+def saved_profile(stored_json: str | None) -> dict:
+    """Re-ask saved facts whose original wording or units were ambiguous."""
     try:
-        current = json.loads(stored_json or "{}")
+        profile = json.loads(stored_json or "{}")
     except ValueError:
-        current = {}
-    if not isinstance(current, dict):
-        current = {}
-    current.update(new_values)
-    return json.dumps(current)
+        return {}
+    if not isinstance(profile, dict):
+        return {}
+    if profile.pop("_question_revision", 0) != 1:
+        for key in ("identified_in_slup_or_verified", "passed_class_8", "land_hectares", "household_has_lpg_or_png"):
+            profile.pop(key, None)
+    return profile
+
+
+def merge_profile(stored_json: str | None, new_values: dict) -> str:
+    profile = saved_profile(stored_json)
+    profile.update(new_values)
+    return json.dumps({**profile, "_question_revision": 1})
 
 
 def complete_record(record: CallRecord, status: str, transcripts, heard: dict,

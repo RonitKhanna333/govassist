@@ -188,3 +188,36 @@ def test_chat_still_works_without_signing_in(client):
     response = client.post("/chat", json={"scheme": "pmfme", "profile": {}})
     assert response.status_code == 200
     assert response.json()["verdict"] == "INSUFFICIENT_INFO"
+
+
+def test_legacy_sqlite_keeps_email_login_and_related_rows_on_phone_signup(tmp_path):
+    from sqlalchemy import event, text
+    from api.auth.models import User
+    from api.auth.security import hash_password, verify_password
+    from api.db import get_engine, get_session_factory, init_db
+
+    engine = get_engine("sqlite:///" + (tmp_path / "legacy.db").as_posix())
+    @event.listens_for(engine, "connect")
+    def enable_foreign_keys(db, _):
+        db.execute("PRAGMA foreign_keys=ON")
+    with engine.begin() as conn:
+        conn.exec_driver_sql("CREATE TABLE users (id INTEGER PRIMARY KEY, email VARCHAR(320) NOT NULL, "
+                             "password_hash VARCHAR(255) NOT NULL, display_name VARCHAR(120), "
+                             "locale VARCHAR(8) NOT NULL, profile_json TEXT NOT NULL, created_at DATETIME NOT NULL)")
+        conn.exec_driver_sql("CREATE UNIQUE INDEX ix_users_email ON users(email)")
+        conn.execute(text("INSERT INTO users VALUES (7,'original@example.invalid',:pw,'Demo','en','{}',CURRENT_TIMESTAMP)"),
+                     {"pw": hash_password("existing-password")})
+        conn.exec_driver_sql("CREATE TABLE related (user_id INTEGER REFERENCES users(id) ON DELETE CASCADE)")
+        conn.exec_driver_sql("INSERT INTO related VALUES (7)")
+    init_db(engine)
+    init_db(engine)
+    with get_session_factory(engine).begin() as session:
+        assert verify_password("existing-password", session.get(User, 7).password_hash)
+        session.add(User(phone="+919000000007", password_hash="test", display_name="New"))
+    with engine.connect() as conn:
+        assert conn.exec_driver_sql("SELECT user_id FROM related").scalar() == 7
+        assert conn.exec_driver_sql("SELECT COUNT(*) FROM users WHERE email IS NULL").scalar() == 1
+        assert conn.exec_driver_sql("PRAGMA foreign_keys").scalar() == 1
+        assert conn.exec_driver_sql("PRAGMA foreign_key_check").first() is None
+        assert {r[1] for r in conn.exec_driver_sql("PRAGMA index_list(users)")} >= {"ix_users_email", "ix_users_phone"}
+    engine.dispose()

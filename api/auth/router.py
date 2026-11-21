@@ -8,7 +8,6 @@ answers you already gave.
 
 from __future__ import annotations
 
-import json
 import logging
 import math
 import re
@@ -18,7 +17,9 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from api.auth.models import User
+from api.auth.models import User, VerifiedPhone
+from api.auth.phone import consume_code
+from api.voice.bland import allowed_numbers
 from api.auth.security import (
     AuthConfigError,
     create_token,
@@ -52,6 +53,7 @@ class RegisterBody(BaseModel):
     password: str = Field(max_length=MAX_PASSWORD_LENGTH)
     display_name: str | None = Field(default=None, max_length=120)
     locale: str | None = Field(default=None, max_length=16)
+    verification_code: str | None = Field(default=None, max_length=32)
 
 
 class LoginBody(BaseModel):
@@ -83,10 +85,11 @@ def get_sessions():
 
 
 def _public(user: User) -> dict:
+    from api.onboarding.service import saved_profile
     return {
         "id": user.id, "email": user.email, "phone": user.phone,
         "display_name": user.display_name, "locale": user.locale,
-        "profile": json.loads(user.profile_json or "{}"),
+        "profile": saved_profile(user.profile_json),
     }
 
 
@@ -182,6 +185,10 @@ def register(body: RegisterBody, sessions=Depends(get_sessions)) -> dict:
             # enumerate who has an account.
             raise HTTPException(409, _DUPLICATE_PHONE if phone else _DUPLICATE)
 
+        verify_phone = phone is not None and phone in allowed_numbers()
+        if verify_phone:
+            consume_code(session, phone, body.verification_code)
+
         user = User(
             email=email,
             phone=phone,
@@ -192,6 +199,8 @@ def register(body: RegisterBody, sessions=Depends(get_sessions)) -> dict:
         try:
             session.add(user)
             session.flush()  # assigns the id without committing
+            if verify_phone:
+                session.add(VerifiedPhone(user_id=user.id, phone=phone))
             token = create_token(user.id, user.email)
             session.commit()
         except IntegrityError as exc:

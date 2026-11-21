@@ -353,7 +353,19 @@ def read_answer(text: str, field: dict) -> Reading:
         return Reading(NONE)
     kind = field.get("kind")
     if kind == "number":
-        return read_number(text)
+        reading = read_number(text)
+        if field.get("attribute") == "land_hectares" and reading.status != QUESTION:
+            # Only store a magnitude that is clearly in the requested unit.
+            # A local unit such as bigha cannot be converted without location.
+            words = _tokens(_NUMBER.sub(" ", text.translate(_DIGIT_TABLE)))
+            accepted = (_EN_TENS.keys() | _EN_UNITS.keys() | _HI_NUMBERS.keys()
+                        | _HI_FRACTIONS.keys() | _HI_HUNDRED | _HI_AND_A_HALF
+                        | {"hundred", "hectare", "hectares", "ha", "हेक्टेयर", "हेक्टेअर",
+                           "ਹੈਕਟੇਅਰ", "ஹெக்டேர்", "i", "own", "have", "of", "land",
+                           "मेरे", "पास", "है", "हैं", "जमीन", "ज़मीन"})
+            if any(word not in accepted for word in words) or reading.status == NONE:
+                return Reading(AMBIGUOUS)
+        return reading
     reading = read_yes_no(text)
     if reading.status != VALUE:
         return reading

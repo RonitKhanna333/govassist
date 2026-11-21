@@ -21,7 +21,6 @@ can't be probed.
 from __future__ import annotations
 
 import hashlib
-import json
 import secrets
 from datetime import datetime, timedelta, timezone
 
@@ -31,6 +30,7 @@ from sqlalchemy import delete, select
 
 from api.auth.models import User
 from api.auth.router import current_user, get_sessions
+from api.onboarding.service import merge_profile
 from api.family import derive
 from api.family.models import (
     PREDICATES,
@@ -247,7 +247,7 @@ def add_member(body: MemberBody, user: User = Depends(current_user),
         if count >= MAX_MEMBERS:
             raise HTTPException(422, "this household is full")
         member = Member(household_id=me.household_id, name=body.name,
-                        birth_year=body.birth_year, profile_json=json.dumps(profile),
+                        birth_year=body.birth_year, profile_json=merge_profile(None, profile),
                         added_by=user.id)
         session.add(member)
         session.flush()

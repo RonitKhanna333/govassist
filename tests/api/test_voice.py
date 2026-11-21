@@ -32,7 +32,8 @@ def client():
 def _post_call(client, **over):
     body = {"scheme": "pmsby", "locale": "hi", "phone": MY_NUMBER, "consent": True}
     body.update(over)
-    return client.post("/voice/call", json=body)
+    with patch.dict("os.environ", {"VOICE_OPERATOR_TOKEN": "test-operator"}):
+        return client.post("/voice/call", json=body, headers={"x-operator-token": "test-operator"})
 
 
 def _webhook(client, heard, scheme="pmsby", locale="hi", phone=MY_NUMBER):
@@ -550,15 +551,13 @@ def test_a_tool_pointing_at_an_old_url_is_not_reused(client):
     assert fake.calls()[0][2]["tools"] == ["TL-new"]
 
 
-def test_without_a_secret_the_call_carries_no_tool(client):
-    import os
-    os.environ.pop("VOICE_WEBHOOK_SECRET", None)
-    env = {k: v for k, v in CALL_ENV.items() if k != "VOICE_WEBHOOK_SECRET"}
-    fake = FakeBland()
-    body = _place(client, fake, env).json()
-    assert body["answers_questions"] is False
-    assert "tools" not in fake.calls()[0][2]
-    assert not [r for r in fake.requests if r[1].endswith("/tools")]
+def test_operator_call_requires_server_secret(client, monkeypatch):
+    monkeypatch.delenv("VOICE_OPERATOR_TOKEN", raising=False)
+    body = {"scheme": "pmsby", "phone": MY_NUMBER, "consent": True}
+    assert client.post("/voice/call", json=body).status_code == 503
+    monkeypatch.setenv("VOICE_OPERATOR_TOKEN", "test-operator")
+    assert client.post("/voice/call", json=body).status_code == 401
+    assert _post_call(client, consent="false").status_code == 422
 
 
 def test_a_refused_number_never_creates_a_tool_or_a_call(client):

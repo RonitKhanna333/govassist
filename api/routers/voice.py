@@ -34,7 +34,7 @@ import os
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from api.agents import conversation
-from api.agents.llm import LLMProvider
+from api.agents.llm import LLMError, LLMProvider
 from api.agents.phrases import phrase
 from api.deps import get_language, get_llm
 from api.language.providers.base import LanguageError
@@ -42,8 +42,9 @@ from api.language.registry import get as get_locale
 from api.language.service import LanguageService
 from api.routers.chat import SCHEME_NAMES  # noqa: F401 -- re-exported for script.py
 from api.rules.engine import SCHEME_SLUG, Citation, decide, load_clauses, load_rules
-from api.rules.forms import OTHER, derive_fields
-from api.rules.spoken import parse_number, parse_yes_no
+from api.rules.forms import derive_fields
+from api.rules.values import specs_for
+from api.rate_limit import enforce, auth_rate_limiter, voice_destination_limiter, too_many
 from api.voice import bland, extract, script
 from api.voice.sms import send_sms
 from parse_scheme import repo_root
@@ -254,14 +255,19 @@ def call_script(scheme: str = "pmfme", locale: str = "hi") -> dict:
         raise HTTPException(422, str(exc)) from exc
 
 
-@router.post("/call")
-def place_call(body: dict) -> dict:
+@router.post("/call", dependencies=[Depends(enforce(auth_rate_limiter))])
+def place_call(body: dict, request: Request) -> dict:
     scheme = str(body.get("scheme") or "pmfme")
     locale = get_locale(body.get("locale") or "hi").code
     phone = str(body.get("phone") or "")
     _check_scheme(scheme)
 
-    if not body.get("consent"):
+    operator_token = os.environ.get("VOICE_OPERATOR_TOKEN")
+    if not operator_token:
+        raise HTTPException(503, "Operator calling is not configured.")
+    if not hmac.compare_digest(request.headers.get("x-operator-token", "").encode(), operator_token.encode()):
+        raise HTTPException(401, "Operator authorisation required.")
+    if body.get("consent") is not True:
         raise HTTPException(
             422,
             "consent must be true: only call someone who has agreed to be "
@@ -274,6 +280,9 @@ def place_call(body: dict) -> dict:
     # the call can answer questions without a model inventing facts.
     webhook, ask_url = _callback_urls()
 
+    limit = voice_destination_limiter.check(phone.strip().replace(" ", ""))
+    if not limit.allowed:
+        raise too_many(limit.retry_after)
     try:
         call_id = bland.start_call(
             phone=phone,
@@ -464,35 +473,8 @@ def read_answers(scheme: str, heard: dict) -> tuple[dict, list[str]]:
         for field in derive_fields(condition["expr"]):
             fields.setdefault(field.attribute, field)
 
-    profile: dict = {}
-    unparsed: list[str] = []
-
-    for attribute, raw in heard.items():
-        field = fields.get(attribute)
-        if field is None or raw is None:
-            continue
-        text = str(raw).strip()
-        if not text:
-            continue
-
-        if field.kind == "number":
-            number = raw if isinstance(raw, (int, float)) and not isinstance(raw, bool) \
-                else parse_number(text)
-            if number is None:
-                unparsed.append(attribute)
-            else:
-                profile[attribute] = number
-            continue
-
-        said_yes = raw if isinstance(raw, bool) else parse_yes_no(text)
-        if said_yes is None:
-            unparsed.append(attribute)
-        elif field.kind == "choice":
-            profile[attribute] = field.satisfied_by if said_yes else OTHER
-        else:
-            profile[attribute] = said_yes
-
-    return profile, unparsed
+    from api.onboarding.service import parse_fields
+    return parse_fields(heard, fields, specs_for(rules))
 
 
 def result_message(scheme: str, locale: str, verdict: str,
@@ -541,10 +523,14 @@ def _interview_webhook(body: dict, metadata: dict, llm: LLMProvider) -> dict:
     heard: dict = {}
     values: dict = {}
     unparsed: list[str] = []
+    deferred = False
     if answered:
         questions = {a: f.ask for a, f in service.fields(locale).items()}
-        heard = extract.find_answers(llm, questions, body.get("transcripts"),
-                                     body.get("concatenated_transcript"))
+        try:
+            heard = extract.find_answers(llm, questions, body.get("transcripts"),
+                                         body.get("concatenated_transcript"), retry_on_failure=True)
+        except LLMError:
+            deferred = True
         values, unparsed = service.read_answers(heard)
 
     sessions = get_sessions()
@@ -564,17 +550,31 @@ def _interview_webhook(body: dict, metadata: dict, llm: LLMProvider) -> dict:
         if record.completed_at is not None:
             # Provider retries must never overwrite a more recent web answer.
             return {"kind": "interview", "duplicate": True}
+        from api.auth.phone import is_verified
+        user = session.scalar(select(User).where(User.id == record.user_id).with_for_update())
+        if user is None or not is_verified(session, user.id, user.phone):
+            raise HTTPException(403, "Verify the callback phone first.")
+        if deferred:
+            record.status = "processing"
+            record.transcript_json = json.dumps(service.transcript_lines(body.get("transcripts")),
+                                                ensure_ascii=False)
+            session.commit()
+            return {"kind": "interview", "status": "processing"}
+
+        if record.status == "processing":
+            # A later dashboard refresh must preserve answers entered while
+            # transcript extraction was waiting for its provider.
+            current = service.saved_profile(user.profile_json)
+            values = {key: value for key, value in values.items() if key not in current}
         service.complete_record(record, "completed" if answered else "not_answered",
                                 body.get("transcripts"), heard, values)
-        if values and record.user_id:
-            user = session.scalar(select(User).where(User.id == record.user_id).with_for_update())
-            if user is not None:
-                user.profile_json = service.merge_profile(user.profile_json, values)
+        if values:
+            user.profile_json = service.merge_profile(user.profile_json, values)
         session.commit()
         profile = {}
         if record.user_id:
             user = session.get(User, record.user_id)
-            profile = json.loads(user.profile_json or "{}") if user else {}
+            profile = service.saved_profile(user.profile_json) if user else {}
 
     log.info("interview call %s: answered=%s recorded=%s unparsed=%s",
              call_id, answered, sorted(values), unparsed)

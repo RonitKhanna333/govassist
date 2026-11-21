@@ -11,7 +11,7 @@ const COPY = {
     pending: "Human review of this scheme’s rules is still pending. Confirm before applying.", rules: "Official rules", documents: "Documents needed",
     noDocs: "Document requirements are unavailable in the current source material. Check with the scheme authority.", more: "What’s still missing", source: "Official source", edit: "Change", yes: "Yes", noAnswer: "No", other: "Other",
     calls: "Your call history", noCalls: "You haven’t requested a call yet.", heard: "Answers heard on the call", verified: "Saved answer", unverified: "Not verified — left out of your profile", transcript: "Questions and answers from the call", agent: "Assistant", caller: "You", noTranscript: "No transcript is available yet.",
-    statuses: { requested: "Requested / in progress", completed: "Completed", not_answered: "Not answered", failed: "Failed" } as Record<string, string>,
+    statuses: { processing: "Processing interview answers", requested: "Requested / in progress", completed: "Completed", not_answered: "Not answered", failed: "Failed" } as Record<string, string>,
   },
   hi: {
     title: "आपका डैशबोर्ड", refresh: "रीफ़्रेश करें", continue: "प्रोफ़ाइल जारी रखें", profile: "आपके सेव किए गए जवाब", emptyProfile: "प्रोफ़ाइल बनाने के लिए सवालों के जवाब दें।",
@@ -20,7 +20,7 @@ const COPY = {
     pending: "इस योजना के नियमों की मानवीय समीक्षा अभी बाकी है। आवेदन से पहले पुष्टि करें।", rules: "सरकारी नियम", documents: "ज़रूरी काग़ज़",
     noDocs: "अभी उपलब्ध स्रोत में ज़रूरी काग़ज़ों की जानकारी नहीं है। योजना के कार्यालय से पूछें।", more: "क्या अभी बाकी है", source: "सरकारी स्रोत", edit: "बदलें", yes: "हाँ", noAnswer: "नहीं", other: "अन्य",
     calls: "आपकी कॉल का इतिहास", noCalls: "आपने अभी कोई कॉल नहीं माँगी है।", heard: "कॉल में सुने गए जवाब", verified: "सेव किया गया जवाब", unverified: "पुष्टि नहीं हुई — प्रोफ़ाइल में शामिल नहीं", transcript: "कॉल के सवाल और जवाब", agent: "सहायक", caller: "आप", noTranscript: "अभी बातचीत का रिकॉर्ड उपलब्ध नहीं है।",
-    statuses: { requested: "अनुरोध भेजा / जारी है", completed: "पूरी हुई", not_answered: "जवाब नहीं मिला", failed: "असफल" } as Record<string, string>,
+    statuses: { processing: "कॉल के जवाब तैयार हो रहे हैं", requested: "अनुरोध भेजा / जारी है", completed: "पूरी हुई", not_answered: "जवाब नहीं मिला", failed: "असफल" } as Record<string, string>,
   },
 };
 

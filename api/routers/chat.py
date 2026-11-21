@@ -184,10 +184,10 @@ SCHEME_NAMES = {
              "hi": "मुफ़्त गैस कनेक्शन (उज्ज्वला)",
              "pa": "ਮੁਫ਼ਤ ਗੈਸ ਕੁਨੈਕਸ਼ਨ (ਉੱਜਵਲਾ)",
              "ta": "இலவச எரிவாயு இணைப்பு (உஜ்வலா)"},
-    "pmfme": {"en": "Food processing business support (PMFME)",
-              "hi": "खाद्य प्रसंस्करण उद्यम सहायता (PMFME)",
-              "pa": "ਖ਼ੁਰਾਕ ਪ੍ਰੋਸੈਸਿੰਗ ਕਾਰੋਬਾਰ ਸਹਾਇਤਾ (PMFME)",
-              "ta": "உணவு பதப்படுத்தும் தொழில் உதவி (PMFME)"},
+    "pmfme": {"en": "Food processing support for individual units (PMFME)",
+              "hi": "व्यक्तिगत खाद्य प्रसंस्करण इकाई सहायता (PMFME)",
+              "pa": "ਵਿਅਕਤੀਗਤ ਖ਼ੁਰਾਕ ਪ੍ਰੋਸੈਸਿੰਗ ਇਕਾਈ ਸਹਾਇਤਾ (PMFME)",
+              "ta": "தனிநபர் உணவு பதப்படுத்தும் அலகுக்கான உதவி (PMFME)"},
     "pmsby": {"en": "Accident insurance for Rs. 20 a year (PMSBY)",
               "hi": "₹20 सालाना दुर्घटना बीमा (PMSBY)",
               "pa": "₹20 ਸਾਲਾਨਾ ਹਾਦਸਾ ਬੀਮਾ (PMSBY)",
@@ -514,6 +514,9 @@ def chat(body: ChatRequest,
                 extracted = check_values(
                     specs, nlu.extract_attributes(llm, english, sorted(allowed)),
                 ).values
+                # A model may strip units from a free-form land measurement.
+                # Collect it through the hectare question with its unit checks.
+                extracted.pop("land_hectares", None)
                 extracted = {k: v for k, v in extracted.items() if k not in profile}
                 if extracted:
                     profile = {**profile, **extracted}

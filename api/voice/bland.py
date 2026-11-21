@@ -243,7 +243,8 @@ def ensure_tool(url: str, scheme: str, locale: str) -> str:
     return ensure_tool_definition(tool_definition(url, scheme, locale))
 
 
-ELIGIBILITY_TOOL = "GovAssist eligibility"
+# A new name provisions the revised question schema on existing deployments.
+ELIGIBILITY_TOOL = "GovAssist eligibility v2"
 
 
 def eligibility_tool_definition(url: str, locale: str, questions: dict[str, str]) -> dict:

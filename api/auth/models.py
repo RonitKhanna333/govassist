@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Integer, String, Text
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from api.db import Base
@@ -43,3 +43,19 @@ class User(Base):
     locale: Mapped[str] = mapped_column(String(8), default="en")
     profile_json: Mapped[str] = mapped_column(Text, default="{}")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+
+class PhoneCode(Base):
+    """Short-lived demo invitation delivered to the actual phone holder."""
+    __tablename__ = "phone_codes"
+
+    phone: Mapped[str] = mapped_column(String(20), primary_key=True)
+    digest: Mapped[str] = mapped_column(String(64))
+    expires_at: Mapped[int] = mapped_column(Integer)
+
+
+class VerifiedPhone(Base):
+    __tablename__ = "verified_phones"
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    phone: Mapped[str] = mapped_column(String(20), unique=True)
