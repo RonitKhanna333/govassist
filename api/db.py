@@ -10,6 +10,7 @@ there.
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 
 from sqlalchemy import create_engine
@@ -181,6 +182,10 @@ def _add_missing_columns(engine) -> None:
     if "users" not in inspector.get_table_names():
         return
     columns = {c["name"]: c for c in inspector.get_columns("users")}
+    if engine.dialect.name == "sqlite":
+        if "phone" not in columns or not columns["email"]["nullable"]:
+            _upgrade_sqlite_users(engine)
+        return
     with engine.begin() as conn:
         if "phone" not in columns:
             conn.execute(text("ALTER TABLE users ADD COLUMN phone VARCHAR(20)"))
@@ -189,3 +194,48 @@ def _add_missing_columns(engine) -> None:
         if (engine.dialect.name == "postgresql" and "email" in columns
                 and not columns["email"].get("nullable", True)):
             conn.execute(text("ALTER TABLE users ALTER COLUMN email DROP NOT NULL"))
+
+
+def _upgrade_sqlite_users(engine) -> None:
+    """SQLite's legacy users table needs a transactional rebuild for nullable email."""
+    db = engine.raw_connection()
+    try:
+        foreign_keys = db.execute("PRAGMA foreign_keys").fetchone()[0]
+        legacy_alter = db.execute("PRAGMA legacy_alter_table").fetchone()[0]
+        try:
+            db.execute("PRAGMA foreign_keys=OFF")
+            db.execute("PRAGMA legacy_alter_table=ON")
+            db.execute("BEGIN IMMEDIATE")
+            # Re-inspect after taking the write lock: another startup may have finished.
+            columns = {row[1]: row for row in db.execute("PRAGMA table_info(users)")}
+            if columns["email"][3]:
+                ddl = db.execute("SELECT sql FROM sqlite_schema WHERE type='table' AND name='users'").fetchone()[0]
+                definition = ddl[ddl.index("("):]
+                # Preserve the original table constraints and all columns. Only the
+                # email declaration from the project's SQLite schema changes.
+                definition, count = re.subn(
+                    r'([,(]\s*"?email"?\s+(?:VARCHAR\s*\(\s*320\s*\)|TEXT))\s+NOT\s+NULL\b',
+                    r'\1', definition, flags=re.IGNORECASE)
+                if count != 1:
+                    raise DatabaseConfigError("Unrecognised legacy SQLite email column. Migration rolled back.")
+                objects = list(db.execute("SELECT sql FROM sqlite_schema WHERE tbl_name='users' "
+                                          "AND type IN ('index','trigger') AND sql IS NOT NULL"))
+                db.execute("CREATE TABLE govassist_users_migration " + definition)
+                names = ", ".join('"' + name.replace('"', '""') + '"' for name in columns)
+                db.execute(f"INSERT INTO govassist_users_migration ({names}) SELECT {names} FROM users")
+                db.execute("DROP TABLE users")
+                db.execute("ALTER TABLE govassist_users_migration RENAME TO users")
+                for (sql,) in objects:
+                    db.execute(sql)
+            if "phone" not in columns:
+                db.execute("ALTER TABLE users ADD COLUMN phone VARCHAR(20)")
+                db.execute("CREATE UNIQUE INDEX ix_users_phone ON users(phone)")
+            if db.execute("PRAGMA foreign_key_check").fetchone():
+                raise DatabaseConfigError("SQLite foreign key check failed. Migration rolled back.")
+            db.commit()
+        finally:
+            db.rollback()
+            db.execute(f"PRAGMA legacy_alter_table={legacy_alter}")
+            db.execute(f"PRAGMA foreign_keys={foreign_keys}")
+    finally:
+        db.close()
