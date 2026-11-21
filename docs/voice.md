@@ -61,6 +61,7 @@ against the provider's current docs before the first real call.
 | `BLAND_API_KEY` | Bland AI key. Without it, `/voice/call` returns 503. |
 | `VOICE_ALLOWED_NUMBERS` | Comma-separated E.164 numbers that may be called. **Empty means nobody**, by design. |
 | `VOICE_WEBHOOK_URL` | Public URL of `/voice/webhook`. Without it the call still happens, but no SMS is sent. |
+| `VOICE_OPERATOR_TOKEN` | Private operator credential for the single-scheme call command. The account callback uses its signed-in session and verified phone. |
 | `VOICE_WEBHOOK_SECRET` | Shared token appended to the webhook and ask URLs. Without it the webhook returns 503 and the call can't answer questions. |
 | `VOICE_ASK_URL` | Public URL of `/voice/ask`, if not next to the webhook. |
 | `BLAND_VOICE_HI` | Override the Hindi voice if the default name changes. |
@@ -131,6 +132,7 @@ curl -s "http://localhost:8000/voice/script?scheme=pmsby&locale=hi" | jq -r .tas
 
 ```bash
 curl -s -X POST http://localhost:8000/voice/call \
+  -H "x-operator-token: $VOICE_OPERATOR_TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"scheme":"pmsby","locale":"hi","phone":"+919000000000","consent":true}'
 ```

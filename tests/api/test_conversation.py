@@ -410,10 +410,15 @@ def test_hindi_number_ambiguity_is_not_guessed(text):
     ("nsap", {"household_is_bpl": True, "age": 60}, "ELIGIBLE"),
     ("nsap", {"household_is_bpl": True, "age": 59}, "NOT_ELIGIBLE"),
     ("pmuy", {"is_woman": True, "age": 18, "is_indian_citizen": True,
-              "household_has_lpg_or_png": False,
+              "household_has_lpg_or_png": False, "household_previously_had_gas": False, "resides_in_india": True,
               "will_give_deprivation_declaration": True}, "ELIGIBLE"),
     ("pmuy", {"is_woman": True, "age": 30, "household_has_lpg_or_png": True}, "NOT_ELIGIBLE"),
-    ("pm-svanidhi", {"is_street_vendor": True, "vends_in_town_or_peri_urban": True}, "ELIGIBLE"),
+    ("pm-svanidhi", {"is_street_vendor": True, "vends_in_town_or_peri_urban": True, "local_scheme_coverage_confirmed": True}, "ELIGIBLE"),
+    ("pm-svanidhi", {"is_street_vendor": True, "vends_in_town_or_peri_urban": True}, "INSUFFICIENT_INFO"),
+    ("pmuy", {"is_woman": True, "age": 24, "is_indian_citizen": True,
+              "household_has_lpg_or_png": False, "will_give_deprivation_declaration": True}, "INSUFFICIENT_INFO"),
+    ("pmuy", {"household_previously_had_gas": True}, "NOT_ELIGIBLE"),
+    ("pmuy", {"resides_in_india": False}, "NOT_ELIGIBLE"),
     ("pm-svanidhi", {"is_street_vendor": False}, "NOT_ELIGIBLE"),
 ])
 def test_added_scheme_boundaries(scheme, profile, verdict):

@@ -107,7 +107,9 @@ auth_rate_limiter = InMemoryRateLimiter(
 probe_rate_limiter = InMemoryRateLimiter(
     _env_limit("GOVASSIST_PROBE_RATE_LIMIT", 5))
 
-ALL_LIMITERS = (chat_rate_limiter, transcribe_rate_limiter, speak_rate_limiter,
+voice_destination_limiter = InMemoryRateLimiter(5, window_seconds=600)
+
+ALL_LIMITERS = (voice_destination_limiter, chat_rate_limiter, transcribe_rate_limiter, speak_rate_limiter,
                 auth_rate_limiter, probe_rate_limiter)
 
 

@@ -2,7 +2,7 @@
 scheme: pm-svanidhi
 name_en: PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)
 tier: 1
-version: 1
+version: 2
 effective_from: null
 effective_to: null
 authority: Ministry of Housing and Urban Affairs
@@ -24,6 +24,10 @@ conditions:
   expr: profile.vends_in_town_or_peri_urban == true
   clause: svanidhi-target-beneficiaries
   asks: Is the vendor vending in a city-region (statutory town, census town or peri-urban area)?
+- id: local_scheme_coverage
+  expr: profile.local_scheme_coverage_confirmed == true
+  clause: svanidhi-coverage
+  asks: Is the vending location covered under the local rollout of the scheme?
 decision: ALL(conditions)
 ---
 
@@ -51,7 +55,8 @@ tests:
 type: definition
 source: scheme-guidelines
 page: 3
-tests: []
+tests:
+- local_scheme_coverage_confirmed
 ```
 
 > The scheme extends to all the States/UTs which have notified rules and schemes under Street

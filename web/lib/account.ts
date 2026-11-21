@@ -67,13 +67,13 @@ async function request<T>(path: string, body?: unknown, signal?: AbortSignal): P
   return response.json() as Promise<T>;
 }
 export const account = {
-  register: (display_name: string, phone: string, password: string, locale: AccountLocale) =>
-    request<{ token: string }>("/auth/register", { display_name, phone, password, locale }),
+  register: (display_name: string, phone: string, password: string, locale: AccountLocale, verification_code?: string) =>
+    request<{ token: string }>("/auth/register", { display_name, phone, password, locale, verification_code }),
   login: (phone: string, password: string) => request<{ token: string }>("/auth/login", { phone, password }),
   interview: (locale: AccountLocale, signal?: AbortSignal) => request<InterviewState>(`/account/interview?locale=${locale}`, undefined, signal),
   answer: (answers: Record<string, unknown>, skipped: string[], locale: AccountLocale) =>
     request<InterviewState>("/account/interview", { answers, skipped, locale }),
-  callback: (consent: boolean, locale: AccountLocale, call_language?: CallLanguage) =>
-    request<{ id: number; status: string }>("/account/callback", { consent, locale, call_language }),
+  callback: (consent: boolean, locale: AccountLocale, call_language?: CallLanguage, verification_code?: string) =>
+    request<{ id: number; status: string }>("/account/callback", { consent, locale, call_language, verification_code }),
   dashboard: (locale: AccountLocale, signal?: AbortSignal) => request<Dashboard>(`/account/dashboard?locale=${locale}`, undefined, signal),
 };

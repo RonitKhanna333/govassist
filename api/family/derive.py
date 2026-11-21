@@ -12,7 +12,6 @@ says what this table assumes.
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass, field
 
 from api.family.models import BenefitRecord, Member, Relation
@@ -159,8 +158,5 @@ def visible_profile(member: Member, viewer_user_id: int, user_profiles: dict[int
 
 
 def _load(raw: str | None) -> dict:
-    try:
-        value = json.loads(raw or "{}")
-    except ValueError:
-        return {}
-    return value if isinstance(value, dict) else {}
+    from api.onboarding.service import saved_profile
+    return saved_profile(raw)

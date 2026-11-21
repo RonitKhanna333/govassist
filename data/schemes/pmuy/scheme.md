@@ -2,7 +2,7 @@
 scheme: pmuy
 name_en: Pradhan Mantri Ujjwala Yojana (free LPG connection)
 tier: 1
-version: 1
+version: 2
 effective_from: null
 effective_to: null
 authority: Ministry of Petroleum and Natural Gas
@@ -21,11 +21,11 @@ conditions:
   clause: pmuy-adult-woman
   asks: Is the applicant an adult woman (18 years and above)?
 - id: indian_citizen
-  expr: profile.is_indian_citizen == true
+  expr: profile.is_indian_citizen == true and profile.resides_in_india == true
   clause: pmuy-citizen
   asks: Is the applicant an Indian citizen residing in India?
 - id: no_lpg_in_household
-  expr: profile.household_has_lpg_or_png == false
+  expr: profile.household_has_lpg_or_png == false and profile.household_previously_had_gas == false
   clause: pmuy-no-existing-connection
   asks: Does the applicant or any household member possess an LPG or Piped Natural Gas connection?
 - id: gives_deprivation_declaration
@@ -63,6 +63,7 @@ source: kyc-form
 page: 2
 tests:
 - is_indian_citizen
+- resides_in_india
 uncertain: true
 note: From the PMUY KYC application form (Version 8.0), not the scheme guidelines.
 ```
@@ -81,6 +82,7 @@ source: kyc-form
 page: 2
 tests:
 - household_has_lpg_or_png
+- household_previously_had_gas
 uncertain: true
 note: From the PMUY KYC application form (Version 8.0), not the scheme guidelines.
 ```

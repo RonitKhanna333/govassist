@@ -48,6 +48,8 @@ export function AccountHome() {
   const [interview, setInterview] = useState<InterviewState | null>(null);
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [skipped, setSkipped] = useState<string[]>([]);
+  const [needsCode, setNeedsCode] = useState(false);
+  const [code, setCode] = useState("");
   const [consent, setConsent] = useState(false);
   const [callLanguage, setCallLanguage] = useState<CallLanguage | "">("");
   const [notice, setNotice] = useState(false);
@@ -59,6 +61,7 @@ export function AccountHome() {
     if (err instanceof AccountError && err.status === 401) {
       setToken(null); setDashboard(null); setInterview(null);
     }
+    if (err instanceof AccountError && err.code === "PHONE_VERIFICATION_REQUIRED") setNeedsCode(true);
     setError(err instanceof AccountError && err.code === "CALLBACK_PROVIDER_ACCESS_DENIED"
       ? t.callDenied : err instanceof Error ? err.message : String(err));
   }, [t.callDenied]);
@@ -83,6 +86,11 @@ export function AccountHome() {
     setInterview(await account.answer(values, skipped, locale));
   });
 
+  const clearCode = () => { setCode(""); setNeedsCode(false); };
+  const codeField = needsCode && <label>{locale === "hi" ? "डेमो आयोजक से मिला सत्यापन कोड" : "Verification code from the demo organiser"}
+    <input value={code} onChange={e => setCode(e.target.value)} autoComplete="one-time-code" maxLength={32} disabled={busy} />
+  </label>;
+
   return <main className="presentation-page account-page" lang={locale}>
     <div className="presentation-shell">
       <SiteNav active="account" />
@@ -90,7 +98,7 @@ export function AccountHome() {
         <div><p className="account-eyebrow">GovAssist</p><h1>{t.title}</h1><p className="hero-deck">{t.intro}</p></div>
         <div className="family-actions">
           <label className="account-language">Language / भाषा <select value={locale} disabled={busy} onChange={e => { setLocale(e.target.value as AccountLocale); setSkipped([]); }}><option value="en">English</option><option value="hi">हिन्दी</option></select></label>
-          {token && <button className="btn" disabled={busy} onClick={() => { setToken(null); setInterview(null); setDashboard(null); setView("choose"); setNotice(false); setSkipped([]); setConsent(false); setCallLanguage(""); }}>{t.out}</button>}
+          {token && <button className="btn" disabled={busy} onClick={() => { clearCode(); setToken(null); setInterview(null); setDashboard(null); setView("choose"); setNotice(false); setSkipped([]); setConsent(false); setCallLanguage(""); }}>{t.out}</button>}
         </div>
       </header>
       {error && <div className="note error" role="alert"><p>{error}</p>{token && <button className="btn" disabled={busy} onClick={() => { setError(null); setLoadVersion(v => v + 1); }}>{t.retry}</button>}</div>}
@@ -101,16 +109,17 @@ export function AccountHome() {
           e.preventDefault(); const data = new FormData(e.currentTarget);
           void run(async () => {
             const result = register
-              ? await account.register(String(data.get("name")), String(data.get("phone")), String(data.get("password")), locale)
+              ? await account.register(String(data.get("name")), String(data.get("phone")), String(data.get("password")), locale, code || undefined)
               : await account.login(String(data.get("phone")), String(data.get("password")));
-            setToken(result.token); setView("choose");
+            clearCode(); setToken(result.token); setView("choose");
           });
         }}>
           {register && <label>{t.name}<input name="name" autoComplete="name" required maxLength={120} disabled={busy} /></label>}
           <label>{t.phone}<input name="phone" type="tel" autoComplete="tel" placeholder="98765 43210" required maxLength={20} disabled={busy} /></label>
           <label>{t.password}<input name="password" type="password" autoComplete={register ? "new-password" : "current-password"} required minLength={register ? 10 : 1} maxLength={256} disabled={busy} />{register && <small>{t.passwordHint}</small>}</label>
+          {register && codeField}
           <button className="btn primary" disabled={busy}>{busy ? t.working : register ? t.create : t.login}</button>
-          <button type="button" className="linkish" disabled={busy} onClick={() => { setRegister(!register); setError(null); }}>{register ? t.haveAccount : t.newAccount}</button>
+          <button type="button" className="linkish" disabled={busy} onClick={() => { clearCode(); setRegister(!register); setError(null); }}>{register ? t.haveAccount : t.newAccount}</button>
         </form>
       </section> : <>
         <div className="family-actions account-tabs">
@@ -123,10 +132,11 @@ export function AccountHome() {
               <label className="account-language">{t.callLanguage}<select value={callLanguage} disabled={busy} onChange={e => setCallLanguage(e.target.value as CallLanguage | "")}>
                 <option value="">{t.sameLanguage}</option><option value="en">English</option><option value="hi">हिन्दी</option><option value="hi-Latn">{t.hinglish}</option>
               </select></label>
+              {codeField}
               <label className="family-check"><input type="checkbox" checked={consent} disabled={busy} onChange={e => setConsent(e.target.checked)} />{t.consent}</label>
               <button className="btn primary" disabled={busy || !consent} onClick={() => void run(async () => {
                 setNotice(false);
-                await account.callback(consent, locale, callLanguage || undefined); setNotice(true);
+                await account.callback(consent, locale, callLanguage || undefined, code || undefined); clearCode(); setNotice(true);
               })}>{busy ? t.working : t.call}</button>
             </article>
             <article className="family-card"><h3>{t.self}</h3><p>{t.selfInfo}</p><button className="btn primary" disabled={busy} onClick={() => void run(async () => {

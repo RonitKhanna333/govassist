@@ -76,7 +76,8 @@ def _render(transcripts: list | None, concatenated: str | None) -> tuple[str, li
 
 
 def find_answers(llm: LLMProvider, questions: dict[str, str],
-                 transcripts: list | None, concatenated: str | None) -> dict[str, str]:
+                 transcripts: list | None, concatenated: str | None,
+                 *, retry_on_failure: bool = False) -> dict[str, str]:
     """attribute -> the caller's own line, exactly as transcribed."""
     rendered, turns = _render(transcripts, concatenated)
     if not turns or not questions:
@@ -87,10 +88,14 @@ def find_answers(llm: LLMProvider, questions: dict[str, str],
     try:
         raw = llm.complete(_SYSTEM, user, Tier.FAST)
     except LLMError as exc:
+        if retry_on_failure:
+            raise
         log.warning("extract: model call failed: %s", type(exc).__name__)
         return {}
     parsed = extract_json(raw)
     if not isinstance(parsed, dict):
+        if retry_on_failure:
+            raise LLMError("Invalid extraction response")
         log.warning("extract: model did not return a JSON object")
         return {}
 

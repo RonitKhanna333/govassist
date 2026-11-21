@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 
 from api.auth import router as auth
 from api.auth.models import User
+from api.auth.phone import issue_code
 from api.db import get_engine, get_session_factory, init_db
 from api.deps import get_llm
 from api.main import app
@@ -27,8 +28,11 @@ def setup(monkeypatch):
     # The webhook calls this directly instead of depending on it.
     monkeypatch.setattr(auth, "get_sessions", lambda: sessions)
     with TestClient(app) as client:
+        monkeypatch.setenv("VOICE_ALLOWED_NUMBERS", "+919876543210")
+        with sessions.begin() as session:
+            code = issue_code(session, "+919876543210")
         result = client.post("/auth/register", json={"display_name": "Asha",
-                            "phone": "9876543210", "password": "a-long-password"})
+                            "phone": "9876543210", "password": "a-long-password", "verification_code": code})
         assert result.status_code == 200
         headers = {"Authorization": "Bearer " + result.json()["token"]}
         yield client, headers, sessions
@@ -400,3 +404,78 @@ def test_a_finished_call_never_blocks_the_next_callback(setup, monkeypatch):
     monkeypatch.setattr(bland, "start_call", lambda **kwargs: "c-second")
     assert client.post("/account/callback", headers=headers,
                        json={"consent": True, "call_language": "hi"}).status_code == 200
+
+
+def test_phone_code_binds_only_the_selected_number_and_can_be_used_once(setup, monkeypatch):
+    client, _, sessions = setup
+    phone = "+919876543211"
+    monkeypatch.setenv("VOICE_ALLOWED_NUMBERS", phone)
+    signup = {"display_name": "Demo", "phone": phone, "password": "long-test-password"}
+    assert client.post("/auth/register", json=signup).status_code == 403
+    with sessions.begin() as session:
+        code = issue_code(session, phone)
+    assert client.post("/auth/register", json={**signup, "verification_code": "wrong"}).status_code == 403
+    result = client.post("/auth/register", json={**signup, "verification_code": code})
+    assert result.status_code == 200
+    from api.auth.models import PhoneCode
+    from api.auth.phone import is_verified
+    with sessions() as session:
+        assert session.get(PhoneCode, phone) is None
+        assert is_verified(session, result.json()["user"]["id"], phone)
+
+
+def test_existing_demo_account_verifies_before_first_call(setup, monkeypatch):
+    client, _, sessions = setup
+    phone = "+919876543211"
+    user = client.post("/auth/register", json={"display_name": "Demo", "phone": phone,
+                       "password": "long-test-password"}).json()
+    headers = {"Authorization": "Bearer " + user["token"]}
+    monkeypatch.setenv("VOICE_ALLOWED_NUMBERS", phone)
+    called = []
+    monkeypatch.setattr(bland, "start_call", lambda **kw: called.append(kw["phone"]) or "test-call")
+    assert client.post("/account/callback", headers=headers, json={"consent": "false"}).status_code == 422
+    assert client.post("/account/callback", headers=headers, json={"consent": True}).status_code == 403
+    assert called == []
+    with sessions.begin() as session:
+        code = issue_code(session, phone)
+    result = client.post("/account/callback", headers=headers, json={"consent": True, "verification_code": code})
+    assert result.status_code == 200
+    assert called == [phone]
+
+
+def test_call_units_and_numeric_domains_are_consistent():
+    from api.routers.voice import read_answers
+    for parse in (service.read_answers, lambda heard: read_answers("pm-kmy", heard)):
+        assert parse({"land_hectares": "4 acres"}) == ({}, ["land_hectares"])
+        assert parse({"land_hectares": "4 bigha"}) == ({}, ["land_hectares"])
+        assert parse({"land_hectares": "2 hectares"}) == ({"land_hectares": 2}, [])
+    assert read_answers("pmfme", {"worker_count": -1}) == ({}, ["worker_count"])
+
+
+def test_old_question_wording_requires_reconfirmation():
+    raw = json.dumps({"age": 30, "passed_class_8": True, "identified_in_slup_or_verified": False})
+    assert service.saved_profile(raw) == {"age": 30}
+    updated = service.merge_profile(raw, {"identified_in_slup_or_verified": True})
+    assert service.saved_profile(updated) == {"age": 30, "identified_in_slup_or_verified": True}
+
+
+def test_transient_extraction_failure_retries_without_overwriting_manual_answer(setup, monkeypatch):
+    from api.agents.llm import LLMError
+    client, headers, _ = setup
+    monkeypatch.setattr(bland, "start_call", lambda **kwargs: "test-retry-extract")
+    record = client.post("/account/callback", headers=headers, json={"consent": True}).json()
+    monkeypatch.setattr(bland, "get_call", lambda call_id: _finished_call(call_id, record["id"]))
+
+    class Unavailable:
+        def complete(self, *args):
+            raise LLMError("temporary outage")
+
+    app.dependency_overrides[get_llm] = lambda: Unavailable()
+    first = client.get("/account/dashboard", headers=headers).json()
+    assert first["calls"][0]["status"] == "processing"
+    assert first["calls"][0]["transcript"]
+    client.post("/account/interview", headers=headers, json={"answers": {"age": 41}})
+    app.dependency_overrides[get_llm] = lambda: PointingLLM()
+    second = client.get("/account/dashboard", headers=headers).json()
+    assert second["calls"][0]["status"] == "completed"
+    assert second["profile"]["age"] == 41

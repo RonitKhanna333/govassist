@@ -11,7 +11,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 
-from api.auth.models import User
+from api.auth.models import User, VerifiedPhone
+from api.auth.phone import consume_code, is_verified
 from api.agents.llm import LLMProvider
 from api.auth.router import current_user, get_sessions
 from api.deps import get_llm
@@ -37,7 +38,8 @@ class InterviewBody(BaseModel):
 
 
 class CallbackBody(BaseModel):
-    consent: bool
+    consent: bool = Field(strict=True)
+    verification_code: str | None = Field(default=None, max_length=32)
     locale: str = Field(default="en", pattern="^(en|hi)$")
     call_language: Literal["en", "hi", "hi-Latn"] | None = None
 
@@ -63,7 +65,7 @@ def interview_state(profile: dict, locale: str, skipped: list[str] | None = None
 
 @router.get("/interview")
 def get_interview(locale: str = "en", user: User = Depends(current_user)) -> dict:
-    return interview_state(json.loads(user.profile_json or "{}"), locale)
+    return interview_state(service.saved_profile(user.profile_json), locale)
 
 
 @router.post("/interview")
@@ -76,7 +78,7 @@ def answer_interview(body: InterviewBody, user: User = Depends(current_user),
         stored.profile_json = service.merge_profile(stored.profile_json, values)
         stored.locale = body.locale
         session.commit()
-        return interview_state(json.loads(stored.profile_json), body.locale, body.skipped)
+        return interview_state(service.saved_profile(stored.profile_json), body.locale, body.skipped)
 
 
 @router.post("/callback", dependencies=[Depends(enforce(auth_rate_limiter))])
@@ -86,6 +88,13 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
         raise HTTPException(422, "Please agree to receive the callback first.")
     if not user.phone:
         raise HTTPException(422, "A phone account is needed for a callback.")
+    with sessions.begin() as session:
+        session.scalar(select(User).where(User.id == user.id).with_for_update())
+        if not is_verified(session, user.id, user.phone):
+            if user.phone not in bland.allowed_numbers():
+                raise HTTPException(403, "Callbacks are available only for authorised demo numbers.")
+            consume_code(session, user.phone, body.verification_code)
+            session.add(VerifiedPhone(user_id=user.id, phone=user.phone))
     # A call that already ended must not block the next one as "in progress".
     sync_calls(user.id, sessions, llm)
     call_language = body.call_language or body.locale
@@ -155,10 +164,12 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
 @router.get("/dashboard")
 def dashboard(locale: str = "en", user: User = Depends(current_user),
               sessions=Depends(get_sessions), llm: LLMProvider = Depends(get_llm)) -> dict:
-    if sync_calls(user.id, sessions, llm):
+    with sessions() as session:
+        verified = bool(user.phone and is_verified(session, user.id, user.phone))
+    if verified and sync_calls(user.id, sessions, llm):
         with sessions() as session:
             user = session.get(User, user.id)
-    profile = json.loads(user.profile_json or "{}")
+    profile = service.saved_profile(user.profile_json)
     schemes = []
     for slug, result in service.evaluate(profile).items():
         clauses = load_clauses(slug, repo_root())
@@ -172,7 +183,7 @@ def dashboard(locale: str = "en", user: User = Depends(current_user),
                         "documents": documents, "documents_available": bool(documents)})
     with sessions() as session:
         records = session.scalars(select(CallRecord).where(CallRecord.user_id == user.id)
-                                  .order_by(CallRecord.created_at.desc(), CallRecord.id.desc()))
+                                  .order_by(CallRecord.created_at.desc(), CallRecord.id.desc())) if verified else []
         calls = [{"id": r.id, "status": r.status, "locale": r.locale,
                   "created_at": r.created_at, "completed_at": r.completed_at,
                   "transcript": json.loads(r.transcript_json or "[]"),
@@ -214,7 +225,7 @@ def sync_calls(user_id: int, sessions, llm: LLMProvider) -> int:
     with sessions() as session:
         pending = [(r.id, r.call_id) for r in session.scalars(
             select(CallRecord).where(CallRecord.user_id == user_id,
-                                     CallRecord.status == "requested",
+                                     CallRecord.status.in_(("requested", "processing")),
                                      CallRecord.call_id.is_not(None)))]
     done = 0
     for record_id, call_id in pending:

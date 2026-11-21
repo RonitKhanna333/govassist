@@ -31,6 +31,16 @@ rejects unknown attributes, malformed types, fractional ages and values outside
 the existing input domains. These are answer validation checks, not scheme
 eligibility rules.
 
+## Verify a demo phone
+
+Use the same database and `VOICE_ALLOWED_NUMBERS` configuration as the API. On the operator machine run:
+
+```sh
+python -m api.auth.phone +91XXXXXXXXXX
+```
+
+Give the 15-minute, single-use code privately to the person controlling that phone, for example by sending it to the number or checking their phone in person. Enter it in the website when prompted during signup or on the first callback from an existing account. A replacement code invalidates the previous code. Successful verification persists for that account and phone. Other users can use the self-service interview without a code. Use a fresh demo account or have the tester sign into their existing account before the evaluation.
+
 ## Callback setup
 
 The callback card has a separate **Call language** selector: the website's

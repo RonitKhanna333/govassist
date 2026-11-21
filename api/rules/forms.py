@@ -46,8 +46,7 @@ def attribute_registry() -> dict:
     is the right thing for a reviewer checking a rule against its source and
     the wrong thing to put in front of an applicant. A question there reads
     "Has your unit been identified in the SLUP for an ODOP product or
-    verified by the Resource Person?"; the registry asks whether an officer
-    visited and added the business to the district list.
+    verified by the Resource Person?"; the registry presents the same two routes in plain language.
     """
     path = Path(__file__).resolve().parents[2] / "data" / "attributes.json"
     if not path.exists():

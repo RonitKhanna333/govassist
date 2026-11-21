@@ -221,7 +221,7 @@ now is a good time.
 
 _INTERVIEW_END = {
     "hi": """आख़िर में -- नतीजा:
-- सारे सवाल पूरे होने पर (या जो पूछे जा सके, उनके बाद) "GovAssist eligibility" \
+- सारे सवाल पूरे होने पर (या जो पूछे जा सके, उनके बाद) "GovAssist eligibility v2" \
 टूल चलाएँ। उसमें हर सवाल के आगे व्यक्ति ने जो कहा, वो उन्हीं के शब्दों में डालें; \
 जिसका जवाब नहीं मिला उसे ख़ाली छोड़ दें।
 - टूल जो नतीजा लौटाए, वही सहज ढंग से बोलें। अपनी तरफ़ से कोई योजना, रकम या नतीजा \
@@ -231,7 +231,7 @@ _INTERVIEW_END = {
 """,
     "en": """At the end -- the result:
 - When the questions are done (or as many as could be asked), call the
-  "GovAssist eligibility" tool. For each question, put what the person said, in
+  "GovAssist eligibility v2" tool. For each question, put what the person said, in
   their own words; leave out any they didn't answer.
 - Say the result the tool returns, naturally. Never add or remove a scheme, an
   amount or a result. You never decide eligibility yourself -- only the tool does.

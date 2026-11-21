@@ -24,7 +24,7 @@ it("sets the password in the same signup as the name and phone number", async ()
   fireEvent.change(screen.getByLabelText(/Password/), { target: { value: "my-test-password" } });
   fireEvent.click(screen.getByRole("button", { name: "Create account" }));
   await screen.findByText("How would you like to fill your profile?");
-  expect(mocks.register).toHaveBeenCalledWith("Asha", "9000000001", "my-test-password", "en");
+  expect(mocks.register).toHaveBeenCalledWith("Asha", "9000000001", "my-test-password", "en", undefined);
 });
 
 it("requires explicit callback consent and exposes provider failure", async () => {
@@ -35,7 +35,7 @@ it("requires explicit callback consent and exposes provider failure", async () =
   fireEvent.click(screen.getByRole("checkbox")); fireEvent.click(button);
   await screen.findByRole("alert");
   expect(screen.getByText("Calling is not configured")).toBeTruthy();
-  expect(mocks.callback).toHaveBeenCalledWith(true, "en", undefined);
+  expect(mocks.callback).toHaveBeenCalledWith(true, "en", undefined, undefined);
 });
 
 it("selects Hinglish for the call without changing the website language", async () => {
@@ -45,7 +45,7 @@ it("selects Hinglish for the call without changing the website language", async 
   fireEvent.click(screen.getByRole("checkbox"));
   fireEvent.click(screen.getByRole("button", { name: "Call me back" }));
   await screen.findByText(/Your callback was requested/);
-  expect(mocks.callback).toHaveBeenCalledWith(true, "en", "hi-Latn");
+  expect(mocks.callback).toHaveBeenCalledWith(true, "en", "hi-Latn", undefined);
   expect((screen.getByRole("combobox", { name: "Language / भाषा" }) as HTMLSelectElement).value).toBe("en");
 });
 
@@ -118,4 +118,20 @@ it("shows quoted rules, missing document gaps and unverified call answers", asyn
   expect(screen.getByText(/Document requirements are unavailable/)).toBeTruthy();
   expect(screen.getByText(/Not verified/)).toBeTruthy();
   expect(screen.getByText("Your age?")).toBeTruthy();
+});
+
+
+it("retries an existing account callback with the demo phone code", async () => {
+  setToken("signed-in");
+  mocks.callback.mockRejectedValueOnce(new AccountError("Verification required", 403, "PHONE_VERIFICATION_REQUIRED"))
+    .mockResolvedValueOnce({ id: 1, status: "requested" });
+  render(<AccountHome />);
+  fireEvent.click(screen.getByRole("checkbox"));
+  fireEvent.click(screen.getByRole("button", { name: "Call me back" }));
+  const input = await screen.findByLabelText("Verification code from the demo organiser");
+  fireEvent.change(input, { target: { value: "test-code" } });
+  fireEvent.click(screen.getByRole("button", { name: "Call me back" }));
+  await screen.findByText(/Your callback was requested/);
+  expect(mocks.callback).toHaveBeenLastCalledWith(true, "en", undefined, "test-code");
+  expect(screen.queryByLabelText("Verification code from the demo organiser")).toBeNull();
 });
