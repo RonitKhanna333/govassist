@@ -54,10 +54,10 @@
     {
       "id": 3,
       "name": "Shreyas",
-      "role": "Frontend and integration: UI, next-steps list, audit fixes and presentation pages",
-      "bio": "Works on the frontend and integration: the web interface, the next-steps checklist, the audit fixes and the presentation pages.",
+      "role": "Frontend, integration and deployment",
+      "bio": "Builds the web interface and brings the parts of the app together. Deployed this website.",
       "strength": "Frontend engineering, UI/UX and requirements",
-      "learningGoal": "Document extraction, evaluation and system integration",
+      "learningGoal": "Cloud deployment, document extraction and system integration",
       "skills": [
         {
           "name": "Frontend Engineering",
@@ -68,8 +68,8 @@
           "level": 88
         },
         {
-          "name": "System Integration",
-          "level": 78
+          "name": "Integration and Deployment",
+          "level": 80
         }
       ]
     }

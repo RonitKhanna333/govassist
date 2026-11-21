@@ -57,4 +57,4 @@ See [DEPLOYMENT.md](DEPLOYMENT.md). In short: `./aws/deploy.ps1` with a signed-i
 |---|---|
 | Bhavneet | Team lead, backend and cloud |
 | Ronit | Algorithms and rules |
-| Shreyas | Frontend and integration |
+| Shreyas | Frontend, integration and deployment |
