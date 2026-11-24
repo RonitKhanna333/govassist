@@ -31,6 +31,7 @@ import hmac
 import logging
 import os
 
+from api.rate_limit import auth_rate_limiter, enforce
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from api.agents import conversation
@@ -64,20 +65,20 @@ def voice_health() -> dict:
     }
 
 
-@router.get("/firewall-probe")
+@router.get("/firewall-probe", dependencies=[Depends(enforce(auth_rate_limiter))])
 def firewall_probe(request: Request, rounds: int = 2) -> dict:
     """Which call bodies Bland's Cloudflare blocks *from this server*.
 
     Sends candidate POST /v1/calls bodies with a deliberately invalid API
     key: a body the firewall lets through gets Bland's ordinary 401, a
     blocked one gets Cloudflare's HTML. No call can be placed and no credit
-    is used. Secret-gated.
+    is used. Not secret-gated: it returns only pass/blocked per variant and
+    never uses the real key; rate-limited like sign-in.
     """
     import json as json_codec
 
     import requests as http
 
-    _check_webhook_token(request)
     from api.onboarding.router import _task_for
 
     webhook, _ = _callback_urls()
