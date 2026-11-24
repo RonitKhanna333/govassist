@@ -1169,7 +1169,7 @@ a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; 
 
 /* -- family page ---------------------------------------------------------- */
 .family-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0 0.75rem; }
-.family-head h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 0.4rem; }
+.family-head h1 { font-weight: 600; letter-spacing: -0.03em; font-size: clamp(1.6rem, 4.2vw, 2.15rem); margin: 0 0 0.4rem; }
 .lang-pills { display: flex; gap: 0.35rem; }
 .lang-pills .btn.on { background: var(--sunken); border-color: var(--ink); }
 .family-privacy { color: var(--ink-soft); max-width: 62ch; line-height: 1.55; margin: 0 0 1.25rem; }
@@ -1217,7 +1217,7 @@ a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; 
 
 /* Phone-first account, general interview and eligibility dashboard. */
 .account-page .presentation-shell { max-width: 1080px; }
-.account-eyebrow { color: var(--good); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; }
+.account-eyebrow { display: none; } /* the header already carries the brand */
 .account-auth { max-width: 480px; margin: 2rem auto; }
 .account-language { display: flex; flex-direction: column; gap: .25rem; font-size: .8rem; }
 .account-language select { padding: .4rem; font: inherit; background: var(--paper); color: var(--ink); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); }
