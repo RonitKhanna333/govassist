@@ -1,7 +1,6 @@
 "use client";
 
 import { MoreSchemes } from "@/components/MoreSchemes";
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ApiError,
@@ -364,21 +363,15 @@ export function Chat() {
 
   return (
     <div className="shell">
-      <div className="topbar">
-        <Link className="brand" href="/" lang={uiLocale}>
-          <span className="brand-mark" aria-hidden="true">G</span>
-          {t("app.title")}
-        </Link>
-        <SiteNav
-          labels={{
-            presentation: t("nav.presentation"),
-            live: t("nav.live"),
-            evidence: t("nav.evidence"),
-            family: t("nav.family"),
-          }}
-          active="live"
-        />
-      </div>
+      <SiteNav
+        labels={{
+          presentation: t("nav.presentation"),
+          live: t("nav.live"),
+          evidence: t("nav.evidence"),
+          family: t("nav.family"),
+        }}
+        active="live"
+      />
       <header className="masthead">
         <h1 lang={uiLocale}>{t("app.tagline")}</h1>
         <LanguageSwitcher

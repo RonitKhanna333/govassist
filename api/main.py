@@ -27,6 +27,7 @@ from api.family.router import router as family_router
 from api.routers.chat import router as chat_router
 from api.routers.voice import router as voice_router
 from api.onboarding.router import router as onboarding_router
+from api.routers.kb import router as kb_router
 
 DEFAULT_ORIGINS = [
     "http://localhost:3000",
@@ -79,3 +80,4 @@ app.include_router(auth_router)
 app.include_router(voice_router)
 app.include_router(family_router)
 app.include_router(onboarding_router)
+app.include_router(kb_router)

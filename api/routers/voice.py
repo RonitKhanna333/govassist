@@ -374,7 +374,14 @@ def ask(body: dict, request: Request,
         _check_scheme(scheme)
     if not question:
         raise HTTPException(422, "question is required")
+    reply = answer_from_clauses(question, locale, scheme, llm, language)
+    reply["clauses"] = [c["clause_id"] for c in reply.pop("citations")]
+    return reply
 
+
+def answer_from_clauses(question: str, locale: str, scheme: str,
+                        llm: LLMProvider, language: LanguageService) -> dict:
+    """Grounded answer from one scheme's clauses, or all schemes' ("all")."""
     english = question
     if locale != "en":
         try:
@@ -396,9 +403,9 @@ def ask(body: dict, request: Request,
     reply = conversation.answer_question(llm, english, clauses)
 
     if reply.busy:
-        return {"answer": phrase("busy", locale), "grounded": False}
+        return {"answer": phrase("busy", locale), "grounded": False, "citations": []}
     if not reply.text:
-        return {"answer": phrase("unknown", locale), "grounded": False}
+        return {"answer": phrase("unknown", locale), "grounded": False, "citations": []}
 
     spoken = reply.text
     if locale != "en":
@@ -409,7 +416,7 @@ def ask(body: dict, request: Request,
     return {
         "answer": spoken,
         "grounded": True,
-        "clauses": [c.clause_id for c in reply.citations],
+        "citations": [c.__dict__ for c in reply.citations],
     }
 
 
