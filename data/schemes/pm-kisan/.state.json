@@ -4,9 +4,21 @@
   "created_at": "2026-08-05T19:51:56+00:00",
   "gates": {
     "0_source": {
-      "at": "2026-08-05T19:53:56+00:00",
+      "at": "2026-11-24T18:41:41+00:00",
       "by": "thorb",
-      "note": "C:\\Users\\thorb\\Desktop\\govassist\\data\\schemes\\pm-kisan\\source\\clarification-on-ogs-of-pmkisan.pdf",
+      "note": "C:\\Users\\thorb\\Downloads\\RevisedPM-KISANOperationalGuidelines(English).pdf",
+      "status": "approved"
+    },
+    "1_identity": {
+      "at": "2026-11-24T18:41:43+00:00",
+      "by": "thorb",
+      "note": "operational-guidelines.pdf sha256:ae82cac83f61a5fa5049387a7c13e00c6d55cef0e9163deb5497dc86c86d697f",
+      "status": "approved"
+    },
+    "2_extraction": {
+      "at": "2026-11-24T18:41:45+00:00",
+      "by": "thorb",
+      "note": "12 pages, 30380 chars",
       "status": "approved"
     }
   },

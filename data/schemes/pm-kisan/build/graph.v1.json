@@ -1,0 +1,496 @@
+{
+  "edges": [
+    {
+      "from": "clause:pmkisan-benefit",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkisan-documents",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-constitutional",
+      "predicate": "BEARS_ON",
+      "to": "attribute:holds_or_held_public_office"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-constitutional",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-government-employees",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_government_employee"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-government-employees",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-group-d-exception",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_government_employee"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-group-d-exception",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-income-tax",
+      "predicate": "BEARS_ON",
+      "to": "attribute:paid_income_tax_last_year"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-income-tax",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-institutional",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_institutional_landholder"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-institutional",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-ministers",
+      "predicate": "BEARS_ON",
+      "to": "attribute:holds_or_held_public_office"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-ministers",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-professionals",
+      "predicate": "BEARS_ON",
+      "to": "attribute:is_practising_professional"
+    },
+    {
+      "from": "clause:pmkisan-exclusion-professionals",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkisan-farmer-family",
+      "predicate": "BEARS_ON",
+      "to": "attribute:owns_cultivable_land"
+    },
+    {
+      "from": "clause:pmkisan-farmer-family",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "clause:pmkisan-scheme",
+      "predicate": "BEARS_ON",
+      "to": "attribute:owns_cultivable_land"
+    },
+    {
+      "from": "clause:pmkisan-scheme",
+      "predicate": "FROM",
+      "to": "source:operational-guidelines"
+    },
+    {
+      "from": "condition:landholding_farmer_family",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkisan-farmer-family"
+    },
+    {
+      "from": "condition:landholding_farmer_family",
+      "predicate": "TESTS",
+      "to": "attribute:owns_cultivable_land"
+    },
+    {
+      "from": "condition:not_constitutional_post",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkisan-exclusion-constitutional"
+    },
+    {
+      "from": "condition:not_constitutional_post",
+      "predicate": "TESTS",
+      "to": "attribute:holds_or_held_public_office"
+    },
+    {
+      "from": "condition:not_elected_office",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkisan-exclusion-ministers"
+    },
+    {
+      "from": "condition:not_elected_office",
+      "predicate": "TESTS",
+      "to": "attribute:holds_or_held_public_office"
+    },
+    {
+      "from": "condition:not_government_employee",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkisan-exclusion-government-employees"
+    },
+    {
+      "from": "condition:not_government_employee",
+      "predicate": "TESTS",
+      "to": "attribute:is_government_employee"
+    },
+    {
+      "from": "condition:not_income_tax_payer",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkisan-exclusion-income-tax"
+    },
+    {
+      "from": "condition:not_income_tax_payer",
+      "predicate": "TESTS",
+      "to": "attribute:paid_income_tax_last_year"
+    },
+    {
+      "from": "condition:not_institutional_land",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkisan-exclusion-institutional"
+    },
+    {
+      "from": "condition:not_institutional_land",
+      "predicate": "TESTS",
+      "to": "attribute:is_institutional_landholder"
+    },
+    {
+      "from": "condition:not_practising_professional",
+      "predicate": "GROUNDED_IN",
+      "to": "clause:pmkisan-exclusion-professionals"
+    },
+    {
+      "from": "condition:not_practising_professional",
+      "predicate": "TESTS",
+      "to": "attribute:is_practising_professional"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmkisan-exclusion-constitutional"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmkisan-exclusion-government-employees"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmkisan-exclusion-income-tax"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmkisan-exclusion-institutional"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmkisan-exclusion-ministers"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "EXCLUDES",
+      "to": "clause:pmkisan-exclusion-professionals"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-benefit"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-documents"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-exclusion-constitutional"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-exclusion-government-employees"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-exclusion-group-d-exception"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-exclusion-income-tax"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-exclusion-institutional"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-exclusion-ministers"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-exclusion-professionals"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-farmer-family"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "HAS_CLAUSE",
+      "to": "clause:pmkisan-scheme"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "PROVIDES",
+      "to": "clause:pmkisan-benefit"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "REQUIRES",
+      "to": "condition:landholding_farmer_family"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "REQUIRES",
+      "to": "condition:not_constitutional_post"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "REQUIRES",
+      "to": "condition:not_elected_office"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "REQUIRES",
+      "to": "condition:not_government_employee"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "REQUIRES",
+      "to": "condition:not_income_tax_payer"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "REQUIRES",
+      "to": "condition:not_institutional_land"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "REQUIRES",
+      "to": "condition:not_practising_professional"
+    },
+    {
+      "from": "scheme:pm-kisan",
+      "predicate": "REQUIRES_DOCUMENT",
+      "to": "clause:pmkisan-documents"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "attribute:holds_or_held_public_office",
+      "name": "holds_or_held_public_office",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_government_employee",
+      "name": "is_government_employee",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_institutional_landholder",
+      "name": "is_institutional_landholder",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:is_practising_professional",
+      "name": "is_practising_professional",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:owns_cultivable_land",
+      "name": "owns_cultivable_land",
+      "type": "Attribute"
+    },
+    {
+      "id": "attribute:paid_income_tax_last_year",
+      "name": "paid_income_tax_last_year",
+      "type": "Attribute"
+    },
+    {
+      "clause_type": "benefit",
+      "id": "clause:pmkisan-benefit",
+      "page": 10,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "document",
+      "id": "clause:pmkisan-documents",
+      "page": 8,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmkisan-exclusion-constitutional",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmkisan-exclusion-government-employees",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "definition",
+      "id": "clause:pmkisan-exclusion-group-d-exception",
+      "page": 3,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmkisan-exclusion-income-tax",
+      "page": 3,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmkisan-exclusion-institutional",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmkisan-exclusion-ministers",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "exclusion",
+      "id": "clause:pmkisan-exclusion-professionals",
+      "page": 3,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "definition",
+      "id": "clause:pmkisan-farmer-family",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "clause_type": "eligibility",
+      "id": "clause:pmkisan-scheme",
+      "page": 2,
+      "tier": 1,
+      "type": "Clause",
+      "uncertain": false,
+      "version": 1
+    },
+    {
+      "asks": "Does your family own cultivable land as per the land records?",
+      "expr": "profile.owns_cultivable_land == true",
+      "id": "condition:landholding_farmer_family",
+      "type": "Condition"
+    },
+    {
+      "asks": "Does anyone in your family hold, or did they ever hold, a constitutional post, or serve as a Minister, MP, MLA, Mayor or District Panchayat Chairperson?",
+      "expr": "profile.holds_or_held_public_office == false",
+      "id": "condition:not_constitutional_post",
+      "type": "Condition"
+    },
+    {
+      "asks": "Does anyone in your family hold, or did they ever hold, a constitutional post, or serve as a Minister, MP, MLA, Mayor or District Panchayat Chairperson?",
+      "expr": "profile.holds_or_held_public_office == false",
+      "id": "condition:not_elected_office",
+      "type": "Condition"
+    },
+    {
+      "asks": "Is anyone in your family a serving or retired Central/State Government, PSE or Local Body employee (other than Multi Tasking Staff / Class IV / Group D)?",
+      "expr": "profile.is_government_employee == false",
+      "id": "condition:not_government_employee",
+      "type": "Condition"
+    },
+    {
+      "asks": "Did anyone in your family pay Income Tax in the last assessment year?",
+      "expr": "profile.paid_income_tax_last_year == false",
+      "id": "condition:not_income_tax_payer",
+      "type": "Condition"
+    },
+    {
+      "asks": "Is the land held by an institution rather than a person?",
+      "expr": "profile.is_institutional_landholder == false",
+      "id": "condition:not_institutional_land",
+      "type": "Condition"
+    },
+    {
+      "asks": "Is anyone in your family a registered, practising Doctor, Engineer, Lawyer, Chartered Accountant or Architect?",
+      "expr": "profile.is_practising_professional == false",
+      "id": "condition:not_practising_professional",
+      "type": "Condition"
+    },
+    {
+      "authority": "Department of Agriculture, Cooperation & Farmers’ Welfare (DAC&FW)",
+      "effective_from": null,
+      "effective_to": null,
+      "id": "scheme:pm-kisan",
+      "name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+      "tier": 1,
+      "type": "Scheme",
+      "version": 1
+    },
+    {
+      "checksum": "sha256:ae82cac83f61a5fa5049387a7c13e00c6d55cef0e9163deb5497dc86c86d697f",
+      "id": "source:operational-guidelines",
+      "retrieved_at": "2026-11-25",
+      "type": "SourceDocument",
+      "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+    }
+  ],
+  "scheme": "pm-kisan",
+  "version": 1
+}

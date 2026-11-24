@@ -296,13 +296,13 @@ def test_the_call_interview_is_short_by_default(monkeypatch):
     monkeypatch.delenv("INTERVIEW_LENGTH", raising=False)
     short = interview.screening_order()
     assert short[0] == "age"
-    assert len(short) <= 8
+    assert len(short) <= 9
     for scheme in interview.schemes():
         # every scheme can still be settled from the short call
         assert set(short) & {a for a in interview.order() if scheme in
                              interview._catalogue()[0][a].schemes}
     task = script.build_interview_task("hi", "Asha")
-    assert "9. " not in task                        # at most 8 questions
+    assert "10. " not in task                       # at most 9 questions
     assert "बस एक मिनट" in task
     monkeypatch.setenv("INTERVIEW_LENGTH", "full")
     assert "31. " in script.build_interview_task("hi", "Asha")

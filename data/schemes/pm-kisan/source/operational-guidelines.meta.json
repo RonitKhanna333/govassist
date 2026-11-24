@@ -1,0 +1,11 @@
+{
+  "id": "operational-guidelines",
+  "url": "",
+  "local_file": "C:\\Users\\thorb\\Downloads\\RevisedPM-KISANOperationalGuidelines(English).pdf",
+  "retrieved_at": "2026-11-25",
+  "checksum": "sha256:ae82cac83f61a5fa5049387a7c13e00c6d55cef0e9163deb5497dc86c86d697f",
+  "extractor": "pdfminer.six",
+  "pages": 12,
+  "characters": 30369,
+  "hand_corrected": false
+}

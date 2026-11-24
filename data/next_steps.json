@@ -135,5 +135,16 @@
     "good_to_know": [
       "pmuy-no-existing-connection"
     ]
+  },
+  "pm-kisan": {
+    "benefits": [
+      "pmkisan-benefit"
+    ],
+    "documents": [
+      "pmkisan-documents"
+    ],
+    "apply": [],
+    "after": [],
+    "good_to_know": []
   }
 }

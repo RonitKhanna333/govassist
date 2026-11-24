@@ -1,0 +1,85 @@
+{
+  "authority": "Department of Agriculture, Cooperation & Farmers’ Welfare (DAC&FW)",
+  "conditions": [
+    {
+      "asks": "Does your family own cultivable land as per the land records?",
+      "clause": "pmkisan-farmer-family",
+      "expr": "profile.owns_cultivable_land == true",
+      "id": "landholding_farmer_family",
+      "reads": [
+        "owns_cultivable_land"
+      ]
+    },
+    {
+      "asks": "Is the land held by an institution rather than a person?",
+      "clause": "pmkisan-exclusion-institutional",
+      "expr": "profile.is_institutional_landholder == false",
+      "id": "not_institutional_land",
+      "reads": [
+        "is_institutional_landholder"
+      ]
+    },
+    {
+      "asks": "Does anyone in your family hold, or did they ever hold, a constitutional post, or serve as a Minister, MP, MLA, Mayor or District Panchayat Chairperson?",
+      "clause": "pmkisan-exclusion-constitutional",
+      "expr": "profile.holds_or_held_public_office == false",
+      "id": "not_constitutional_post",
+      "reads": [
+        "holds_or_held_public_office"
+      ]
+    },
+    {
+      "asks": "Does anyone in your family hold, or did they ever hold, a constitutional post, or serve as a Minister, MP, MLA, Mayor or District Panchayat Chairperson?",
+      "clause": "pmkisan-exclusion-ministers",
+      "expr": "profile.holds_or_held_public_office == false",
+      "id": "not_elected_office",
+      "reads": [
+        "holds_or_held_public_office"
+      ]
+    },
+    {
+      "asks": "Is anyone in your family a serving or retired Central/State Government, PSE or Local Body employee (other than Multi Tasking Staff / Class IV / Group D)?",
+      "clause": "pmkisan-exclusion-government-employees",
+      "expr": "profile.is_government_employee == false",
+      "id": "not_government_employee",
+      "reads": [
+        "is_government_employee"
+      ]
+    },
+    {
+      "asks": "Did anyone in your family pay Income Tax in the last assessment year?",
+      "clause": "pmkisan-exclusion-income-tax",
+      "expr": "profile.paid_income_tax_last_year == false",
+      "id": "not_income_tax_payer",
+      "reads": [
+        "paid_income_tax_last_year"
+      ]
+    },
+    {
+      "asks": "Is anyone in your family a registered, practising Doctor, Engineer, Lawyer, Chartered Accountant or Architect?",
+      "clause": "pmkisan-exclusion-professionals",
+      "expr": "profile.is_practising_professional == false",
+      "id": "not_practising_professional",
+      "reads": [
+        "is_practising_professional"
+      ]
+    }
+  ],
+  "decision": "ALL(conditions)",
+  "effective_from": null,
+  "effective_to": null,
+  "name_en": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+  "scheme": "pm-kisan",
+  "sources": [
+    {
+      "checksum": "sha256:ae82cac83f61a5fa5049387a7c13e00c6d55cef0e9163deb5497dc86c86d697f",
+      "id": "operational-guidelines",
+      "pdf": "source/operational-guidelines.pdf",
+      "retrieved_at": "2026-11-25",
+      "txt": "source/operational-guidelines.txt",
+      "url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+    }
+  ],
+  "tier": 1,
+  "version": 1
+}
