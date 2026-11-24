@@ -275,6 +275,10 @@ def test_hindi_callback_sends_a_devanagari_script(setup, monkeypatch):
     assert call["webhook"] is None
     assert "आपकी उम्र कितनी है?" in call["task"]
     assert "Aapki umar" not in call["task"]
+    # Small enough for Bland's firewall (the all-Hindi script was ~12 KB).
+    assert len(call["task"].encode("utf-8")) < 6000
+    assert "GovAssist eligibility" in call["task"]
+    assert "never decide eligibility" in call["task"]
 
 
 @pytest.mark.parametrize("locale", ["hi", "hi-Latn"])

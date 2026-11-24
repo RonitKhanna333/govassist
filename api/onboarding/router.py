@@ -177,12 +177,38 @@ def dashboard(locale: str = "en", user: User = Depends(current_user),
             "schemes": schemes, "calls": calls}
 
 
+_HINDI_CALL_RULES = """You are a warm, patient helpline assistant from GovAssist, calling someone in rural India who asked for this call. Speak ONLY simple, natural spoken Hindi (not Hinglish). Sound like a kind person, not a machine: short sentences, "ji", varied acknowledgements ("achha ji", "theek hai", "samajh gaya").
+
+Opening: greet {name}, say you are calling from GovAssist because they asked for a call, it takes about a minute, and ask if now is a good time. If not, thank them and end.
+
+Rules:
+- Ask the questions below one at a time, in order, exactly in their meaning. Wait for each answer. Follow the age and skip notes.
+- Never guess. If you can't hear or understand, say politely the line was unclear and ask again; after the third try, skip that question. Silence is never a reason to end the call.
+- Confirm every number back ("to aapki umar 35 saal hai, sahi?").
+- "Pata nahi" / "maybe" is not yes or no: say "koi baat nahi ji" and move on.
+- Never ask for money, OTP, PIN, passwords, Aadhaar or account numbers. If they start saying such a number, stop them kindly and do not repeat it.
+- If asked, say honestly you are an automated assistant.
+- If they ask about a scheme, use the "GovAssist scheme info all" tool and say its answer; never answer from your own knowledge.
+- At the end, call the "GovAssist eligibility" tool with what they said to each question, in their own words, and read its result in Hindi without adding or changing anything. You never decide eligibility yourself. Then say the details are on their GovAssist dashboard, thank them and end the call.
+
+"""
+
+
 def _task_for(call_language: str, name: str) -> str:
-    """The call script, in the script the agent should speak: Devanagari for
-    Hindi. (It was briefly sent romanized on the belief that Devanagari
-    tripped Bland's firewall; /voice/firewall-probe showed the trigger was
-    the webhook URL, which calls no longer carry -- and a romanized script
-    made the agent sound like broken Hinglish.)"""
+    """The call script.
+
+    Hindi: English instructions plus the questions in Devanagari, so the
+    agent says them in proper Hindi. The all-Hindi script (~4,000
+    Devanagari characters, ~12 KB) is blocked by Bland's firewall from our
+    host on size alone -- every section passes by itself, the whole does
+    not (measured with /voice/firewall-probe?sections=1). English rules are
+    one byte per character, which keeps the request well under that.
+    """
+    if call_language == "hi":
+        full = script.build_interview_task("hi", name)
+        marker = "सवाल, इसी क्रम में।"
+        questions = full[full.index(marker):] if marker in full else full
+        return _HINDI_CALL_RULES.format(name=name or "them") + questions
     return script.build_interview_task(call_language, name)
 
 
