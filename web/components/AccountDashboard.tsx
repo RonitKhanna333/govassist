@@ -9,7 +9,7 @@ const COPY = {
     eligible: "Schemes you appear eligible for", missing: "Schemes needing more answers", no: "Schemes whose rules you do not meet", empty: "No schemes in this group yet.",
     note: "Results come from the rule engine and your saved answers. This is guidance, not a government decision.",
     pending: "Human review of this scheme’s rules is still pending. Confirm before applying.", rules: "Official rules", documents: "Documents needed",
-    noDocs: "Document requirements are unavailable in the current source material. Check with the scheme authority.", more: "What’s still missing", source: "Official source", edit: "Change", yes: "Yes", noAnswer: "No", other: "Other",
+    noDocs: "Document requirements are unavailable in the current source material. Check with the scheme authority.", hintNote: "Quoted from the official document; not yet reviewed. Confirm the full list with the scheme office.", more: "What’s still missing", source: "Official source", edit: "Change", yes: "Yes", noAnswer: "No", other: "Other",
     calls: "Your call history", noCalls: "You haven’t requested a call yet.", heard: "Answers heard on the call", verified: "Saved answer", unverified: "Not verified — left out of your profile", transcript: "Questions and answers from the call", agent: "Assistant", caller: "You", noTranscript: "No transcript is available yet.",
     statuses: { requested: "Requested / in progress", completed: "Completed", not_answered: "Not answered", failed: "Failed" } as Record<string, string>,
   },
@@ -18,7 +18,7 @@ const COPY = {
     eligible: "जिन योजनाओं के लिए आप पात्र लगते हैं", missing: "जिन योजनाओं के लिए और जवाब चाहिए", no: "जिन योजनाओं के नियम पूरे नहीं हुए", empty: "इस समूह में अभी कोई योजना नहीं।",
     note: "नतीजे नियम इंजन और आपके सेव किए गए जवाबों से आते हैं। यह जानकारी है, सरकारी फ़ैसला नहीं।",
     pending: "इस योजना के नियमों की मानवीय समीक्षा अभी बाकी है। आवेदन से पहले पुष्टि करें।", rules: "सरकारी नियम", documents: "ज़रूरी काग़ज़",
-    noDocs: "अभी उपलब्ध स्रोत में ज़रूरी काग़ज़ों की जानकारी नहीं है। योजना के कार्यालय से पूछें।", more: "क्या अभी बाकी है", source: "सरकारी स्रोत", edit: "बदलें", yes: "हाँ", noAnswer: "नहीं", other: "अन्य",
+    noDocs: "अभी उपलब्ध स्रोत में ज़रूरी काग़ज़ों की जानकारी नहीं है। योजना के कार्यालय से पूछें।", hintNote: "सरकारी दस्तावेज़ से लिया गया; समीक्षा अभी बाकी है। पूरी सूची योजना के कार्यालय से पक्की करें।", more: "क्या अभी बाकी है", source: "सरकारी स्रोत", edit: "बदलें", yes: "हाँ", noAnswer: "नहीं", other: "अन्य",
     calls: "आपकी कॉल का इतिहास", noCalls: "आपने अभी कोई कॉल नहीं माँगी है।", heard: "कॉल में सुने गए जवाब", verified: "सेव किया गया जवाब", unverified: "पुष्टि नहीं हुई — प्रोफ़ाइल में शामिल नहीं", transcript: "कॉल के सवाल और जवाब", agent: "सहायक", caller: "आप", noTranscript: "अभी बातचीत का रिकॉर्ड उपलब्ध नहीं है।",
     statuses: { requested: "अनुरोध भेजा / जारी है", completed: "पूरी हुई", not_answered: "जवाब नहीं मिला", failed: "असफल" } as Record<string, string>,
   },
@@ -40,7 +40,10 @@ function SchemeCard({ result, locale }: { result: SchemeResult; locale: AccountL
     {result.missing_questions.length > 0 && <><h4>{t.more}</h4><ul>{result.missing_questions.map(q => <li key={q.attribute}>{q.ask}</li>)}</ul></>}
     <details open={result.verdict === "ELIGIBLE"}><summary>{t.rules}</summary><Evidence items={result.verdict === "NOT_ELIGIBLE" ? result.failed_citations : result.citations} source={t.source} /></details>
     <h4>{t.documents}</h4>
-    {result.documents_available ? <Evidence items={result.documents} source={t.source} /> : <p className="muted-copy">{t.noDocs}</p>}
+    {result.documents_available ? <Evidence items={result.documents} source={t.source} />
+      : result.document_hints?.length ? <><p className="account-review-note">{t.hintNote}</p>
+        <Evidence items={result.document_hints.map((h, i) => ({ clause_id: `hint-${i}`, quote: h.quote, source_url: h.source_url ?? undefined } as Citation))} source={t.source} /></>
+      : <p className="muted-copy">{t.noDocs}</p>}
   </article>;
 }
 

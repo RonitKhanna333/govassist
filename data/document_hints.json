@@ -1,0 +1,23 @@
+{
+  "_comment": "Document lines quoted from each scheme's committed source text, shown on the dashboard as 'not yet reviewed' where no reviewed document clause exists. Not used by the rule engine. Every quote must be an exact substring of source/<source>.txt after collapsing whitespace runs to one space (tests/api/test_document_hints.py).",
+  "pm-kmy": [
+    {"source": "operational-guidelines", "quote": "The Eligible SMFs desirous of joining the scheme shall visit nearest Common Service Centre (CSC) along with his Aadhaar card and bank passbook or account details."}
+  ],
+  "pmjjby": [
+    {"source": "rules", "quote": "Aadhaar is the primary KYC for the bank / Post office account."}
+  ],
+  "pmsby": [
+    {"source": "rules", "quote": "Aadhar would be the primary KYC for the bank/ Post office account."}
+  ],
+  "nsap": [
+    {"source": "programme-guidelines", "quote": "For age, the birth certificate or school certificate may be relied on. In their absence ration card and EPIC may be considered."}
+  ],
+  "pm-svanidhi": [
+    {"source": "scheme-guidelines", "quote": "In statutory towns, the Certificate of Vending (CoV)/Identity Card/Letter of Recommendation (LoR) to the street vendors will be issued by TVC/ ULBs."}
+  ],
+  "pmuy": [
+    {"source": "kyc-form", "quote": "Attach copy of Aadhaar"},
+    {"source": "kyc-form", "quote": "Details of Ration Card/ any other document issued by State Government certifying family composition/ Self Declaration (in case of Migrants) ( attach a copy of ration card/Document issued by State Government/Annexure I (in case of migrants)."},
+    {"source": "kyc-form", "quote": "PARTICULARS OF APPLICANT BANK ACCOUNT (attach copy of passbook/ bank statement/ cancelled cheque having name of account holder,A/C No. and IFSC code printed on it)"}
+  ]
+}

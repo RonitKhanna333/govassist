@@ -19,6 +19,7 @@ export interface SchemeResult {
   missing_questions: AnswerField[];
   documents: Citation[];
   documents_available: boolean;
+  document_hints?: { quote: string; source_url: string | null }[];
 }
 export interface CallRecord {
   id: number;

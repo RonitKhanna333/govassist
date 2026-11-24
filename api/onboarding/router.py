@@ -163,7 +163,8 @@ def dashboard(locale: str = "en", user: User = Depends(current_user),
                         "reviewed": review_assessment(slug).reviewed,
                         "missing_questions": [f.to_dict() for a in (result.missing_attributes if result.verdict.value == "INSUFFICIENT_INFO" else [])
                                               if (f := interview.field_for(a, locale))],
-                        "documents": documents, "documents_available": bool(documents)})
+                        "documents": documents, "documents_available": bool(documents),
+                        "document_hints": [] if documents else _document_hints(slug)})
     with sessions() as session:
         records = session.scalars(select(CallRecord).where(CallRecord.user_id == user.id)
                                   .order_by(CallRecord.created_at.desc(), CallRecord.id.desc()))
@@ -177,7 +178,15 @@ def dashboard(locale: str = "en", user: User = Depends(current_user),
             "schemes": schemes, "calls": calls}
 
 
-_HINDI_CALL_RULES = """You are a warm, patient helpline assistant from GovAssist, calling someone in rural India who asked for this call. Speak ONLY simple, natural spoken Hindi (not Hinglish). Sound like a kind person, not a machine: short sentences, "ji", varied acknowledgements ("achha ji", "theek hai", "samajh gaya").
+def _document_hints(slug: str) -> list[dict]:
+    """Unreviewed document lines quoted from the source (data/document_hints.json)."""
+    path = repo_root() / "data" / "document_hints.json"
+    rows = json.loads(path.read_text(encoding="utf-8")).get(slug, []) if path.exists() else []
+    urls = {s.get("id"): s.get("url") for s in load_rules(slug, repo_root()).get("sources") or []}
+    return [{"quote": r["quote"], "source_url": urls.get(r["source"])} for r in rows]
+
+
+_HINDI_CALL_RULES ="""You are a warm, patient helpline assistant from GovAssist, calling someone in rural India who asked for this call. Speak ONLY simple, natural spoken Hindi (not Hinglish). Sound like a kind person, not a machine: short sentences, "ji", varied acknowledgements ("achha ji", "theek hai", "samajh gaya").
 
 Opening: greet {name}, say you are calling from GovAssist because they asked for a call, it takes about a minute, and ask if now is a good time. If not, thank them and end.
 

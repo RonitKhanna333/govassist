@@ -6,7 +6,7 @@
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "50mb",
-        "includeFiles": "{api/**,data/attributes.json,data/scripts/**,data/schemes/**/build/**,data/schemes/*/.state.json}"
+        "includeFiles": "{api/**,data/attributes.json,data/next_steps.json,data/document_hints.json,data/scripts/**,data/schemes/**/build/**,data/schemes/*/.state.json}"
       }
     }
   ],
