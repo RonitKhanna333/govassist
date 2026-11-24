@@ -82,6 +82,25 @@ def firewall_probe(request: Request, rounds: int = 2) -> dict:
     from api.onboarding.router import _task_for
 
     webhook, _ = _callback_urls()
+    if request.query_params.get("sections") == "1":
+        # Each blank-line-separated section of the real Hindi script alone,
+        # to find the text the firewall reacts to.
+        from api.onboarding.router import _task_for
+        sections = [p for p in _task_for("hi", "Test").split("\n\n") if p.strip()]
+        out = {}
+        for i, part in enumerate(sections):
+            body = {"phone_number": "+910000000000", "task": part, "language": "hi"}
+            try:
+                r = http.post(f"{bland.BASE_URL}/calls",
+                              data=json_codec.dumps(body, ensure_ascii=False).encode("utf-8"),
+                              headers={"Content-Type": "application/json",
+                                       "Authorization": "probe-invalid-key"}, timeout=20)
+                blocked = r.status_code == 403 and "cloudflare" in r.text[:3000].lower()
+                verdict = "BLOCKED" if blocked else f"pass({r.status_code})"
+            except http.RequestException as exc:
+                verdict = f"error({type(exc).__name__})"
+            out[f"{i:02d} {part.strip().splitlines()[0][:50]}"] = f"{verdict} ({len(part)} chars)"
+        return out
     if request.query_params.get("real") == "1":
         # The exact shape of a real Hindi callback, then one field removed
         # at a time, to find what the firewall reacts to.
