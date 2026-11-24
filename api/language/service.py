@@ -32,6 +32,7 @@ from api.language.registry import CANONICAL_LOCALE, get
 # Calibrate on the golden set; 0.55 is a deliberately forgiving starting
 # point because word order legitimately changes through a round trip.
 ROUND_TRIP_THRESHOLD = 0.55
+ROUND_TRIP_ATTEMPTS = 2
 
 
 class Rung(str, Enum):
@@ -89,33 +90,37 @@ class LanguageService:
 
         protected = protect_mod.protect(text, self._terms)
 
-        try:
-            translated = self._provider.translate(protected.text, source, target)
-        except LanguageError:
-            return TranslationResult(
-                text=text, locale=source, rung=Rung.ENGLISH_FALLBACK,
-                note="Translation is unavailable right now, so this is shown in English.",
-            )
+        # The round-trip check is lexical and a model's back-translation
+        # paraphrases differently each time: one real verdict failed it 2 of 3
+        # tries. A fresh attempt is cheaper than showing English. Every
+        # attempt still has to pass both checks.
+        for _ in range(ROUND_TRIP_ATTEMPTS):
+            try:
+                translated = self._provider.translate(protected.text, source, target)
+            except LanguageError:
+                return TranslationResult(
+                    text=text, locale=source, rung=Rung.ENGLISH_FALLBACK,
+                    note="Translation is unavailable right now, so this is shown in English.",
+                )
 
-        if not protected.survived(translated):
-            # An entity was dropped, duplicated, or mangled. This is the
-            # hard gate -- no threshold, no judgement call.
-            return TranslationResult(
-                text=text, locale=source, rung=Rung.ENGLISH_FALLBACK,
-                note="The translation altered a number or date, so the English "
-                     "version is shown instead.",
-            )
+            if not protected.survived(translated):
+                # An entity was dropped, duplicated, or mangled. This is the
+                # hard gate -- no threshold, no judgement call.
+                return TranslationResult(
+                    text=text, locale=source, rung=Rung.ENGLISH_FALLBACK,
+                    note="The translation altered a number or date, so the English "
+                         "version is shown instead.",
+                )
 
-        restored = protected.restore(translated)
+            restored = protected.restore(translated)
+            if self._round_trip_ok(text, restored, target, source):
+                return TranslationResult(text=restored, locale=target, rung=Rung.PROVIDER)
 
-        if not self._round_trip_ok(text, restored, target, source):
-            return TranslationResult(
-                text=text, locale=source, rung=Rung.ENGLISH_FALLBACK,
-                note="The translation didn't check out against the original, so "
-                     "the English version is shown instead.",
-            )
-
-        return TranslationResult(text=restored, locale=target, rung=Rung.PROVIDER)
+        return TranslationResult(
+            text=text, locale=source, rung=Rung.ENGLISH_FALLBACK,
+            note="The translation didn't check out against the original, so "
+                 "the English version is shown instead.",
+        )
 
     def _round_trip_ok(self, original: str, translated: str,
                        target: str, source: str) -> bool:
@@ -137,7 +142,9 @@ class LanguageService:
 
         a = protect_mod.protect(original, self._terms).text.lower()
         b = protect_mod.protect(back, self._terms).text.lower()
-        return difflib.SequenceMatcher(None, a, b).ratio() >= ROUND_TRIP_THRESHOLD
+        # autojunk off: on texts over 200 chars it drops spaces and common
+        # letters, which scored a faithful long verdict 0.18.
+        return difflib.SequenceMatcher(None, a, b, autojunk=False).ratio() >= ROUND_TRIP_THRESHOLD
 
     # -- speech ------------------------------------------------------------
 

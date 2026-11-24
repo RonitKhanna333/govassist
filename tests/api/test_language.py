@@ -230,3 +230,18 @@ def test_speech_plan_falls_back_to_browser_without_a_provider():
 def test_synthesize_returns_none_rather_than_raising_on_failure():
     service = LanguageService(provider=FakeProvider(fail=True))
     assert service.synthesize("hi there", "hi") is None
+
+
+def test_a_faithful_paraphrase_of_a_long_verdict_passes_the_round_trip():
+    """From a live Hindi chat: difflib's autojunk scored this pair 0.18 (over
+    200 chars it ignores spaces and common letters), so every long verdict
+    fell back to English."""
+    original = ("You're eligible because you are between 18 and 70 years old, you have a bank or "
+                "Post Office account with a participating institution, you can provide your "
+                "Aadhaar as the main identity proof, and you agree to join and allow the premium "
+                "to be auto-debited from that account.")
+    back = ("You qualify because your age is between 18 and 70 years, you have an account at a "
+            "participating bank or post office, you can give your Aadhaar as the main id proof, "
+            "and you agree to join and have the premium automatically deducted from that account.")
+    service = LanguageService(provider=FakeProvider({("hi", "en"): back}))
+    assert service._round_trip_ok(original, "अनुवाद", "hi", "en")
