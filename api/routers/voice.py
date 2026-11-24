@@ -81,6 +81,36 @@ def firewall_probe(request: Request, rounds: int = 2) -> dict:
     from api.onboarding.router import _task_for
 
     webhook, _ = _callback_urls()
+    if request.query_params.get("real") == "1":
+        # The exact shape of a real Hindi callback, then one field removed
+        # at a time, to find what the firewall reacts to.
+        from api.onboarding.router import _task_for
+        full = {"phone_number": "+910000000000", "task": _task_for("hi", "Test"),
+                "language": "hi", "max_duration": 3, "record": False,
+                "wait_for_greeting": True, "voice": bland.VOICE or "maya",
+                "tools": ["TL-00000000-0000-0000-0000-000000000000",
+                          "TL-11111111-1111-1111-1111-111111111111"],
+                "metadata": {"kind": "interview", "record_id": 1, "locale": "hi",
+                             "call_language": "hi"}}
+        variants = {"full": full}
+        for key in ("voice", "tools", "metadata", "wait_for_greeting", "record", "task"):
+            variants[f"without_{key}"] = {k: v for k, v in full.items() if k != key}
+        variants["short_task_only"] = {**full, "task": "Hindi mein namaste kahiye."}
+        out = {}
+        for name, body in variants.items():
+            results = []
+            for _ in range(2):
+                try:
+                    r = http.post(f"{bland.BASE_URL}/calls",
+                                  data=json_codec.dumps(body, ensure_ascii=False).encode("utf-8"),
+                                  headers={"Content-Type": "application/json",
+                                           "Authorization": "probe-invalid-key"}, timeout=20)
+                    blocked = r.status_code == 403 and "cloudflare" in r.text[:3000].lower()
+                    results.append("BLOCKED" if blocked else f"pass({r.status_code})")
+                except http.RequestException as exc:
+                    results.append(f"error({type(exc).__name__})")
+            out[name] = results
+        return out
     if request.query_params.get("webhooks") == "1":
         # Same long script, different shapes of webhook URL.
         task = script.build_interview_task("hi-Latn", "Test")
