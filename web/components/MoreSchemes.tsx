@@ -4,9 +4,6 @@
 type Card = { name: string; hi: string; about: string; aboutHi: string; url: string };
 
 const CARDS: Card[] = [
-  { name: "PM-KISAN", hi: "पीएम-किसान", url: "https://pmkisan.gov.in",
-    about: "Income support of ₹6,000 a year, in three instalments, for landholding farmer families.",
-    aboutHi: "ज़मीन वाले किसान परिवारों को साल में ₹6,000 की मदद, तीन किस्तों में।" },
   { name: "Ayushman Bharat PM-JAY", hi: "आयुष्मान भारत पीएम-जय", url: "https://pmjay.gov.in",
     about: "Free hospital treatment cover of up to ₹5 lakh per family per year at listed hospitals.",
     aboutHi: "सूचीबद्ध अस्पतालों में हर परिवार को साल में ₹5 लाख तक का मुफ़्त इलाज।" },
