@@ -1,0 +1,191 @@
+6.2   For  the  purpose  of  exclusion  States  have  to  take  a  self-declaration  from  the 
+beneficiaries  as  detailed  in  par  4.2  above.  In  the  said  self-declaration  taken  by  the 
+States / UT Governments an undertaking should also be included wherein the consent 
+of the beneficiaries should be taken for using the Aadhaar number for verification of his 
+eligibility for the scheme with the concerned agencies.  This consent of the beneficiary 
+should be “to agree that the department responsible for implementation of the Pradhan 
+Mantri  Kisan  Samman  Nidhi  Yojana  in  Union  Government  or  the  State  Government  / 
+Union  Territory  Administration  can  use  the  beneficiary  Aadhaar  number  and  other 
+information  provided  in  the  declaration  to  verify  the  eligibility  of  the  beneficiary  for 
+scheme as per extant scheme guidelines with the concerned agencies”. 
+
+The existing land-ownership system in the concerned State / UT will be used for 
+6.3 
+identification  of  beneficiaries.  Accordingly,  it  is  of  utmost  importance  that  the  land 
+records  are  clear  and  updated.  Further,  State  /  UT  Governments  would  also  expedite 
+
+6 
+
+ 
+ 
+ 
+ 
+
+the  progress  of  digitization  of  the  land  records  and  linking  the  same  with  Aadhaar  as 
+well as bank details of the beneficiaries.  
+
+6.4 
+The lists of eligible beneficiaries would be published at the village level. Farmers’ 
+families who are eligible but have been excluded should be provided an  opportunity to 
+represent their case. 
+
+7. 
+
+Review, Monitoring and Grievance Redressal Mechanism 
+
+7.1 
+There  will  be  stratified  review  /  monitoring  mechanism  at  National,  State  and 
+District  Level.  At  the  National  level,  the  Review  Committee  will  be  headed  by  Cabinet 
+Secretary.  The  States  shall  notify  the  State  and  District  Level  Review  /  Monitoring 
+Committee.  
+
+7.2 
+The  States  shall  also  notify  State  and  District  Level  Grievance  Redressal 
+Monitoring  Committees  for  looking  into  all  the  grievances  related  to  implementation  of 
+the  scheme.  Any  grievances  or  complaints  which  are  received  should  be  disposed  off 
+on merit preferably within two weeks time.  
+
+8. 
+
+Setting up of Project Monitoring Unit (PMU) 
+
+8.1 
+A Project Monitoring Unit (PMU) at Central level will be set up in the Department 
+of  Agriculture,  Cooperation  &  Farmers  Welfare  (DAC&FW)  in  the  form  of  a  Society 
+registered  under  the  Societies  Registration  Act,  1860.  This  PMU  shall  be  tasked  with 
+the  responsibility  of  overall  monitoring  of  the  scheme  and  shall  be  headed  by  Chief 
+Executive  Officer  (CEO).  PMU  shall  also  undertake  publicity  campaign  (Information, 
+Education and Communication-IEC).  
+
+Each  State 
+
+8.2 
+for 
+implementation of the scheme and coordinating with Central Government with regard to 
+implementation of Income Support Scheme.  
+
+/  UT  Government  will  designate  a  Nodal  Department 
+
+8.3  On  the  lines  of  PMU  at  central  level,  States  /  UTs  may  consider  setting  up 
+dedicated  Project  Monitoring  Units  at  State  /  UT  Level.  0.125%  for  the  amount  of 
+installments  transferred  to  beneficiaries  can  be  transferred  by  Central  Government  to 
+State /  UT Government to cover the  expenditure on their PMUs, if established and for 
+meeting  other  related  administrative  expenses  including  cost  to  be  incurred  for 
+their 
+procurement  of  stationary, 
+certification  and  its  uploading  as  well  as  incentive  for  field  functionaries,  publicity,  etc. 
+States / UTs will furnish the details of the account to which Administrative Charges are 
+credited by the Central Government. The administrative charges payable to the States / 
+UTs  will  be  provided  by  Government  of  India  based  on  the  volume  of  work  and  the 
+number of beneficiaries. 
+
+filling  of  prescribed 
+
+field  verification, 
+
+formats, 
+
+7 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+PM-Kisan  Portal  for  implementation  of  the  scheme  (Beneficiary  Details 
+
+9. 
+uploading by State) 
+
+9.1 
+Beneficiaries under the scheme are to  be identified by the  respective State  and 
+Union Territory. The details of farmers are being maintained by the States / UTs either 
+in  electronic  form  or  in  manual  register.  To  make  integrated  platform  available  in  the 
+country  to  assist  in  benefit  transfer,  a  platform  named  PM-Kisan  Portal  available  at 
+URL  (http://pmkisan.gov.in)  has  been  be  launched  for  uploading  the  farmers’  details 
+at a single web-portal in a uniform structure. 
+
+9.2 
+
+The PM-Kisan Portal has been created with the following objectives - 
+
+i) 
+ii) 
+iii) 
+
+iv) 
+v) 
+
+To provide verified and single source of truth on farmers’ details at the portal. 
+Timely assistance to the farmers in farm operation 
+A unified e-platform for transferring of cash benefits into farmer’s bank account 
+through Public Financial Management System (PFMS) integration. 
+Location wise availability of benefited farmers’ list. 
+Ease of monitoring across the country on fund transaction details. 
+
+9.3 
+
+PM-Kisan Portal : 
+
+The following farmer attributes need to be entered in the Portal: 
+
+Farmer Attributes: (Essential): 
+
+ State,  District,  Sub-District/Block,  Village,  Farmer  Name,  Type  of  Identity  –
+Aadhaar Number and in case Aadhaar not available, Aadhaar enrollment number 
+with  any  other  ID  proof  like  Voter  ID  etc,  Gender,  Category,  IFSC  Code,  Bank 
+Account Number. 
+
+Farmer Attributes (Optional): 
+
+Father name, Address, Mobile Number, Date of Birth/Age, Farm-Size in Hectare, 
+Survey Number, Khasra Number 
+
+ Optional attributes such as Mobile number can be utilized for SMS alerts. Other 
+optional  attributes  may  be  used  for  purpose  of  future  requirement.    However, 
+these attributes are not essential for purpose of transfer of money. 
+
+These  attributes  are  illustrated  on  PM-KISAN  Portal  http://pmkisan.gov.in  as 
+follows 
+
+8 
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+There are 3 ways through which a State / UT can onboard on the PM Kisan 
+
+9.4 
+Portal: 
+
+If  a  State  /  UT  has  village  /  district  wise  list  of  farmers,  they  may  upload 
+
+(a) 
+the same in a pre-defined format and with the help of local NIC State Unit.  
+
+(b) 
+
+Some existing data of farmers is already available on the PM-Kisan Portal 
+which will be visible on selection of States / Districts / Village. States / UTs 
+which do not have their own list may use this village-wise list of farmers as 
+provided  on  the  portal  and  edit  the  same  to  finalize  the  farmers’  list.  For 
+this  the  correction  window  shall  be  available  at  PM-Kisan  portal  for 
+authorized users of District and Block officials.   
+
+(c) 
+
+If States / UTs want to make fresh entry of a farmer, provision is there for 
+registration of these farmers in a defined and standardized format. 

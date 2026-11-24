@@ -20,6 +20,12 @@
       "by": "thorb",
       "note": "12 pages, 30380 chars",
       "status": "approved"
+    },
+    "3_segments": {
+      "at": "2026-11-24T18:58:36+00:00",
+      "by": "thorb",
+      "note": "5 segments",
+      "status": "approved"
     }
   },
   "scheme": "pm-kisan"

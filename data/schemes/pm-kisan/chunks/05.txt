@@ -1,0 +1,89 @@
+PFMS. 
+
+vi.  Details  of  sponsoring  bank  along  with  IFSC  code  and  bank  account  number  in 
+
+which funds are to be transferred are to be provided to the Department.  
+
+11 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+vii.  States  /  UT  Governments  are  to  authorise  the  sponsoring  bank  to  directly 
+transmit  the  amount  received  under  the  scheme  to  destination  banks  having 
+beneficiary account. 
+
+viii. 
+
+The sponsoring bank is to  transmit the funds to destination  bank soon after the 
+same are received by it.  
+
+B.  Union  Government: 
+
+I. 
+
+II. 
+
+The Programme Division in the DAC&FW is to issue Sanction Order on the basis 
+of FTOs received from States / UTs. 
+The  beneficiary  account  is  to  be  credited  periodically  after  the  issuance  of  the 
+Sanction Order. 
+
+III.  Beneficiary  would  be  intimated  about  credit  of  amount  to  his  account  by  Short 
+
+IV. 
+
+V. 
+
+Messaging Service (SMS).  
+The confirmation of credit to the beneficiary account would be received back by 
+the DAC&FW on the day next to the day of credit to the beneficiary account. 
+Failed / unsuccessful transactions would be reported back by the banking system 
+to  the  DAC&FW,  on  the  day  next  to  the  day  of  reporting  of  the  successful 
+transactions, along with amount involved. 
+
+VI.  Details of failed transactions would be made available to States / UTs for further 
+
+verification of beneficiary details and reprocessing. 
+
+10.5  The  beneficiary  lists  would  be  displayed  at  Panchayats  to  ensure  greater 
+transparency and information. Further, States / UTs would notify the sanction of benefit 
+to the beneficiary through system generated SMS.  In cases of complaints / grievances 
+emanating subsequent to publication of beneficiary list, the same should be addressed 
+and  remedial  action  taken  expeditiously.  Efforts  should  be  undertaken  by  State  /  UT 
+Governments  to  ensure  checking  for  around  5%  of  the  beneficiary  for  the  eligibility 
+during the year.  
+
+11. 
+
+Validity of the list of beneficiaries 
+
+The list of beneficiaries identified by States / UTs shall be valid for one year. However, 
+States  /  UTs  can  upload  names  of  eligible  beneficiaries  who  have  been  identified 
+subsequently.  States  /  UTs  should  also  implement  a  mechanism  to  ensure  revision  of 
+the  name  of  the  beneficiary  in  case  of  mutation  /changes  in  the  land  record  after 
+uploading list on the portal for updation of the eligible beneficiary details for such lands 
+as per above para 5.3. 
+
+******* 
+
+12 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+

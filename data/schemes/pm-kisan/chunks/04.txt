@@ -1,0 +1,178 @@
+9.5   Databases  of  Pradhan  Mantri  Fasal  Bima  Yojana  (PMFBY),  Soil  Health  Cards, 
+Socio Economic and Caste Census (SECC) can also be utilized for this purpose.   
+
+State/UT wise status of number of farmer records shall be available at http://pmkisan.gov.in. 
+
+9.6    Records preparation process through PM-KISAN Portal: 
+
+1.  State-admin  and  District-admin  need  to  be  identified  for  creation  of  login 
+credentials  or  approval  of  login  credentials  in  case  of  self-registration  by 
+District and Block / Tehsil / Taluka officials. 
+
+9 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+STATE ADMIN 
+
+DISTRICT ADMIN 
+
+DISTRICT ADMIN 
+
+DISTRICT ADMIN 
+
+BLOCK 
+USER 
+
+BLOCK 
+USER 
+
+BLOCK 
+USER 
+
+BLOCK 
+USER 
+
+BLOCK 
+USER 
+
+BLOCK 
+USER 
+
+BLOCK 
+USER 
+
+BLOCK 
+USER 
+
+BLOCK 
+USER 
+
+2.  Farmers  list  as  available  on  the  portal  shall  be  available  at  Block  /  Tehsil  / 
+
+Taluka level official’s login.  
+
+3.  Search  facility  will  also  be  available  to  get  details  on  Farmers  by  Name, 
+Aadhaar  Number  or  Mobile  Number  in  case  PM-KISAN  Portal  data  is  being 
+used. Facility  to add new farmers’ details shall be available, if details are not 
+found in the list. 
+
+4.  The verified list shall be e-signed by the District level or block / tehsil / taluka 
+level  officials  as  the  case  may  be.  The  exclusion  categories  specified  in 
+scheme  guidelines  also  need  to  be  taken  care  before  e-signing  the  verified 
+farmers list. 
+
+5.  The States Nodal Officer shall submit a district wise e-Signed list of farmers to 
+
+the Program Division of DAC&FW through PM-Kisan Portal. 
+
+10  Modalities for transfer of benefit 
+
+10.1  The  financial  benefit  of  Rs.6000/-  per  year  is  to  be  released  to  the  eligible 
+farmers in three installments of Rs.2000/- each every 4-month / trimester, i.e. April-July, 
+August-November and December-March.  
+
+10.2  The  Scheme  is  being  implemented  through  an  Aadhaar  linked  electronic  data 
+base  containing  details  of  all  members  of  the  families  of  the  farmers  whose  names 
+appear in the land records. For transfer of the financial benefits to the eligible farmers, 
+Aadhaar number shall be collected for all beneficiaries, since payment of all installments 
+pertaining to the trimester December, 2019 – March, 2020 onwards shall be done only 
+on the basis of Aadhaar seeded data base. However, exemption has been to the States 
+of Assam, Meghalaya and Jammu & Kashmir from the requirement of Aadhaar number 
+and Aadhaar seeded database under the scheme till 31.3.2021. In the meantime these 
+States  will  complete  Aadhaar  enrolment  so  that  subsequent  installments  are  released 
+on  the  basis  of  Aadhaar  seeded  data  only.  States  /  UTs  shall  ensure  that  there  is  no 
+duplication of the payment transferred to eligible families.  
+
+10.3  The funds pertaining to income support benefit as well as administrative charges 
+shall  be  released  from  Government  of  India  to  the  States’  designated  account  / 
+mechanism.    The  benefit  shall  be  transferred  by  Government  of  India  to  the 
+beneficiaries  through  a  mechanism  wherein  district  wise  beneficiaries’  lists  shall  be 
+
+10 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+certified  and  uploaded  by  the  States  /  UTs  and  the  funds  will  be  electronically 
+transferred  via  State  Notional  Account  [similar  to  Mahatma  Gandhi  National  Rural 
+Employment Guarantee Scheme (MNREGS)] to the beneficiaries’ bank accounts on the 
+basis of their account numbers and IFSC codes. However, where the states verify that 
+Aadhaar linked accounts are not the loan accounts of beneficiaries, the Aadhaar linked 
+payment  system  can  be  adopted.  However,  from  the  December,  2019  –  March,  2020 
+trimester onwards the States shall have to ensure Aadhaar linked bank accounts of the 
+beneficiaries, except in case of Assam, Meghalaya and Jammu & Kashmir, which have 
+been given exemption till the 31st March, 2021. For ease of implementation the States 
+may  consider  assigning  the  job  of  sponsoring  bank  for  the  scheme  to  the  same  bank 
+being used by concerned State for MGNREGS. 
+
+10.4  The funds pertaining to income support benefit as well as administrative charges 
+shall  be  released  from  Government  of  India  to  the  State  designated  account  / 
+mechanism. Detailed modalities for transfer of funds are as under: 
+
+The amount due to the beneficiaries under the scheme is to be paid directly into 
+(a) 
+their  bank  accounts  through  the  mechanism  of  Direct  Benefit  Transfer  (DBT).  The 
+amount will flow to the accounts of the beneficiaries held in destination banks, through 
+the accredited bank of DAC&FW and sponsoring banks of the States /UTs, using PFMS 
+portal.  The  destination  bank  can  be  a  Schedule  Bank,  Post  office,  Rural  Bank, 
+Cooperative Bank or any other Financial Institution.   
+
+The  important  steps  to  be  taken  by  State  /  UT  Governments  and  the  Union 
+
+(b) 
+Government for timely payment into the beneficiary account are listed below: 
+
+A.  State / UT Government: 
+
+i.  State  /  UT  Governments  are  to  identify  the  beneficiaries  and  upload  the 
+
+beneficiary details on the web portal of the scheme.  
+
+ii.  Correctness of beneficiary details is to be  ensured by State  / UT Governments. 
+Further,  speedy  reconciliation  in  case  of  wrong  /  incomplete  bank  details  of  the 
+beneficiary should be ensured. 
+
+iii. 
+
+For  facilitating  payment,  Fund  Transfer  Order  (FTO)  for  the  total  amount  in  a 
+batch  of  beneficiaries  is  to  be  signed  by  State  /  UT  on  the  web  portal  of  the 
+scheme. 
+
+iv.  State / UT Governments are also required to  identify a bank in each State / UT 
+and  designate  it  as  sponsoring  bank  for  this  scheme.  States  may  consider 
+designating  the  same  bank  for  use  for  MNRGES  for  sponsoring  bank  for  this 
+schemes. 
+
+v. 
+
+The  bank  to  be  designated  as  sponsoring  bank  is  to  have  well  developed  IT 
+system  with  the  capabilities  of  integration  with  web  portal  of  the  scheme  and 
