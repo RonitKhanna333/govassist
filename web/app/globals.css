@@ -1243,3 +1243,11 @@ a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; 
 .account-transcript li { padding: .4rem 0; }
 .account-anonymous { margin-top: 2rem; text-align: center; }
 .account-page button:focus-visible, .account-page summary:focus-visible, .account-page a:focus-visible { outline: 2px solid var(--good); outline-offset: 3px; }
+
+/* Info-only scheme cards (not in the grounded corpus). */
+.more-schemes { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.more-schemes h2 { font-size: 1.05rem; margin: 0; }
+.more-schemes ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.more-schemes li { display: flex; flex-direction: column; gap: 0.35rem; padding: 0.8rem 0.9rem; border: 1px solid var(--line, rgba(127,127,127,.3)); border-radius: 10px; background: var(--raised); }
+.more-schemes li span { font-size: 0.86rem; color: var(--ink-faint); line-height: 1.45; }
+.more-schemes li a { font-size: 0.82rem; margin-top: auto; }

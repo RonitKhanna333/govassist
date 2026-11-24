@@ -1,5 +1,6 @@
 "use client";
 
+import { MoreSchemes } from "@/components/MoreSchemes";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -421,6 +422,7 @@ export function Chat() {
               {t("chat.start")}
               <Icon name="arrowRight" />
             </button>
+            <MoreSchemes locale={uiLocale} />
           </div>
         ) : (
           <>
