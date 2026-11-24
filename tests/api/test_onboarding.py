@@ -261,12 +261,9 @@ def test_call_numeric_answers_use_same_input_domain():
     assert set(invalid) == {"age", "own_contribution_percent"}
 
 
-def test_hindi_callback_sends_only_ascii_to_the_provider(setup, monkeypatch):
-    """Bland's Cloudflare rejected every Hindi callback from Vercel with
-    "Attention Required" (HTTP 403) while Hinglish ones went through: it
-    blocks Devanagari request bodies from our host. A Hindi call now sends
-    its script and tools romanized, but stays a Hindi call, so the agent
-    speaks Hindi and the transcript comes back in Devanagari."""
+def test_hindi_callback_sends_a_devanagari_script(setup, monkeypatch):
+    """A romanized script made the agent speak broken Hinglish. Devanagari
+    passes Bland's firewall once no webhook URL is sent (measured)."""
     client, headers, _ = setup
     sent = []
     monkeypatch.setattr(bland, "start_call", lambda **kwargs: sent.append(kwargs) or "call-hi")
@@ -274,12 +271,10 @@ def test_hindi_callback_sends_only_ascii_to_the_provider(setup, monkeypatch):
                            json={"consent": True, "locale": "hi", "call_language": "hi"})
     assert response.status_code == 200
     call = sent[0]
-    assert call["locale"] == "hi"                    # still a Hindi call
-    assert call["metadata"]["locale"] == "hi"        # answers parsed as Hindi
-    assert call["task"].isascii()
-    assert "pure spoken Hindi" in call["task"]
-    assert "Never add or remove a scheme" in call["task"]
-    assert json.dumps(call["extra_tools"], ensure_ascii=False).isascii()
+    assert call["locale"] == "hi"
+    assert call["webhook"] is None
+    assert "आपकी उम्र कितनी है?" in call["task"]
+    assert "Aapki umar" not in call["task"]
 
 
 @pytest.mark.parametrize("locale", ["hi", "hi-Latn"])

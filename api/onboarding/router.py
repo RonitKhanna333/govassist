@@ -96,13 +96,7 @@ def callback(body: CallbackBody, user: User = Depends(current_user),
     parts = urlsplit(webhook)
     eligibility_url = urlunsplit(parts._replace(path=parts.path.rsplit("/", 1)[0] + "/eligibility"))
     questions = {a: f.ask or a for a, f in service.fields(profile_locale).items()}
-    if call_language in ("hi", "hi-Latn"):
-        # Hindi calls go out romanized too. Bland's Cloudflare rejects
-        # Devanagari request bodies sent from Vercel ("Attention Required",
-        # HTTP 403) while the same text passes from elsewhere, so every
-        # Hindi call failed. The call language stays "hi": the agent still
-        # speaks Hindi and Bland still transcribes it in Devanagari, which
-        # is what our parser reads.
+    if call_language == "hi-Latn":
         from api.voice.hinglish import QUESTIONS
         questions = {a: QUESTIONS.get(a, ask) for a, ask in questions.items()}
     try:
@@ -184,14 +178,11 @@ def dashboard(locale: str = "en", user: User = Depends(current_user),
 
 
 def _task_for(call_language: str, name: str) -> str:
-    """The call script. Hindi is sent romanized (see callback()), with an
-    instruction to speak pure Hindi rather than Hinglish."""
-    if call_language == "hi":
-        from api.voice.hinglish import build_task
-        return ("Speak only simple, pure spoken Hindi -- not Hinglish, and no English "
-                "words unless the person uses them first. Everything below is written "
-                "in Romanized Hindi only so it can be sent; say it in Hindi.\n\n"
-                + build_task(name))
+    """The call script, in the script the agent should speak: Devanagari for
+    Hindi. (It was briefly sent romanized on the belief that Devanagari
+    tripped Bland's firewall; /voice/firewall-probe showed the trigger was
+    the webhook URL, which calls no longer carry -- and a romanized script
+    made the agent sound like broken Hinglish.)"""
     return script.build_interview_task(call_language, name)
 
 
