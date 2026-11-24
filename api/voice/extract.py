@@ -21,6 +21,8 @@ Two things keep that honest:
 from __future__ import annotations
 
 import logging
+import re
+from difflib import SequenceMatcher
 
 from api.agents._json import extract_json
 from api.agents.llm import LLMError, LLMProvider, Tier
@@ -75,6 +77,34 @@ def _render(transcripts: list | None, concatenated: str | None) -> tuple[str, li
     return "\n".join(lines), turns
 
 
+def _coverage(ask: str, said: str) -> float:
+    """Share of the question's characters the agent's line contains, in order."""
+    ask = re.sub(r"\s*\([^)]*\)", "", ask).strip()  # agents drop "(पोस्ट ऑफ़िस)"
+    if not ask:
+        return 0.0
+    blocks = SequenceMatcher(None, ask, said, autojunk=False).get_matching_blocks()
+    return sum(b.size for b in blocks) / len(ask)
+
+
+def match_by_question(questions: dict[str, str], transcripts: list | None) -> dict[str, str]:
+    """No model: find the agent line that asks each question (the script's
+    own wording) and take the caller's next line. A later re-ask wins, so a
+    corrected answer is kept. Words are still the transcript's own."""
+    found: dict[str, str] = {}
+    turns = [t for t in transcripts or [] if isinstance(t, dict) and t.get("text")]
+    for i, turn in enumerate(turns):
+        if turn.get("user") != "assistant":
+            continue
+        score, attribute = max(((_coverage(ask, str(turn["text"])), attr)
+                                for attr, ask in questions.items()), default=(0.0, None))
+        if attribute is None or score < 0.8:
+            continue
+        reply = next((t for t in turns[i + 1:] if t.get("user") == "user"), None)
+        if reply is not None:
+            found[attribute] = str(reply["text"]).strip()
+    return found
+
+
 def find_answers(llm: LLMProvider, questions: dict[str, str],
                  transcripts: list | None, concatenated: str | None) -> dict[str, str]:
     """attribute -> the caller's own line, exactly as transcribed."""
@@ -82,19 +112,23 @@ def find_answers(llm: LLMProvider, questions: dict[str, str],
     if not turns or not questions:
         log.info("extract: nothing to read (caller lines=%d)", len(turns))
         return {}
+    # Fallback for anything the model fails on (seen live: no JSON at all).
+    fallback = match_by_question(questions, transcripts)
     asked = "\n".join(f"- {attr}: {ask}" for attr, ask in questions.items())
     user = f"Questions:\n{asked}\n\nTranscript:\n{rendered}"
     try:
         raw = llm.complete(_SYSTEM, user, Tier.FAST)
     except LLMError as exc:
-        log.warning("extract: model call failed: %s", type(exc).__name__)
-        return {}
+        log.warning("extract: model call failed: %s; matched %d by question",
+                    type(exc).__name__, len(fallback))
+        return fallback
     parsed = extract_json(raw)
     if not isinstance(parsed, dict):
-        log.warning("extract: model did not return a JSON object")
-        return {}
+        log.warning("extract: model did not return a JSON object; matched %d by question",
+                    len(fallback))
+        return fallback
 
-    found: dict[str, str] = {}
+    found: dict[str, str] = dict(fallback)
     for attribute, pointer in parsed.items():
         if attribute not in questions or pointer is None or isinstance(pointer, bool):
             continue

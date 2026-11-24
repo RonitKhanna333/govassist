@@ -679,6 +679,29 @@ def test_a_spelling_difference_no_longer_loses_the_answer():
     assert found == {"has_bank_or_post_office_account": "हां जी है."}
 
 
+def test_answers_survive_a_model_that_returns_no_json():
+    """From a real call: the model replied without JSON and every answer was
+    lost. The agent asks in the script's own words, so the caller's next line
+    is found without the model. A confirmation "हां" must not replace the age."""
+    from api.onboarding import service
+    transcript = [
+        {"user": "assistant", "text": "धन्यवाद जी। सबसे पहले पूछना चाहूँगा, आपकी उम्र कितनी है?"},
+        {"user": "user", "text": "पच्चीस लाल."},
+        {"user": "assistant", "text": "तो आपकी उमर पच्चीस साल है, सही?"},
+        {"user": "user", "text": "हां,"},
+        {"user": "assistant", "text": "अच्छा जी। क्या आपका अपना बैंक या डाकघर खाता है?"},
+        {"user": "user", "text": "हां,"},
+        {"user": "assistant", "text": "क्या आवेदन करने वाली एक महिला हैं?"},
+        {"user": "user", "text": "नहीं."},
+    ]
+    questions = {a: f.ask for a, f in service.fields("hi").items()}
+    found = extract.find_answers(FakeLLM(["sorry, I can't"]), questions, transcript, None)
+    assert found == {"age": "पच्चीस लाल.", "has_bank_or_post_office_account": "हां,",
+                     "is_woman": "नहीं."}
+    assert service.read_answers(found)[0] == {
+        "age": 25, "has_bank_or_post_office_account": True, "is_woman": False}
+
+
 def test_an_unanswered_call_texts_nobody(client):
     payload = {"call_id": "c", "to": MY_NUMBER, "status": "no-answer",
                "answered_by": "no-answer", "metadata": {"scheme": "pmsby"}}
