@@ -65,6 +65,16 @@ def voice_health() -> dict:
     }
 
 
+@router.get("/hindi-voices", dependencies=[Depends(enforce(auth_rate_limiter))])
+def hindi_voices() -> dict:
+    """Hindi/Indian voices in Bland's library (id, name, tags only) to pick
+    BLAND_VOICE from. Public library data, so not secret-gated."""
+    try:
+        return {"current": bland.VOICE, "voices": bland.hindi_voices()}
+    except bland.VoiceError as exc:
+        raise HTTPException(503, str(exc)) from exc
+
+
 @router.get("/firewall-probe", dependencies=[Depends(enforce(auth_rate_limiter))])
 def firewall_probe(request: Request, rounds: int = 2) -> dict:
     """Which call bodies Bland's Cloudflare blocks *from this server*.
